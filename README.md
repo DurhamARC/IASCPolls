@@ -33,7 +33,18 @@ is needed.
 
 This project is developed in [Python Django](https://www.djangoproject.com/) and [React](https://reactjs.org/).
 
-[//]: # (### Docker)
+### Linting
+
+The [Black](https://github.com/psf/black) code style is used to lint this repository on-push. Set up a pre-commit hook 
+to ensure that any code you push is passing this code style or Linting may fail for your commit. The `.pre-commit-config.yaml` 
+file contains the configuration for this. You need to tell Git to run it with the following command:
+
+```
+pre-commit install
+```
+
+If you see `command not found: pre-commit`, you need to first install the [pre-commit framework](https://pre-commit.com/#install)
+
 
 [//]: # (### Running Locally)
 
