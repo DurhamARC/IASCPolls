@@ -43,7 +43,9 @@ file contains the configuration for this. You need to tell Git to run it with th
 pre-commit install
 ```
 
-If you see `command not found: pre-commit`, you need to first install the [pre-commit framework](https://pre-commit.com/#install)
+If you see `command not found: pre-commit`, you need to first install the [pre-commit framework](https://pre-commit.com/#install).
+
+You can also run black manually by installing the python module and then: `python -m black ./src`
 
 
 [//]: # (### Running Locally)
