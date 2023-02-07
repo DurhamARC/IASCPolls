@@ -1,7 +1,5 @@
 # IASCPolls
 
-[//]: # [![Actions Status](https://github.com/DurhamARC/IASCPolls/workflows/Unit%20Tests/badge.svg)](https://github.com/DurhamARC/IASCPolls/actions)
-[//]: # [![codecov.io](https://codecov.io/gh/DurhamARC/IASCPolls/branch/main/graphs/badge.svg)](https://codecov.io/gh/DurhamARC/IASCPolls/branch/main)
 [![License: MIT](https://img.shields.io/github/license/DurhamARC/IASCPolls)](https://github.com/DurhamARC/IASCPolls/blob/main/LICENSE)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
@@ -35,15 +33,11 @@ is needed.
 
 This project is developed in [Python Django](https://www.djangoproject.com/) and [React](https://reactjs.org/).
 
-[//]: # ### Docker
+[//]: # (### Docker)
 
-[//]: # ### Running Locally
+[//]: # (### Running Locally)
 
-[//]: # The [docker-compose.yml](docker-compose.yml) file in the root of this repository includes the project dependencies and can be run to set up an instant working development system. For manual setup instructions, see [DEVELOPMENT.md](DEVELOPMENT.md).
-
-[//]: # ### Deployment
-
-[//]: # A couple of different production deployment possibilities are documented in [PRODUCTION.md](PRODUCTION.md). We include a production [docker-compose](docker-compose.production.yml) file for running the system behind a [Træfik](https://traefik.io/traefik) load balancer.
+[//]: # (### Deployment)
 
 ## Contributing
 
