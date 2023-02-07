@@ -118,6 +118,9 @@ This work is licensed under the [MIT License](LICENSE), a permissive license
 which allows Commercial use, Modification, and Distribution, but does not admit 
 liability or warranty for use of this code.
 
+## Acknowledgements
+This project was supported by the Durham University Seedcorn project fund, Durham University Department of Philosophy, and the [Centre for Humanities Engaging Science and Society (CHESS)](https://www.durham.ac.uk/research/institutes-and-centres/humanities-engaging-science-society/).
+
 [//]: # (## Citation)
 [//]: # ()
 [//]: # (Please cite the associated papers for this work if you use this code:)
