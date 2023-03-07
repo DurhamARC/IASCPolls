@@ -76,9 +76,17 @@ stages:
               SlotName: 'production'
               packageForLinux: '$(System.DefaultWorkingDirectory)/$(Build.BuildId).zip'
               RuntimeStack: '$(runtimeStack)'
-              StartupCommand: 'python3.8 manage.py runserver'
+              StartupCommand: '$(System.DefaultWorkingDirectory)/venv/bin/python manage.py runserver'
               ScriptType: 'Inline Script'
               InlineScript: |
+                echo ${System.DefaultWorkingDirectory}
+                pwd
                 ls -ls /usr/bin/python*
+                ls -ls /opt/python/latest/bin/python*
                 which python3.8
-                python3.8 -m pip install -r requirements.txt
+                echo $PYTHONPATH
+                python3.8 -m venv venv
+                chmod +x ./venv/bin/activate
+                source venv/bin/activate
+                which python
+                python -m pip install -r requirements.txt
