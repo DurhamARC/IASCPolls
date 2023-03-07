@@ -21,7 +21,6 @@ export default function Ethics() {
       section.scrollIntoView({ behavior: "smooth", block: "start" });
     };
 
-
     return (
      <div>
        <NavBar />
