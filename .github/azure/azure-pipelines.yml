@@ -1,0 +1,82 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  name: Default
+  demands:
+  - Agent.Name -equals vmlsha1
+
+resources:
+- repo: self
+
+variables:
+  - name: appName
+    value: 'duuksawharciasc01' # Update this value.
+  - name: webAppResourceGroupName
+    value: 'du-uks-awh-arc-iasc01' # Update this value.
+  - name: runtimeStack
+    value: 'PYTHON|3.8' # Update this value.
+
+stages:
+  - stage: Build
+    displayName: Build and zip content
+    jobs:
+      - job: Build
+        displayName: Build
+        steps:
+          - checkout: self
+          - script: |
+              sudo apt-get -y install zip
+              echo  '$(System.DefaultWorkingDirectory)'
+            displayName: Run script
+
+          - task: ArchiveFiles@2
+            inputs:
+              rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
+              includeRootFolder: false
+              archiveType: "zip"
+              archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip"
+              replaceExistingArchive: true
+            displayName: "Archive Files"
+
+          - publish: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip"
+            artifact: $(appName)
+            displayName: "Upload Artifact"
+
+  - stage: Release
+    displayName: Release
+    jobs:
+      - job: Release
+        displayName: Release
+        steps:
+          - script: |
+              echo  '$(System.DefaultWorkingDirectory)'
+            displayName: Run script
+
+          - task: DownloadPipelineArtifact@2
+            inputs:
+              buildType: 'current'
+              artifactName: $(appName)
+              targetPath: '$(System.DefaultWorkingDirectory)'
+
+          # https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/azure-rm-web-app-deployment-v4
+          - task: AzureRmWebAppDeployment@4
+            inputs:
+              ConnectionType: 'AzureRM'
+              azureSubscription: 'svc-con-awh-01'
+              appType: 'webAppLinux'
+              WebAppName: '$(appName)'
+              deployToSlotOrASE: true
+              ResourceGroupName: '$(webAppResourceGroupName)'
+              SlotName: 'production'
+              packageForLinux: '$(System.DefaultWorkingDirectory)/$(Build.BuildId).zip'
+              RuntimeStack: '$(runtimeStack)'
+              StartupCommand: 'python manage.py runserver'
+              ScriptType: 'Inline Script'
+              InlineScript: |
+                pip install -r requirements.txt
