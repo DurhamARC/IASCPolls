@@ -88,7 +88,7 @@ stages:
                 echo "Creating virtual environment:"
                 python3.8 -m venv venv
                 chmod +x ./venv/bin/activate
-                source $HOME/venv/bin/activate
+                . $HOME/venv/bin/activate
                 PATH=$HOME/venv/bin/:$PATH
                 which python
                 $HOME/venv/bin/python -m pip install -r requirements.txt
