@@ -81,16 +81,14 @@ stages:
               InlineScript: |
                 echo "Working directory is $(pwd)"
                 export WORKDIR=$(pwd)
-                ls -ls /usr/bin/python*
-                ls -ls /opt/python/latest/bin/python*
                 echo "python3.8 is $(which python3.8)"
                 echo "\$PYTHONPATH is $PYTHONPATH"
                 echo "\$PATH is $PATH"
                 echo "Creating virtual environment:"
                 python3.8 -m venv venv
                 chmod +x ./venv/bin/activate
-                . $WORKDIR/venv/bin/activate
-                PATH=$WORKDIR/venv/bin/:$PATH
+                echo "Activating virtual environment:"
+                . ./venv/bin/activate
                 echo "python is $(which python)"
                 echo "Install requirements..."
-                $HOME/venv/bin/python -m pip install -r requirements.txt
+                python -m pip install -r requirements.txt
