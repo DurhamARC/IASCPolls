@@ -84,10 +84,11 @@ stages:
                 ls -ls /opt/python/latest/bin/python*
                 echo "python3.8 is $(which python3.8)"
                 echo "\$PYTHONPATH is $PYTHONPATH"
+                echo "\$PATH is $PATH"
                 echo "Creating virtual environment:"
                 python3.8 -m venv venv
                 chmod +x ./venv/bin/activate
                 source $HOME/venv/bin/activate
                 PATH=$HOME/venv/bin/:$PATH
                 which python
-                python -m pip install -r requirements.txt
+                $HOME/venv/bin/python -m pip install -r requirements.txt
