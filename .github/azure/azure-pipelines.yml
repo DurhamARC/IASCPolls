@@ -76,8 +76,8 @@ stages:
               SlotName: 'production'
               packageForLinux: '$(System.DefaultWorkingDirectory)/$(Build.BuildId).zip'
               RuntimeStack: '$(runtimeStack)'
-              StartupCommand: 'python manage.py runserver'
+              StartupCommand: 'python3 manage.py runserver'
               ScriptType: 'Inline Script'
               InlineScript: |
-                which python
-                python -m pip install -r requirements.txt
+                which python3
+                python3 -m pip install -r requirements.txt
