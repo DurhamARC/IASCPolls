@@ -79,16 +79,14 @@ stages:
               StartupCommand: '$(System.DefaultWorkingDirectory)/venv/bin/python manage.py runserver'
               ScriptType: 'Inline Script'
               InlineScript: |
-                echo "Working directory is $(pwd)"
-                export WORKDIR=$(pwd)
-                echo "python3.8 is $(which python3.8)"
-                echo "\$PYTHONPATH is $PYTHONPATH"
-                echo "\$PATH is $PATH"
-                echo "Creating virtual environment:"
+                echo ${System.DefaultWorkingDirectory}
+                pwd
+                ls -ls /usr/bin/python*
+                ls -ls /opt/python/latest/bin/python*
+                which python3.8
+                echo $PYTHONPATH
                 python3.8 -m venv venv
                 chmod +x ./venv/bin/activate
-                echo "Activating virtual environment:"
-                . ./venv/bin/activate
-                echo "python is $(which python)"
-                echo "Install requirements..."
+                source venv/bin/activate
+                which python
                 python -m pip install -r requirements.txt
