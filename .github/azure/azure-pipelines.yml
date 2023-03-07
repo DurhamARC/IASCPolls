@@ -79,4 +79,5 @@ stages:
               StartupCommand: 'python manage.py runserver'
               ScriptType: 'Inline Script'
               InlineScript: |
-                pip install -r requirements.txt
+                which python
+                python -m pip install -r requirements.txt
