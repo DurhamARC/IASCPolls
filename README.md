@@ -39,6 +39,30 @@ were encountered; tailored architecture is needed.
 This project is developed in [Python Django](https://www.djangoproject.com/) and 
 [React](https://reactjs.org/).
 
+### Install Dependencies
+
+Python dependencies are included in the file `requirements.txt`. This can be installed using the `pip` or `conda` dependency managers. 
+
+Pip:
+```
+pip install -r requirements.txt
+```
+
+Conda:
+```
+conda create --name IASCPolls
+conda activate IASCPolls
+conda install --file requirements.txt
+```
+
+### Run Locally
+
+The django development server can be run using the command:
+
+```
+python manage.py runserver
+```
+
 ### Linting
 
 The [Black](https://github.com/psf/black) code style is used to lint this 
@@ -57,8 +81,6 @@ If you see `command not found: pre-commit`, you need to first install the
 You can also run black manually by installing the python module and then 
 `python -m black ./src`.
 
-
-[//]: # (### Running Locally)
 
 [//]: # (### Deployment)
 
