@@ -79,7 +79,6 @@ stages:
               StartupCommand: '$(System.DefaultWorkingDirectory)/venv/bin/python manage.py runserver'
               ScriptType: 'Inline Script'
               InlineScript: |
-                echo ${System.DefaultWorkingDirectory}
                 pwd
                 ls -ls /usr/bin/python*
                 ls -ls /opt/python/latest/bin/python*
