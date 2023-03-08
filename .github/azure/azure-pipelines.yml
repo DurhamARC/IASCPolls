@@ -5,6 +5,7 @@
 
 trigger:
 - main
+- pipelines
 
 pool:
   name: Default
@@ -76,19 +77,19 @@ stages:
               SlotName: 'production'
               packageForLinux: '$(System.DefaultWorkingDirectory)/$(Build.BuildId).zip'
               RuntimeStack: '$(runtimeStack)'
-              StartupCommand: '$(System.DefaultWorkingDirectory)/venv/bin/python manage.py runserver'
+              #StartupCommand: 'pwd && ls -ls /home/site/wwwroot/venv/bin && /home/site/wwwroot/venv/bin/python3 manage.py runserver'
               ScriptType: 'Inline Script'
               InlineScript: |
-                echo "Working directory is $(pwd)"
                 export WORKDIR=$(pwd)
-                echo "python3.8 is $(which python3.8)"
+                echo "\$WORKDIR is $WORKDIR"
                 echo "\$PYTHONPATH is $PYTHONPATH"
                 echo "\$PATH is $PATH"
+                echo "python3.8 is $(which python3.8)"
                 echo "Creating virtual environment:"
-                python3.8 -m venv venv
-                chmod +x ./venv/bin/activate
+                python3.8 -m venv antenv
+                chmod +x ./antenv/bin/activate
                 echo "Activating virtual environment:"
-                . ./venv/bin/activate
+                . ./antenv/bin/activate
                 echo "python is $(which python)"
                 echo "Install requirements..."
                 python -m pip install -r requirements.txt
