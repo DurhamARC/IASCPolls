@@ -77,7 +77,7 @@ stages:
               SlotName: 'production'
               packageForLinux: '$(System.DefaultWorkingDirectory)/$(Build.BuildId).zip'
               RuntimeStack: '$(runtimeStack)'
-              #StartupCommand: 'pwd && ls -ls /home/site/wwwroot/venv/bin && /home/site/wwwroot/venv/bin/python3 manage.py runserver'
+              StartupCommand: 'gunicorn --bind=0.0.0.0:80 iasc.wsgi'
               ScriptType: 'Inline Script'
               InlineScript: |
                 export WORKDIR=$(pwd)
