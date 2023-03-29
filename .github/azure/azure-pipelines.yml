@@ -80,7 +80,9 @@ stages:
               SlotName: 'production'
               packageForLinux: '$(System.DefaultWorkingDirectory)/$(Build.BuildId).zip'
               RuntimeStack: '$(runtimeStack)'
-              StartupCommand: 'gunicorn --bind=0.0.0.0:8000 iasc.wsgi'
+              StartupCommand: >- 
+                python -m pip install -r requirements.txt && \
+                gunicorn --bind=0.0.0.0:8000 iasc.wsgi
               ScriptType: 'Inline Script'
               AppSettings: >-
                 -SCM_DO_BUILD_DURING_DEPLOYMENT "true"
@@ -100,4 +102,3 @@ stages:
                 echo "python is $(which python)"
                 echo "Install requirements..."
                 python -m pip install -r requirements.txt
-                python -m pip install django
