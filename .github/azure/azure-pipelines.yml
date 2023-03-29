@@ -88,6 +88,8 @@ stages:
                 -SCM_DO_BUILD_DURING_DEPLOYMENT "true"
                 -ENABLE_ORYX_BUILD "true"
                 -ALLOWED_HOSTS "$(allowedHosts)"
+                -SITE_URL "https://$(allowedHosts)"
+                -CSRF_TRUSTED_ORIGINS "https://$(allowedHosts)"
               InlineScript: |
                 export WORKDIR=$(pwd)
                 echo "\$WORKDIR is $WORKDIR"
