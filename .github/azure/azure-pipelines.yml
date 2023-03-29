@@ -81,7 +81,7 @@ stages:
               packageForLinux: '$(System.DefaultWorkingDirectory)/$(Build.BuildId).zip'
               RuntimeStack: '$(runtimeStack)'
               StartupCommand: >- 
-                python -m pip install -r requirements.txt && \
+                python -m pip install -r requirements.txt &&
                 gunicorn --bind=0.0.0.0:8000 iasc.wsgi
               ScriptType: 'Inline Script'
               AppSettings: >-
