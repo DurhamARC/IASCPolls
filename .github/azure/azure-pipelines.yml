@@ -15,6 +15,7 @@ pool:
 resources:
 - repo: self
 
+
 variables:
   - name: appName
     value: 'duuksawharciasc01' # Update this value.
@@ -22,6 +23,8 @@ variables:
     value: 'du-uks-awh-arc-iasc01' # Update this value.
   - name: runtimeStack
     value: 'PYTHON|3.8' # Update this value.
+  - name: allowedHosts
+    value: 'iasc.awh.durham.ac.uk'
 
 stages:
   - stage: Build
@@ -77,8 +80,9 @@ stages:
               SlotName: 'production'
               packageForLinux: '$(System.DefaultWorkingDirectory)/$(Build.BuildId).zip'
               RuntimeStack: '$(runtimeStack)'
-              StartupCommand: 'gunicorn --bind=0.0.0.0:80 iasc.wsgi'
+              StartupCommand: 'gunicorn --bind=0.0.0.0:8000 iasc.wsgi'
               ScriptType: 'Inline Script'
+              AppSettings: '-ALLOWED_HOSTS "$(allowedHosts)"'
               InlineScript: |
                 export WORKDIR=$(pwd)
                 echo "\$WORKDIR is $WORKDIR"
