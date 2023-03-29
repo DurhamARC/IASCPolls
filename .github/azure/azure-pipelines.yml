@@ -82,7 +82,10 @@ stages:
               RuntimeStack: '$(runtimeStack)'
               StartupCommand: 'gunicorn --bind=0.0.0.0:8000 iasc.wsgi'
               ScriptType: 'Inline Script'
-              AppSettings: '-ALLOWED_HOSTS "$(allowedHosts)"'
+              AppSettings: >-
+                -SCM_DO_BUILD_DURING_DEPLOYMENT "true"
+                -ENABLE_ORYX_BUILD "true"
+                -ALLOWED_HOSTS "$(allowedHosts)"
               InlineScript: |
                 export WORKDIR=$(pwd)
                 echo "\$WORKDIR is $WORKDIR"
