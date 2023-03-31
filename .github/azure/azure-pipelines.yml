@@ -95,7 +95,7 @@ stages:
               StartupCommand: >-
                 python -m pip install -r requirements.txt &&
                 python manage.py migrate &&
-                gunicorn --bind=0.0.0.0:8000 iasc.wsgi
+                gunicorn --bind=0.0.0.0:8000 --access-logfile '-' --log-level=debug iasc.wsgi
               AppSettings: >-
                 -SCM_DO_BUILD_DURING_DEPLOYMENT "true"
                 -ENABLE_ORYX_BUILD "true"
