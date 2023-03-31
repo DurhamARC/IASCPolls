@@ -131,3 +131,6 @@ dmypy.json
 # JetBrains IDE
 .idea/
 .ideavimrc
+
+# Node
+node_modules/
