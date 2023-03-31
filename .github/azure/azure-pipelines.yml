@@ -35,6 +35,22 @@ stages:
               echo  '$(System.DefaultWorkingDirectory)'
             displayName: Run script
 
+          # Install NodeJS
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '16.x'
+            displayName: 'Install Node.js'
+
+          - script: |
+              npm install
+            displayName: 'Install NPM packages'
+            workingDirectory: my-app/
+
+          - script: |
+              npm run build
+            displayName: 'Build static site with npm'
+            workingDirectory: my-app/
+
           - task: ArchiveFiles@2
             inputs:
               rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
