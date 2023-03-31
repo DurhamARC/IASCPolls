@@ -48,12 +48,12 @@ stages:
           - script: |
               npm install
             displayName: 'Install NPM packages'
-            workingDirectory: my-app/
+            workingDirectory: react-app/
 
           - script: |
               npm run webpack
             displayName: 'Build static site with npm'
-            workingDirectory: my-app/
+            workingDirectory: react-app/
 
           - task: ArchiveFiles@2
             inputs:

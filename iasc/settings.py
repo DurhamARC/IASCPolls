@@ -57,7 +57,7 @@ INSTALLED_APPS = [
 WEBPACK_LOADER = {
     "DEFAULT": {
         "BUNDLE_DIR_NAME": "frontend/",
-        "STATS_FILE": os.path.join(BASE_DIR, "my-app/webpack-stats.json"),
+        "STATS_FILE": os.path.join(BASE_DIR, "react-app/webpack-stats.json"),
     }
 }
 

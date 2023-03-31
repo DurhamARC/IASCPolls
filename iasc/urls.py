@@ -19,8 +19,8 @@ from django.views.generic import RedirectView
 urlpatterns = [
     path("", include("frontend.urls"), name="index"),
     # static files (*.css, *.js, *.jpg etc.) served on /
-    re_path(
-        r"^(?!/static/.*)(?P<path>.*\..*)$",
-        RedirectView.as_view(url="/static/%(path)s"),
-    ),
+    # re_path(
+    #     r"^(?!/static/.*)(?P<path>.*\..*)$",
+    #     RedirectView.as_view(url="/static/%(path)s"),
+    # ),
 ]
