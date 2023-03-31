@@ -1,2 +1,4 @@
-Django==4.1
+django
+django-environ
 whitenoise
+gunicorn
