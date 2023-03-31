@@ -4,9 +4,11 @@ import { useNavigate } from "react-router-dom";
 export default function PollForm() {
   const navigate = useNavigate();
   const [selectedOption, setSelectedOption] = useState("");
+  const [optionSelected, setOptionSelected] = useState(false);
 
   function handleOptionChange(event) {
     setSelectedOption(event.target.value);
+    setOptionSelected(true);
   }
 
   function handleSubmit(event) {
@@ -14,10 +16,7 @@ export default function PollForm() {
     if (selectedOption !== "") {
       navigate("/thankyou");
     } else {
-      const pollOptions = document.querySelectorAll('.poll--checkbox label ');
-      pollOptions.forEach((option) => {
-        option.parentNode.style.backgroundColor = '#FFFFFF';
-      });
+      alert("Please select an option.");
     }
   }
 
@@ -87,7 +86,7 @@ export default function PollForm() {
               <label htmlFor="strongly-disagree">Strongly Disagree</label>
             </li>
           </ul>
-          <button type="submit" className="poll--submit">
+          <button type="submit" className={"poll--submit " + (optionSelected ? "poll--submit-active" : "")}>
             Submit
           </button>
         </form>

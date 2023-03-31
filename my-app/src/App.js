@@ -27,6 +27,14 @@ function App() {
   );
 }
 
+// /login - make sure to adimn
+// /ethics
+// /poll with poll id {pollId: r00000, pollQuestion:"A question?"} 
+// GET /api/poll?pollId=r00000?uniqueId=1234567890
+// POST /api/poll?pollId=r00000?uniqueId=1234567890?answer=1
+// if unique id doesn't exist then give page that says already used/ invalid
+
+
 export default App;
 
 // Inter Link:

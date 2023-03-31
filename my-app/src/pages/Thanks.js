@@ -1,9 +1,10 @@
 import React from "react";
 import NavBar from "../components/NavBar";
+import Footer from '../components/Footer';
 
 export default function Thanks() {
   return (
-    <div>
+    <div className="thankyou--container">
       <NavBar />
       <div className="thankyou">
         <div className="thankyou--title">Thank you for your participation!</div>
@@ -14,6 +15,7 @@ export default function Thanks() {
           <h2 className="thankyou--para">Once again, thank you for your support.</h2>
         </div>
       </div>
+      <Footer />
     </div>
   )
 };
