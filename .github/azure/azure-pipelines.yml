@@ -15,19 +15,23 @@ resources:
 - repo: self
 
 variables:
+  - name: azureSubscription
+    value: 'svc-con-awh-01'
   - name: appName
-    value: 'duuksawharciasc01' # Update this value.
+    value: 'duuksawharciasc01'
   - name: webAppResourceGroupName
-    value: 'du-uks-awh-arc-iasc01' # Update this value.
+    value: 'du-uks-awh-arc-iasc01'
   - name: runtimeStack
-    value: 'PYTHON|3.8' # Update this value.
+    value: 'PYTHON|3.8'
+  - name: allowedHosts
+    value: 'iasc.awh.durham.ac.uk'
 
 stages:
   - stage: Build
     displayName: Build and zip content
     jobs:
       - job: Build
-        displayName: Build
+        displayName: Build and Zip content
         steps:
           - checkout: self
           - script: |
@@ -70,10 +74,6 @@ stages:
       - job: Release
         displayName: Release
         steps:
-          - script: |
-              echo  '$(System.DefaultWorkingDirectory)'
-            displayName: Run script
-
           - task: DownloadPipelineArtifact@2
             inputs:
               buildType: 'current'
@@ -84,7 +84,7 @@ stages:
           - task: AzureRmWebAppDeployment@4
             inputs:
               ConnectionType: 'AzureRM'
-              azureSubscription: 'svc-con-awh-01'
+              azureSubscription: '$(azureSubscription)'
               appType: 'webAppLinux'
               WebAppName: '$(appName)'
               deployToSlotOrASE: true
@@ -92,7 +92,15 @@ stages:
               SlotName: 'production'
               packageForLinux: '$(System.DefaultWorkingDirectory)/$(Build.BuildId).zip'
               RuntimeStack: '$(runtimeStack)'
-              StartupCommand: '$(System.DefaultWorkingDirectory)/venv/bin/python manage.py runserver'
+              StartupCommand: >-
+                python -m pip install -r requirements.txt &&
+                gunicorn --bind=0.0.0.0:8000 iasc.wsgi
+              AppSettings: >-
+                -SCM_DO_BUILD_DURING_DEPLOYMENT "true"
+                -ENABLE_ORYX_BUILD "true"
+                -ALLOWED_HOSTS "$(allowedHosts)"
+                -SITE_URL "https://$(allowedHosts)"
+                -CSRF_TRUSTED_ORIGINS "https://$(allowedHosts)"
               ScriptType: 'Inline Script'
               InlineScript: |
                 echo "Working directory is $(pwd)"
