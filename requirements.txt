@@ -1,4 +1,5 @@
 django
 django-environ
+django-webpack-loader
 whitenoise
 gunicorn

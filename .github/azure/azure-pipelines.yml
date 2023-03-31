@@ -51,7 +51,7 @@ stages:
             workingDirectory: my-app/
 
           - script: |
-              npm run build
+              npm run webpack
             displayName: 'Build static site with npm'
             workingDirectory: my-app/
 
@@ -94,6 +94,7 @@ stages:
               RuntimeStack: '$(runtimeStack)'
               StartupCommand: >-
                 python -m pip install -r requirements.txt &&
+                python manage.py migrate &&
                 gunicorn --bind=0.0.0.0:8000 iasc.wsgi
               AppSettings: >-
                 -SCM_DO_BUILD_DURING_DEPLOYMENT "true"

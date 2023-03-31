@@ -34,9 +34,9 @@ SECRET_KEY = "django-insecure-wg#z-k0)cxbzl1h1wmw)as82$brq5(cf1m^2d=ph7ui15n_fr+
 # False if not in os.environ because of casting above
 DEBUG = env("DEBUG")
 
-ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["localhost"])
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["localhost", "127.0.0.1"])
 CSRF_TRUSTED_ORIGINS = env.list(
-    "CSRF_TRUSTED_ORIGINS", default=["http://localhost:8000"]
+    "CSRF_TRUSTED_ORIGINS", default=["http://localhost:8000", "http://127.0.0.1:8000"]
 )
 # Site URL (or short URL) for use in messages
 SITE_URL = env.str("SITE_URL", "http://localhost:8000")
@@ -44,6 +44,8 @@ SITE_URL = env.str("SITE_URL", "http://localhost:8000")
 # Application definition
 
 INSTALLED_APPS = [
+    "frontend",
+    "webpack_loader",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -51,6 +53,13 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 ]
+
+WEBPACK_LOADER = {
+    "DEFAULT": {
+        "BUNDLE_DIR_NAME": "frontend/",
+        "STATS_FILE": os.path.join(BASE_DIR, "my-app/webpack-stats.json"),
+    }
+}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
