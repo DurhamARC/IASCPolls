@@ -109,6 +109,7 @@ stages:
                 -DB_NAME "$(DB_NAME)"
                 -DB_PASS "$(DB_PASS)"
                 -DB_USER "$(DB_USER)"
+                -DB_SSL_ENABLED "$(DB_SSL_ENABLED)"
               ScriptType: 'Inline Script'
               InlineScript: |
                 echo "Working directory is $(pwd)"
