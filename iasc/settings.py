@@ -103,8 +103,16 @@ DATABASES = {
         "PASSWORD": env.str("DB_PASS", "1234"),
         "HOST": env.str("DB_HOST", "127.0.0.1"),
         "PORT": env.str("DB_PORT", "3306"),
+        "OPTIONS": {},
     }
 }
+
+# Azure MariaDB server is configured with SSL enabled
+# Provide environment options to turn on and configure this
+if env.bool("DB_SSL_ENABLED", False):
+    DATABASES["default"]["OPTIONS"]["ssl"] = {
+        "ca": env.str("DB_SSL_CA", "/etc/ssl/certs/Baltimore_CyberTrust_Root.pem")
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
