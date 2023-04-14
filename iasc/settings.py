@@ -44,6 +44,7 @@ SITE_URL = env.str("SITE_URL", "http://localhost:8000")
 
 INSTALLED_APPS = [
     "frontend",
+    "iasc",
     "webpack_loader",
     "django.contrib.admin",
     "django.contrib.auth",
