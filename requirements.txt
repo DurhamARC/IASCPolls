@@ -1,6 +1,6 @@
 django
 django-environ
 django-webpack-loader
-mysqlclient
+mysql-connector-python
 whitenoise
 gunicorn
