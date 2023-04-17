@@ -97,7 +97,7 @@ WSGI_APPLICATION = "iasc.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "mysql.connector.django",
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
         "NAME": env.str("DB_NAME", "arc_iasc"),
         "USER": env.str("DB_USER", "arc_iasc"),
         "PASSWORD": env.str("DB_PASS", "1234"),
@@ -110,9 +110,7 @@ DATABASES = {
 # Azure MariaDB server is configured with SSL enabled
 # Provide environment options to turn on and configure this
 if env.bool("DB_SSL_ENABLED", False):
-    DATABASES["default"]["OPTIONS"]["ssl"] = {
-        "ca": env.str("DB_SSL_CA", "/etc/ssl/certs/Baltimore_CyberTrust_Root.pem")
-    }
+    DATABASES["default"]["OPTIONS"]["sslmode"] = 'required'
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
