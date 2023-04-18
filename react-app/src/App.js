@@ -1,31 +1,33 @@
 // import logo from './logo.svg';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
-import Home from './pages/Home'
-import Poll from './pages/Poll'
-import About from './pages/About'
-import Thanks from './pages/Thanks'
-import Ethics from './pages/Ethics'
-
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import Poll from './pages/Poll';
+import About from './pages/About';
+import Thanks from './pages/Thanks';
+import Ethics from './pages/Ethics';
+import Error from './pages/Error';
 
 function App() {
+
   return (
-    <body>
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route index element={<Home />} />
-          <Route path="/home" element={<Home />} />
+          <Route path="/" element={<Home />} />
           <Route path="/poll" element={<Poll />} />
           <Route path="/about" element={<About />} />
           <Route path="/thankyou" element={<Thanks />} />
           <Route path="/ethics" element={<Ethics />} />
+          <Route path="/error" element={<Error />} />
         </Routes>
       </BrowserRouter>
     </div>
-    </body>
   );
 }
+
+export default App;
+
 
 // /login - make sure to adimn
 // /ethics
@@ -34,8 +36,6 @@ function App() {
 // POST /api/poll?pollId=r00000?uniqueId=1234567890?answer=1
 // if unique id doesn't exist then give page that says already used/ invalid
 
-
-export default App;
 
 // Inter Link:
 //   <link rel="preconnect" href="https://fonts.googleapis.com">

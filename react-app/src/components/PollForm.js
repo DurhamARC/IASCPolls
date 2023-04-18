@@ -86,11 +86,11 @@ export default function PollForm() {
               <label htmlFor="strongly-disagree">Strongly Disagree</label>
             </li>
           </ul>
-          <button type="submit" className={"poll--submit " + (optionSelected ? "poll--submit-active" : "")}>
-            Submit
-          </button>
         </form>
       </div>
+      <button type="submit" className={"poll--submit " + (optionSelected ? "poll--submit-active" : "")}>
+            Submit
+          </button>
     </div>
   );
 }
