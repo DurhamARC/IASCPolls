@@ -7,6 +7,7 @@ import About from './pages/About';
 import Thanks from './pages/Thanks';
 import Ethics from './pages/Ethics';
 import Error from './pages/Error';
+import PollTemp from './pages/Poll-temp';
 
 function App() {
 
@@ -20,6 +21,7 @@ function App() {
           <Route path="/thankyou" element={<Thanks />} />
           <Route path="/ethics" element={<Ethics />} />
           <Route path="/error" element={<Error />} />
+          <Route path="/poll-temp" element={<PollTemp />} />
         </Routes>
       </BrowserRouter>
     </div>
