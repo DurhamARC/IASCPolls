@@ -169,10 +169,13 @@ p, ol, ul {
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 0;
+    width: 100vw;
   }
   
   .nav li {
     display: none;
+    padding: 0;
   }
   
   .site-title {
@@ -183,10 +186,6 @@ p, ol, ul {
   }
 }
 
-@media (max-height: 600px) {
-  .nav{display:none;
-  }
-}
 
 
 /* footer */
@@ -197,6 +196,7 @@ p, ol, ul {
   justify-content: center;
   align-items: center;
   width: 100%;
+  height: 10bh;
 }
 
 .footer ul {
@@ -437,11 +437,10 @@ p, ol, ul {
 
 
  /* POLL */ 
-
  .poll--total {
   position: relative;
   width: 100vw;
-  height: 90vh;
+  min-height: 100vh; /* Use min-height instead of height */
   backdrop-filter: blur(0px);
 }
 
@@ -471,7 +470,6 @@ p, ol, ul {
   margin-right: 1rem;
   border-radius: 5px;
   width: 100%;
-  height: 100vh;
   flex-grow: 1;
   padding: 1rem;
 }
@@ -583,23 +581,23 @@ p, ol, ul {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.poll--checkbox + label {
+  }
+  
+  .poll--checkbox + label {
   transition-duration: 0.2s;
-}
-
-.poll--checkbox + label {
+  }
+  
+  .poll--checkbox + label {
   font-size: 1.5rem;
-}
-
-.poll--checkbox:checked {
+  }
+  
+  .poll--checkbox:checked {
   content: "\2715";
   font-size: 1.5rem;
   color: #14213D;
-}
-
-.poll--checkbox:checked + label:before {
+  }
+  
+  .poll--checkbox:checked + label:before {
   position: absolute;
   top: 3px;
   left: 3px;
@@ -607,52 +605,61 @@ p, ol, ul {
   height: 10px;
   background-color: #14213D;
   border-radius: 2px;
-}
-
-.poll--checkbox:checked + label:before {
+  }
+  
+  .poll--checkbox:checked + label:before {
   display: none;
-}
-
-.poll--checkbox:checked:after {
+  }
+  
+  .poll--checkbox:checked:after {
   content: "\2715";
   font-size: 1.5rem;
   color: #14213D;
-}
-
-.poll--checkbox:not(:checked):hover {
+  }
+  
+  .poll--checkbox:not(:checked):hover {
   content: "\2715";
   font-size: 1.5rem;
   color: #5c667d;
   transition: .1s ease-in-out;
-}
-
-.poll--checkbox:not(:checked):hover::after {
+  }
+  
+  .poll--checkbox:not(:checked):hover::after {
   content: "\2715";
   font-size: 1.5rem;
   color: #5c667d;
   transition: .1s ease-in-out;
-}
-
-
-@media screen and (max-width: 450px) {
+  }
+  
+  @media screen and (max-width: 450px) {
   .poll--box {
-    width: 95%;
-    margin-bottom: 2rem;
-    margin-top: 2rem;
+  width: 95%;
+  margin-top: 1rem;
   }
   .poll {
-    padding: 0rem;
-    margin-left: 0rem;
-    margin-right: 0rem;
-    border: #D9D1D3;
+  padding: 0rem;
+  margin-left: 0rem;
+  margin-right: 0rem;
+  border: #D9D1D3;
   }
   .poll--total{
-    height: 160vh;
+  min-height: 130vh;
   }
   .background-blur{
-    height: 0%;
+  height: 0%;
   }
-
+  .poll--options {
+  font-size: 1.2rem;
+  }
+  .poll--blurb {
+  font-size: 1.2rem;
+  }
+  .poll--question {
+  font-size: 1.5rem;
+  }
+  .poll--submit {
+  font-size: 1.2rem;
+  }
   }
 
 
