@@ -110,7 +110,7 @@ DATABASES = {
 # Azure MariaDB server is configured with SSL enabled
 # Provide environment options to turn on and configure this
 if env.bool("DB_SSL_ENABLED", False):
-    DATABASES["default"]["OPTIONS"]["sslmode"] = 'require'
+    DATABASES["default"]["OPTIONS"]["sslmode"] = "require"
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
