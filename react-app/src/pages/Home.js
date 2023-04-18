@@ -37,15 +37,18 @@ function Home(){
             </div> 
             <div className="home">
                 <div>
-                    <h2> Ensuring that real scientific 
-                        consensus is communicated 
-                        with the public.</h2>
+                    <h1>
+                        Ethics and Anonymisation
+                    </h1>
+                    <h2> We are committed to guaranteeing the anonymity of all survey participants to ensure their safety in expressing their opinions.</h2>
+                    <a href="./ethics">
+                        <button className="home--button">
+                        Explore the ethics
+                        </button>
+                    </a>
                 </div>
             </div>
         </div>
-        
-
-
 
 
 

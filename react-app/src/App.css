@@ -243,10 +243,27 @@ p, ol, ul {
   margin-bottom: 2rem;
 }
 
+.home--eyecatching div {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: left;
+}
+
+
 .home--eyecatching h2{
   font-size: 1.5rem;
   font-weight: 500;
-  color: #ebe3d7;
+  color: #f5f2ee;
+  padding-right: 4rem;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+.home--eyecatching h1{
+  color: #f5f2ee;
+  font-size: 6rem;
+  padding-right: 4rem;
 }
 
 
@@ -308,6 +325,10 @@ p, ol, ul {
   opacity: 70%;
   transition: 0.2s ease-in-out;
 }
+
+
+
+
 
 
 .about--container{  display: flex;
