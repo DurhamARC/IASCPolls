@@ -88,7 +88,7 @@ export default function PollForm() {
           </ul>
         </form>
       </div>
-      <button type="submit" className={"poll--submit " + (optionSelected ? "poll--submit-active" : "")}>
+      <button type="submit" className={"button poll--submit " + (optionSelected ? "button poll--submit-active" : "")}>
             Submit
           </button>
     </div>
