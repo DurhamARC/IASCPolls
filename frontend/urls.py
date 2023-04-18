@@ -7,9 +7,9 @@ urlpatterns = [
     path("about", views.index),
     path("ethics", views.index),
     path("login", views.index),
+    path("poll-temp", views.index),
     path("admin/", admin.site.urls),
     path("accounts/", include("django.contrib.auth.urls")),
     path("accounts/", include("django.contrib.auth.urls")),
     path('poll', views.poll_view, name='poll'),
-    path("poll-temp", views.index),
 ]
