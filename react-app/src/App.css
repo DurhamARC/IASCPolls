@@ -237,9 +237,10 @@ p, ol, ul {
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
-  height: 70vh;
+  height: 80vh;
   width: 100vw;
   background-color: #DFAB77;
+  margin-bottom: 2rem;
 }
 
 .home--eyecatching h2{
@@ -263,7 +264,7 @@ p, ol, ul {
 .home--about{
   background-color: #D9D1D3;
   padding: 4rem;
-  height: 70vh;
+  height: 80vh;
   width: 100vw;
   display: flex;
   flex-direction: column;
