@@ -205,7 +205,7 @@ p, ol, ul {
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
-  height: 80vh;
+  height: 100vh;
   width: 100vw;}
 
 .home {
@@ -232,32 +232,81 @@ p, ol, ul {
 }
 
 
+.home--eyecatching{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  height: 70vh;
+  width: 100vw;
+  background-color: #DFAB77;
+}
 
-@media (max-width: 500px) {
-  .home--title{
-    font-size: 3rem;
-    font-weight: 600;
-  }
-  
-  .home {
-    margin-bottom: 0rem;
-    margin-top: 4rem;
-    margin-bottom: 2rem;
-  }
-
-  .home--container{  display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    height: 80vh;
-  }
-
-  .home--mobile ul {
-    flex-direction: column;
-  }
+.home--eyecatching h2{
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #ebe3d7;
 }
 
 
+.home-pic-2{
+  width: 100%;
+  height: 100%;
+  background-position: center;
+  background-image: url('./front-page-comp.png');
+  background-repeat: no-repeat;
+  background-size: 30rem;
+}
+
+
+
+.home--about{
+  background-color: #D9D1D3;
+  padding: 4rem;
+  height: 70vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.home--about h2, .home--about h3{
+  padding: 2rem;
+}
+
+.home--about h3{
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.home--about h2{
+  letter-spacing: -0.05em;
+}
+
+
+.home--button {
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  border: none;
+  width: 20rem;
+  text-align: center;
+  border: 2px solid #df8c59;
+  font-weight: 500;
+  margin-top: 1rem;
+  font-size: 1.5rem;
+  background-color:#e89866;
+  color: #FFFFFF;
+  margin-bottom: 4rem;
+}
+
+
+.home--button:hover {
+  opacity: 70%;
+  transition: 0.2s ease-in-out;
+}
 
 
 .about--container{  display: flex;
@@ -266,8 +315,18 @@ p, ol, ul {
   align-items: center;}
 
 .about {
-  margin-bottom: 5rem;
+
   width: 80%;
+}
+
+.home-pic-3{
+  width: 50%;
+  height: 50%;
+  background-position: center;
+  background-image: url('./front-page-scientists.png');
+  background-repeat: no-repeat;
+  background-size: 15rem;
+  filter: opacity(0.8);
 }
 
 @media (max-width: 500px) {

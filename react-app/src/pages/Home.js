@@ -15,6 +15,40 @@ function Home(){
             <div className="home-pic">
             </div> 
         </div>
+
+
+        <div className="home--about">
+            <div className="home-pic-3">
+            </div> 
+            <h2> What is IASC? </h2>
+            <h3>
+            The Institute for Ascertaining Scientific Consensus (IASC) is a global network that can email over 100,000 scientists with a specific statement of interest, such as "Covid is caused by a virus", and request an agree/disagree response within two minutes. The responses will be instantly and anonymously recorded in a database, allowing for the calculation of the strength of consensus. This network will be a valuable resource for policymakers and the general public in discerning the level of agreement among scientists on various issues and combating misinformation. It will also provide insight into cross-cultural differences in scientific opinions.
+            </h3>
+            <a href="./about">
+                <button className="home--button">
+                Find out more
+                </button>
+            </a>
+        </div> 
+        
+
+        <div className="home--eyecatching">
+            <div className="home-pic-2">
+            </div> 
+            <div className="home">
+                <div>
+                    <h2> Ensuring that real scientific 
+                        consensus is communicated 
+                        with the public.</h2>
+                </div>
+            </div>
+        </div>
+        
+
+
+
+
+
         <Footer />
         </div>
 
