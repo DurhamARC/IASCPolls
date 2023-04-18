@@ -198,6 +198,14 @@ p, ol, ul {
 }
 
 
+@media (max-width: 500px) {
+  .footer p{
+    padding-left: 1rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+}
+
 
 /* HOME */
 
@@ -571,16 +579,16 @@ p, ol, ul {
 
 
 @media screen and (max-width: 450px) {
-  .poll {
-    width: 90%;
-    height: 80%;}
-    
   .poll--box {
-    height: 40rem;
+    width: 95%;
+    margin-bottom: 2rem;
+    margin-top: 2rem;
   }
-  .poll--total {
-    position: absolute;
-    top: 5em;
+  .poll {
+    padding: 0rem;
+    margin-left: 0rem;
+    margin-right: 0rem;
+    border: #D9D1D3;
   }
 
   }
