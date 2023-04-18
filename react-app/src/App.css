@@ -270,7 +270,7 @@ p, ol, ul {
 
 
 .home--eyecatching{
-  height: 80vh;
+  height: 120vh;
   background-color: #DFAB77;
   margin-bottom: 2rem;
 }
@@ -305,7 +305,7 @@ p, ol, ul {
   background-position: center;
   background-image: url('./front-page-comp.png');
   background-repeat: no-repeat;
-  background-size: 30rem;
+  background-size: 20rem;
 }
 
 
