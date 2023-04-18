@@ -17,7 +17,7 @@ function Home(){
         </div>
 
 
-        <div className="home--about">
+        <div className="home--container home--about">
             <div className="home-pic-3">
             </div> 
             <h2> What is IASC? </h2>
@@ -32,7 +32,7 @@ function Home(){
         </div> 
         
 
-        <div className="home--eyecatching">
+        <div className="home--container home--eyecatching">
             <div className="home-pic-2">
             </div> 
             <div className="home">

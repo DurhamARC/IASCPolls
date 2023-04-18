@@ -241,12 +241,7 @@ p, ol, ul {
 
 
 .home--eyecatching{
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  align-items: center;
   height: 80vh;
-  width: 100vw;
   background-color: #DFAB77;
   margin-bottom: 2rem;
 }
@@ -290,11 +285,7 @@ p, ol, ul {
   background-color: #D9D1D3;
   padding: 4rem;
   height: 80vh;
-  width: 100vw;
-  display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
 }
 
 .home--about h2, .home--about h3{
@@ -335,6 +326,73 @@ p, ol, ul {
 }
 
 
+.home-pic-3{
+  width: 50%;
+  height: 50%;
+  background-position: center;
+  background-image: url('./front-page-scientists.png');
+  background-repeat: no-repeat;
+  background-size: 15rem;
+  filter: opacity(0.8);
+}
+
+
+
+@media (max-width: 500px) {
+  .home--container{
+    flex-direction: column;
+    justify-content: flex-start;
+    height: 90vh;
+    padding: 0rem;
+
+  }
+  .home--title {
+    padding: 1rem;
+  }
+
+  .home-pic{
+    width: 100%;
+    height: 50%;
+  }
+
+  .home--eyecatching{
+    height: auto;
+    padding: 2rem;
+    height: 100vh;
+  }
+  .home--eyecatching h1{
+    height: auto;
+    font-size: 2.5rem;
+    padding: 0rem;
+    padding-top: 2rem;
+  }
+
+  .home--eyecatching h2{
+    padding-left: 0rem;
+  }
+
+  .home-pic-2{
+    background-size: 10rem;
+  }
+
+  .home-pic-3{
+    background-size: 10rem;
+  }
+
+  .home--about{
+    height: auto;
+    flex-direction: column;
+    padding: 1rem;
+  }
+  .home-pic{
+    background-size: 20rem;
+  }
+
+  .home--about h3{
+    font-size: 1.5rem;
+  }
+}
+
 
 
 
@@ -349,15 +407,7 @@ p, ol, ul {
   width: 80%;
 }
 
-.home-pic-3{
-  width: 50%;
-  height: 50%;
-  background-position: center;
-  background-image: url('./front-page-scientists.png');
-  background-repeat: no-repeat;
-  background-size: 15rem;
-  filter: opacity(0.8);
-}
+
 
 @media (max-width: 500px) {
   .about--container{  display: flex;
