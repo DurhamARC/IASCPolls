@@ -102,13 +102,14 @@ DATABASES = {
         "USER": env.str("DB_USER", "arc_iasc"),
         "PASSWORD": env.str("DB_PASS", "1234"),
         "HOST": env.str("DB_HOST", "127.0.0.1"),
-        "PORT": env.str("DB_PORT", "3306"),
+        "PORT": env.str("DB_PORT", "5432"),
         "OPTIONS": {},
     }
 }
 
 # Azure MariaDB server is configured with SSL enabled
 # Provide environment options to turn on and configure this
+
 if env.bool("DB_SSL_ENABLED", False):
     DATABASES["default"]["OPTIONS"]["sslmode"] = "require"
 
