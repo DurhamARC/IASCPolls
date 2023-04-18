@@ -23,7 +23,6 @@ environ.Env.read_env()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
@@ -45,6 +44,7 @@ SITE_URL = env.str("SITE_URL", "http://localhost:8000")
 
 INSTALLED_APPS = [
     "frontend",
+    "iasc",
     "webpack_loader",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -63,6 +63,7 @@ WEBPACK_LOADER = {
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -91,17 +92,26 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "iasc.wsgi.application"
 
-
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": env.str("DB_NAME", "arc_iasc"),
+        "USER": env.str("DB_USER", "arc_iasc"),
+        "PASSWORD": env.str("DB_PASS", "1234"),
+        "HOST": env.str("DB_HOST", "127.0.0.1"),
+        "PORT": env.str("DB_PORT", "5432"),
+        "OPTIONS": {},
     }
 }
 
+# Azure MariaDB server is configured with SSL enabled
+# Provide environment options to turn on and configure this
+
+if env.bool("DB_SSL_ENABLED", False):
+    DATABASES["default"]["OPTIONS"]["sslmode"] = "require"
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -121,7 +131,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
@@ -130,14 +139,12 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = "/static/"
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
-]
+STATIC_ROOT = os.path.join(BASE_DIR, "frontend/static")
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
