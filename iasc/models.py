@@ -80,6 +80,8 @@ class Survey(models.Model):
     expiry = models.DateTimeField(
         null=False, default=datetime.datetime(2000, 1, 1, 0, 0)
     )
+    participants = models.IntegerField(null=False)
+    voted = models.IntegerField(null=False, default=0)
 
     def get_survey_kind(self) -> SurveyKind:
         # Get value from choices enum

@@ -27,7 +27,7 @@ The icon ⚠️ indicates that the routes in the given group require login to re
 `POST /login`  
 Get a session ID that an administrator will send as a cookie in subsequent requests to access the back-end. The `POST` body should contain the following:
 
-```python
+```javascript
 username="admin"
 password="mypassword"
 ```
@@ -41,9 +41,9 @@ On a successful login, the server will return `302 Found` and redirect to the ad
 `POST /api/vote`  
 Post a participant's vote to the server. Takes a JSON object:
 
-```python
-vote = {
-  "survey_id": 1234,
+```javascript
+{
+  "survey_id": "1234",
   "unique_id": "VGVzdGluZzEyMzQK",
   "vote": 0
 }
@@ -68,10 +68,10 @@ TBC: We could alternately return `302 Found` on success if a redirect is require
 `POST /api/survey/create`  
 Create a survey in the database.
 
-```python
-create_survey = {
+```javascript
+{
     "question": "Science has proven beyond all reasonable doubt that...",
-    "active": True | False,
+    "active": "True",
     "kind": 'LI',
     "expiry": "2023-05-01T12:34:56.789Z"
 }
@@ -83,7 +83,7 @@ NB: Such a date can be generated in Javascript using `(new Date()).toISOString()
 
 The following methods takes the following optional arguments as `GET` parameters:
 
-```python
+```javascript
 page=1  *optional
 size=10 *optional
 ```
@@ -95,19 +95,23 @@ Optional paging arguments are `page` and `size`. Defaults to not paging, if thes
 
 Returns a filtered list of active surveys. Keys are `survey_id`, values are data. Also accessible on `GET /api/survey/list_active` with same parameters for convenience.
 
-```python
-active_surveys = {
+```javascript
+{
     "1": {
         "question": "Science has proven beyond all reasonable doubt that...",
         "kind": "LI",
-        "active": True,
-        "expiry": "2023-05-01T12:34:56.789Z"
+        "active": "True",
+        "expiry": "2023-05-01T12:34:56.789Z",
+        "participants": 10000,
+        "voted": 6700
     },
     "2": {
         "question": "Another example question, asking about something nice?",
         "kind": "LI",
-        "active": True,
-        "expiry": "2023-05-01T12:34:56.789Z"
+        "active": "True",
+        "expiry": "2023-05-01T12:34:56.789Z",
+        "participants": 10000,
+        "voted": 6700
     }
 }
 ```
@@ -125,8 +129,8 @@ Do not filter surveys, just retrieve everything.
 `POST /api/survey/deactivate`  
 The `survey_id` field accepts an integer for survey_id, OR a list.
 
-```python
-close_survey = {
+```javascript
+{
     "survey_id": [1, 2, 4]
 }
 ```
@@ -138,7 +142,7 @@ NB: 🛑 This is a destructive action! All data for the survey in the `active_li
 `GET /api/survey/links`
 
 Retrieve unique voting links. Takes the following arguments as GET parameters:
-```python
+```javascript
 survey_id=1234
 institution="Durham%20University"
 ```
@@ -158,8 +162,8 @@ Takes a CSV or Excel spreadsheet which will be processed to populate the databas
 `GET /api/participants/status`  
 Processing a CSV or Excel sheet runs as a background job. The status of that job (i.e. % to completion) must be requested on this route. 
 
-```python
-status={
+```javascript
+{
   "status": "PROCESSING" | "ACCEPTED" | "FAILURE" | "SUCCESS"
 }
 ```
@@ -185,7 +189,7 @@ Non-compliant sheets will be rejected with `Failure` status and an error message
 `GET /api/participants`   
 Return a page of participants. Arguments are provided for pagination and filtering by institution or discipline:
 
-```python
+```javascript
 page=1
 size=10
 institution=["Durham University"]
@@ -196,8 +200,8 @@ discipline=["Biologist","Chemist"]
 `GET /api/participants/disciplines`  
 Returns a sorted list of *all* disciplines as a JSON object. Can be used to populate e.g. a filter dropdown.
 
-```python
-disciplines = {
+```javascript
+{
     "disciplines": [
         "Biologist",
         "Chemist",
@@ -211,8 +215,8 @@ disciplines = {
 `GET /api/participants/institution`
 Return a sorted list of institutions as JSON. Can be used to populate e.g. a filter dropdown.
 
-```python
-institutions = {
+```javascript
+{
     "institutions": [
         "Durham University",
         "Unseen University"
@@ -229,7 +233,7 @@ Retrieve survey results incrementally and following the close of a survey
 `GET /api/results`
 
 Provide the following parameters for survey ID, and OPTIONAL pagination:
-```python
+```javascript
 survey_id=1234
 page=1  *optional
 size=10 *optional
@@ -240,14 +244,14 @@ size=10 *optional
 # Pages
 The following routes return pages in the React web application:
 
-| Page                | Description                                                    |
-|---------------------|----------------------------------------------------------------|
-| /                   | Home page                                                      |
-| /about              | About the project                                              |
-| /ethics             | Ethics statement                                               |
-| /login              | Log into the administrative interface                          |
-| /poll               | Respond to a survey                                            |
-| /admin/             | Administrative homepage, shows available options after login   |
-| /admin/survey       | Perform survey administration actions: create, list, close     |
-| /admin/participants | Administer participants: upload CSV or Excel spreadsheet       |
-| /admin/results      | Retrieve survey results, while survey running or after closure |
+| Page                    | Description                                                    |
+|-------------------------|----------------------------------------------------------------|
+| /                       | Home page                                                      |
+| /about                  | About the project                                              |
+| /ethics                 | Ethics statement                                               |
+| /login                  | Log into the administrative interface                          |
+| /poll                   | Respond to a survey                                            |
+| /dashboard/             | Administrative dashboard, shows available options after login  |
+| /dashboard/survey       | Perform survey administration actions: create, list, close     |
+| /dashboard/participants | Administer participants: upload CSV or Excel spreadsheet       |
+| /dashboard/results      | Retrieve survey results, while survey running or after closure |
