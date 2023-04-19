@@ -42,4 +42,25 @@ conda activate IASCPolls
 conda install -c conda-forge --file requirements.txt
 ```
 
+### Build React App
 
+Use npm to build the React app statically with webpack, into the correct directory:
+
+```shell
+cd react-app
+npm run webpack
+```
+
+### Run the server:
+
+Two ways of running the server exist: with the Django dev server, and with gunicorn:
+
+```shell
+DEBUG=True python manage.py runserver
+# OR:
+gunicorn \
+  --bind=0.0.0.0:5000 \
+  --access-logfile - \
+  --log-level=debug \
+  iasc.wsgi
+```
