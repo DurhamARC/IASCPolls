@@ -10,6 +10,5 @@ urlpatterns = [
     path("poll-temp", views.index),
     path("admin/", admin.site.urls),
     path("accounts/", include("django.contrib.auth.urls")),
-    path("accounts/", include("django.contrib.auth.urls")),
-    path('poll', views.index),
+    path("poll", views.index),
 ]
