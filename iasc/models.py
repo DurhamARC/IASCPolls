@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy
+import datetime
 
 
 class Institution(models.Model):
@@ -76,6 +77,9 @@ class Survey(models.Model):
     kind = models.CharField(
         max_length=2, choices=SurveyKind.choices, default=SurveyKind.LIKERT
     )
+    expiry = models.DateTimeField(
+        null=False, default=datetime.datetime(2000, 1, 1, 0, 0)
+    )
 
     def get_survey_kind(self) -> SurveyKind:
         # Get value from choices enum
@@ -106,13 +110,15 @@ class ActiveLinks(models.Model):
 
 class Results(models.Model):
     """
-    Results table is populated when a vote is
+    Results table is populated when a vote is cast.
+
     Demographic information is copied from the Participant table, but is not linked directly to the participant.
     References to identities must be broken when an entry in the Active Links table is deleted. We therefore copy
     the demographic data into the Results table at the time when that link is broken (i.e., when a vote is cast).
     """
 
     unique_link = models.ForeignKey("ActiveLinks", null=True, on_delete=models.SET_NULL)
+    survey_id = models.ForeignKey("Survey", null=True, on_delete=models.SET_NULL)
     vote = models.JSONField(null=False, blank=False)
     institution = models.ForeignKey("Institution", null=True, on_delete=models.SET_NULL)
     discipline = models.ForeignKey("Discipline", null=True, on_delete=models.SET_NULL)
