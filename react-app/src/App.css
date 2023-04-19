@@ -83,7 +83,7 @@ p, ol, ul {
 }
 
 
-@media (max-width: 1000px) {
+@media (max-width: 450px) {
   h1 {
     font-size: 2.5rem;
   }
@@ -230,7 +230,7 @@ p, ol, ul {
 }
 
 
-@media (max-width: 1000px) {
+@media (max-width: 450px) {
   .footer p{
     padding-left: 1rem;
     padding-top: 1rem;
@@ -350,7 +350,7 @@ p, ol, ul {
 
 
 
-@media (max-width: 1000px) {
+@media (max-width: 450px) {
   .home--container{
     flex-direction: column;
     justify-content: flex-start;
@@ -421,7 +421,7 @@ p, ol, ul {
 
 
 
-@media (max-width: 1000px) {
+@media (max-width: 450px) {
   .about--container{  display: flex;
     flex-direction: column;
     justify-content: center;
@@ -635,6 +635,7 @@ p, ol, ul {
   .poll--box {
   width: 95%;
   margin-top: 1rem;
+  height: none;
   }
   .poll {
   padding: 0rem;
@@ -643,8 +644,9 @@ p, ol, ul {
   border: #D9D1D3;
   }
   .poll--total{
-  min-height: 130vh;
+    height: auto;
   }
+
   .background-blur{
   height: 0%;
   }
@@ -742,7 +744,7 @@ p, ol, ul {
   width: 80%;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 450px) {
   .ethics--container{  display: flex;
     flex-direction: column;
     justify-content: center;
