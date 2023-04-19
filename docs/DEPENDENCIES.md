@@ -42,6 +42,12 @@ conda activate IASCPolls
 conda install -c conda-forge --file requirements.txt
 ```
 
+If you receive the error `django.core.exceptions.ImproperlyConfigured: Error loading psycopg2 module: No module named 'psycopg2'` when running on an M1 Mac, then run the following to correct it:
+
+```shell
+pip install psycopg2-binary
+```
+
 ### Build React App
 
 Use npm to build the React app statically with webpack, into the correct directory:
