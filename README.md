@@ -39,23 +39,9 @@ were encountered; tailored architecture is needed.
 This project is developed in [Python Django](https://www.djangoproject.com/) and 
 [React](https://reactjs.org/).
 
-### Install Dependencies
-
-Python dependencies are included in the file `requirements.txt`. This can be installed using the `pip` or `conda` dependency managers. 
-
-Pip:
-```
-pip install -r requirements.txt
-```
-
-Conda:
-```
-conda create --name IASCPolls
-conda activate IASCPolls
-conda install --file requirements.txt
-```
-
 ### Run Locally
+
+There are some prerequisites to be aware of: please see [Dependencies](docs/DEPENDENCIES.md) for more information.
 
 The django development server can be run using the command:
 

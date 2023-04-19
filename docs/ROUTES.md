@@ -25,15 +25,14 @@ The icon ⚠️ indicates that the routes in the given group require login to re
 ---
 # Login
 `POST /login`  
-Get a session ID that an administrator will send as a cookie in subsequent requests to access the back-end.
+Get a session ID that an administrator will send as a cookie in subsequent requests to access the back-end. The `POST` body should contain the following:
 
 ```python
-login = {
-    "username": "admin",
-    "password": "mypassword"
-}
+username="admin"
+password="mypassword"
 ```
 
+On a successful login, the server will return `302 Found` and redirect to the admin page.
 
 ---
 # Voting
