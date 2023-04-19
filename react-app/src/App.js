@@ -9,6 +9,7 @@ import Ethics from './pages/Ethics';
 import Error from './pages/Error';
 import PollTemp from './pages/Poll-temp';
 import Login from './pages/Login';
+import Dashboard from './pages/Dashboard';
 
 function App() {
 
@@ -24,6 +25,7 @@ function App() {
           <Route path="/error" element={<Error />} />
           <Route path="/poll-temp" element={<PollTemp />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </BrowserRouter>
     </div>

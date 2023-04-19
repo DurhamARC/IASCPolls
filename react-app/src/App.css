@@ -55,6 +55,7 @@ p, ol, ul {
 .container{  display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-between;
   height: 100vh;
   width: 100vw;
 }
@@ -74,7 +75,6 @@ p, ol, ul {
   font-size: 1.5rem;
   background-color:#e89866;
   color: #FFFFFF;
-  margin-bottom: 4rem;
 }
 
 .button:hover {
@@ -270,9 +270,12 @@ p, ol, ul {
 
 
 .home--eyecatching{
-  height: 120vh;
+  flex-direction: row;
   background-color: #DFAB77;
   margin-bottom: 2rem;
+  justify-content: flex-start;
+  height: fit-content;
+  padding:2rem;
 }
 
 .home--eyecatching div {
@@ -284,7 +287,7 @@ p, ol, ul {
 
 
 .home--eyecatching h2{
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: 500;
   color: #f5f2ee;
   padding-right: 4rem;
@@ -300,8 +303,8 @@ p, ol, ul {
 
 
 .home-pic-2{
-  width: 100%;
-  height: 100%;
+  width: 50%;
+  height: 30rem;
   background-position: center;
   background-image: url('./front-page-comp.png');
   background-repeat: no-repeat;
@@ -313,7 +316,7 @@ p, ol, ul {
 .home--about{
   background-color: #D9D1D3;
   padding: 4rem;
-  height: 80vh;
+  height: auto;
   flex-direction: column;
 }
 
@@ -322,8 +325,9 @@ p, ol, ul {
 }
 
 .home--about h3{
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: 500;
+  width: 50%;
 }
 
 .home--about h2{
@@ -335,12 +339,13 @@ p, ol, ul {
   border: 2px solid #df8c59;
   background-color:#e89866;
   color: #FFFFFF;
+  font-size: 1.2rem;
 }
 
 
 .home-pic-3{
   width: 50%;
-  height: 50%;
+  height: 15rem;
   background-position: center;
   background-image: url('./front-page-scientists.png');
   background-repeat: no-repeat;
@@ -408,7 +413,9 @@ p, ol, ul {
 
   .home--button {
     font-size: 1rem;
+    padding-bottom: 1rem;
   }
+
 }
 
 
@@ -785,3 +792,63 @@ p, ol, ul {
   align-items: center;
 }
 
+.login--content {
+  width: 50%;
+  height: auto;
+  padding: 4rem;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  border: 2px solid rgba(51, 51, 51, 1);
+  background-color: #eeecec;
+}
+
+.login--form{
+  height:40%;
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  margin: 1rem;
+}
+
+.login--form div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.login--form label {
+  font-size: 1rem;
+  font-weight: 500;
+  padding: .5rem;
+}
+
+.login--form input {
+  font-size: 1rem;
+  width: 25vw;
+  height: 3vh;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  text-align: left;
+}
+
+.login--form button {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.login--pic {
+  background-size: 10rem;
+  height: 10rem;
+  margin-top: 1rem;
+}
+
+.login--form h1 {
+  font-size: 1rem;
+}
