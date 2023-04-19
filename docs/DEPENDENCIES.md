@@ -1,11 +1,11 @@
 # Project Dependencies
 
-To get started, you will need a Python environment which can run Django, and Postgres.
+To get started, you will need a Python environment which can run Django, and Postgres, the database server.
 
 ## Postgres
 The recommended way to run Postgres is in a Docker container:
 
-```python
+```shell
 docker run --name postgres \
     -e POSTGRES_PASSWORD=root \
     -e POSTGRES_USER=arc_iasc \
@@ -13,6 +13,18 @@ docker run --name postgres \
     -p"5432:5432/tcp" \
     -d postgres:15.2-alpine
 ```
+
+You can check it is running using the command line client. Install it using:
+
+OSX: `brew install libpq`  
+Linux: `sudo apt-get install postgresql-client` (Debian/Ubuntu)
+
+Then, try connecting to the running database using:
+
+```shell
+psql -h localhost --user arc_iasc -W
+```
+
 
 ### Install Dependencies
 
@@ -27,5 +39,7 @@ Conda:
 ```
 conda create --name IASCPolls
 conda activate IASCPolls
-conda install --file requirements.txt
+conda install -c conda-forge --file requirements.txt
 ```
+
+
