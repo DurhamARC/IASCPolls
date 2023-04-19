@@ -45,9 +45,12 @@ Post a participant's vote to the server. Takes a JSON object:
 ```python
 vote = {
   "survey_id": 1234,
-  "unique_id": "VGVzdGluZzEyMzQK"
+  "unique_id": "VGVzdGluZzEyMzQK",
+  "vote": 0
 }
 ```
+
+For a likert-type poll, the vote can be 0-5, corresponding to "Strongly Disagree" through "Strongly Agree".
 
 A vote can fail if either the survey has expired, or the unique ID is missing from the database (e.g. already voted). This route will as such return a response code to indicate the success/failure of the voting operation. 
 
@@ -154,7 +157,14 @@ Takes a CSV or Excel spreadsheet which will be processed to populate the databas
 
 ### Status
 `GET /api/participants/status`  
-Processing a CSV or Excel sheet runs as a background job. The status of that job (i.e. % to completion) must be requested on this route. The following conditions can be returned:
+Processing a CSV or Excel sheet runs as a background job. The status of that job (i.e. % to completion) must be requested on this route. 
+
+```python
+status={
+  "status": "PROCESSING" | "ACCEPTED" | "FAILURE" | "SUCCESS"
+}
+```
+The following conditions can be returned:
 
 | Status       | Reason                                                                            |
 |--------------|-----------------------------------------------------------------------------------|
