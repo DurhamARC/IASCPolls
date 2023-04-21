@@ -196,6 +196,15 @@ institution=["Durham University"]
 discipline=["Biologist","Chemist"]
 ```
 
+### Download CSV
+`GET /api/participants/csv`  
+Download a list of participants. Arguments are provide to allow filtering by institution and discipline:
+
+```javascript
+institution=["Durham University"]
+discipline=["Health Scientist"]
+```
+
 ### List Disciplines
 `GET /api/participants/disciplines`  
 Returns a sorted list of *all* disciplines as a JSON object. Can be used to populate e.g. a filter dropdown.
