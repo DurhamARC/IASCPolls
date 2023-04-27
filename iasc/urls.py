@@ -16,10 +16,19 @@ Including another URLconf
 from django.urls import path, include
 from django.views.generic import RedirectView
 from django.conf import settings
+from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from rest_framework import routers
+from iasc import views
+
+
+router = routers.DefaultRouter()
+router.register(r"participants", views.ParticipantViewSet, "participants")
 
 urlpatterns = [
     path("", include("frontend.urls"), name="index"),
+    path("api/", include(router.urls)),
+    path("admin/", admin.site.urls),
     path("favicon.ico", RedirectView.as_view(url=settings.STATIC_URL + "favicon.ico")),
 ]
 
