@@ -79,6 +79,12 @@ DJANGO_SUPERUSER_PASSWORD=password python manage.py createsuperuser --username r
 python manage.py migrate
 ```
 
+#### Load Fixtures
+(OPTIONALLY) Load the fixtures for example data:
+```shell
+python manage.py loaddata iasc/fixtures/*.json
+```
+
 ### Run the server:
 
 Two ways of running the server exist: with the Django dev server, and with gunicorn:
