@@ -10,5 +10,4 @@ urlpatterns = [
     path("poll-temp", views.index),
     path("poll", views.index),
     path("dashboard", views.index),
-    path("admin/", admin.site.urls),
 ]
