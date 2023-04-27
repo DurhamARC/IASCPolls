@@ -23,7 +23,16 @@ from iasc import views
 
 
 router = routers.DefaultRouter()
-router.register(r"participants", views.ParticipantViewSet, "participants")
+api_views = [
+    (r"participants", views.ParticipantViewSet, "participants"),
+    (r"survey", views.SurveyViewSet, "survey"),
+    (r"links", views.ActiveLinkViewSet, "links"),
+    (r"result", views.ResultViewSet, "result"),
+]
+
+for v in api_views:
+    router.register(*v)
+
 
 urlpatterns = [
     path("", include("frontend.urls"), name="index"),

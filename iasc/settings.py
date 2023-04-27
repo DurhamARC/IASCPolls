@@ -33,10 +33,13 @@ SECRET_KEY = "django-insecure-wg#z-k0)cxbzl1h1wmw)as82$brq5(cf1m^2d=ph7ui15n_fr+
 # False if not in os.environ because of casting above
 DEBUG = env("DEBUG")
 
+# Override these in production:
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["localhost", "127.0.0.1"])
 CSRF_TRUSTED_ORIGINS = env.list(
     "CSRF_TRUSTED_ORIGINS", default=["http://localhost:8000", "http://127.0.0.1:8000"]
 )
+CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS", default=CSRF_TRUSTED_ORIGINS)
+
 # Site URL (or short URL) for use in messages
 SITE_URL = env.str("SITE_URL", "http://localhost:8000")
 
@@ -46,6 +49,8 @@ INSTALLED_APPS = [
     "frontend",
     "iasc",
     "webpack_loader",
+    "rest_framework",
+    "corsheaders",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -65,6 +70,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -130,6 +136,19 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+
+# https://django-rest-framework-json-api.readthedocs.io/en/stable/usage.html
+REST_FRAMEWORK = {
+    "PAGE_SIZE": 10,
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    "DEFAULT_PERMISSION_CLASSES": [
+        # Production: "rest_framework.permissions.IsAuthenticated"
+        "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"
+    ],
+    "DEFAULT_RENDERER_CLASSES": ("rest_framework.renderers.JSONRenderer",),
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
