@@ -57,6 +57,28 @@ cd react-app
 npm run webpack
 ```
 
+### Set up the Database using Django
+
+You will need to use Django to set up the database correctly. `cd` back to the root of the project and:
+
+#### Create a superuser
+You can create a database superuser using the command:
+
+```shell
+python manage.py createsuperuser
+```
+
+OR, you can also do this in one step with the following command:
+```shell
+DJANGO_SUPERUSER_PASSWORD=password python manage.py createsuperuser --username root --email webmaster@localhost --noinput
+```
+
+#### Run the database migrations
+
+```shell
+python manage.py migrate
+```
+
 ### Run the server:
 
 Two ways of running the server exist: with the Django dev server, and with gunicorn:
