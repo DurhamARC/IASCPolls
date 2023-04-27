@@ -1007,3 +1007,131 @@ p, ol, ul {
   background-repeat: no-repeat;
   background-size: 3rem;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.create{
+  border: 2px solid rgb(221, 210, 210);
+  height: 70vh;
+  width: 50vw;
+}
+
+.create form {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  padding: 2rem;
+}
+
+.create label {
+  margin-top: 1rem;
+  font-size: 1.5rem;
+}
+
+.create  input[type="text"],
+.create  input[type="date"],
+.create  input[type="file"] {
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  width: 100%;
+}
+
+.create input[type="file"] {
+  height: 3rem;
+  overflow: hidden;
+}
+
+.create button[type="submit"] {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 0.25rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.create button[type="submit"]:hover {
+  background-color: #0062cc;
+}
+
+.create input[type="file"]:focus {
+  outline: none;
+  border: 1px solid #007bff;
+}
+
+.create input[type="file"]::before {
+  content: 'Choose a file or drag it here';
+  display: block;
+  margin-top: -2rem;
+  margin-bottom: 1rem;
+  color: #aaa;
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+.create input[type="file"]:hover::before {
+  color: #007bff;
+}
+
+.progress-bar {
+  height: 5px;
+  background-color: #ccc;
+  margin-top: 10px;
+}
+
+.progress-bar::before {
+  content: '';
+  display: block;
+  height: 100%;
+  background-color: green;
+}
+
+.tick {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 5px solid green;
+  position: relative;
+}
+
+.tick::before {
+  content: '';
+  position: absolute;
+  left: 27%;
+  top: 43%;
+  height: 1.2rem;
+  width: .4rem;
+  border-width: 0 4px 4px 0;
+  border-style: solid;
+  border-color: white;
+  transform-origin: bottom left;
+  animation: tick 0.5s ease forwards;
+}
+
+@keyframes tick {
+  0% {
+    transform: translate(-50%, -50%) rotate(-45deg) scaleX(0);
+  }
+  70% {
+    transform: translate(-50%, -50%) rotate(-45deg) scaleX(1.2);
+  }
+  100% {
+    transform: rotate(50deg) translate(-50%, -50%) scaleX(1);
+  }
+}
