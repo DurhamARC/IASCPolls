@@ -1,5 +1,6 @@
 from django.urls import path, include
 from . import views
+from django.contrib import admin
 
 urlpatterns = [
     path("", views.index),
@@ -9,5 +10,5 @@ urlpatterns = [
     path("poll-temp", views.index),
     path("poll", views.index),
     path("dashboard", views.index),
-    path("accounts/", include("django.contrib.auth.urls")),
+    path("admin/", admin.site.urls),
 ]
