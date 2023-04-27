@@ -136,3 +136,5 @@ dmypy.json
 node_modules/
 /frontend/static/frontend/
 webpack-stats.json
+# OSX
+.DS_Store
