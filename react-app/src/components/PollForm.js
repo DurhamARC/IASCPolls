@@ -14,6 +14,7 @@ export default function PollForm() {
   function handleSubmit(event) {
     event.preventDefault();
     if (selectedOption !== "") {
+      
       navigate("/thankyou");
     } else {
       alert("Please select an option.");
@@ -94,3 +95,8 @@ export default function PollForm() {
     </div>
   );
 }
+
+
+// need a way to keep a const that refers to number in option
+// on submit request will take uniqueid qid and option number
+

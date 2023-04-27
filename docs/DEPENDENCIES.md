@@ -65,7 +65,7 @@ Two ways of running the server exist: with the Django dev server, and with gunic
 DEBUG=True python manage.py runserver
 # OR:
 gunicorn \
-  --bind=0.0.0.0:5000 \
+  --bind=0.0.0.0:5100 \
   --access-logfile - \
   --log-level=debug \
   iasc.wsgi

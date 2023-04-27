@@ -9,6 +9,8 @@ export default function Dashboard() {
             <div className="question">{key}</div>
             <div>{value[0]}</div>
             <div className="dashboard--download--img"></div>
+            <div className="dashboard--download--img"></div>
+            <div className="dashboard--download--img"></div>
           </div>
         ));
 
@@ -43,6 +45,8 @@ export default function Dashboard() {
                         <div className="question">Statement</div>
                         <div>Completed</div>
                         <div>Download</div>
+                        <div>Active</div>
+                        <div>Close</div>
                     </div>
                     {jsonElements}
                 </div>
