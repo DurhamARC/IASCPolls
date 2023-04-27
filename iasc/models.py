@@ -17,6 +17,9 @@ class Institution(models.Model):
     # Could use `django-countries` https://github.com/SmileyChris/django-countries/ to normalise this further
     country = models.CharField(max_length=255, help_text="Host Country")
 
+    def __str__(self):
+        return f"{self.name} ({self.id})"
+
 
 class Discipline(models.Model):
     """
@@ -29,6 +32,9 @@ class Discipline(models.Model):
         db_index=True,
         help_text="Scientific Discipline, e.g. 'Physicist'",
     )
+
+    def __str__(self):
+        return f"{self.name} ({self.id})"
 
 
 class Participant(models.Model):
@@ -57,6 +63,12 @@ class Participant(models.Model):
     #               ? f"{self.first_name} {self.last_name}"
     #               : f"{self.first_name} {self.last_name}"
 
+    class Meta:
+        ordering = ["-email"]
+
+    def __str__(self):
+        return f"{self.title} {self.name} <{self.email}>"
+
 
 class Survey(models.Model):
     """
@@ -80,17 +92,20 @@ class Survey(models.Model):
     expiry = models.DateTimeField(
         null=False, default=datetime.datetime(2000, 1, 1, 0, 0)
     )
-    participants = models.IntegerField(null=False)
+    participants = models.IntegerField(null=False, default=0)
     voted = models.IntegerField(null=False, default=0)
 
     def get_survey_kind(self) -> SurveyKind:
         # Get value from choices enum
         return self.SurveyKind[self.kind]
 
+    def __str__(self):
+        return f"{self.id}: {self.question[:75] if len(self.question) > 75 else self.question}"
 
-class ActiveLinks(models.Model):
+
+class ActiveLink(models.Model):
     """
-    ActiveLinks temporarily links participant responses to identities in the database, while the survey is running
+    ActiveLink temporarily links participant responses to identities in the database, while the survey is running
     """
 
     # Composite key
@@ -109,8 +124,11 @@ class ActiveLinks(models.Model):
             )
         ]
 
+    def __str__(self):
+        return f"{self.unique_link}"
 
-class Results(models.Model):
+
+class Result(models.Model):
     """
     Results table is populated when a vote is cast.
 
@@ -119,8 +137,13 @@ class Results(models.Model):
     the demographic data into the Results table at the time when that link is broken (i.e., when a vote is cast).
     """
 
-    unique_link = models.ForeignKey("ActiveLinks", null=True, on_delete=models.SET_NULL)
+    unique_link = models.ForeignKey("ActiveLink", null=True, on_delete=models.SET_NULL)
     survey_id = models.ForeignKey("Survey", null=True, on_delete=models.SET_NULL)
     vote = models.JSONField(null=False, blank=False)
     institution = models.ForeignKey("Institution", null=True, on_delete=models.SET_NULL)
     discipline = models.ForeignKey("Discipline", null=True, on_delete=models.SET_NULL)
+
+    def save(self, *args, **kwargs):
+        if not self.unique_link:
+            self.unique_link = None
+        super(Result, self).save(*args, **kwargs)

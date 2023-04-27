@@ -1,0 +1,11 @@
+[
+{
+    "model": "iasc.activelink",
+    "pk": 1,
+    "fields": {
+        "participant_id": 1,
+        "survey_id": 1,
+        "unique_link": "12345"
+    }
+}
+]

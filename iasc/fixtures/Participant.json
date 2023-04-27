@@ -1,0 +1,35 @@
+[
+{
+    "model": "iasc.participant",
+    "pk": 1,
+    "fields": {
+        "name": "Samantha Finnigan",
+        "title": "Dr",
+        "email": "samantha.finnigan@durham.ac.uk",
+        "institution": 1,
+        "discipline": 1
+    }
+},
+{
+    "model": "iasc.participant",
+    "pk": 2,
+    "fields": {
+        "name": "Peter Vickers",
+        "title": "Prof",
+        "email": "peter.vickers@durham.ac.uk",
+        "institution": 1,
+        "discipline": 2
+    }
+},
+{
+    "model": "iasc.participant",
+    "pk": 3,
+    "fields": {
+        "name": "Joanne Sheppard",
+        "title": null,
+        "email": "joanne.r.shepherd@dur.ac.uk",
+        "institution": 1,
+        "discipline": 1
+    }
+}
+]

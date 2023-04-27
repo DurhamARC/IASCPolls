@@ -1,0 +1,10 @@
+[
+{
+    "model": "iasc.institution",
+    "pk": 1,
+    "fields": {
+        "name": "Durham University",
+        "country": "United Kingdom"
+    }
+}
+]

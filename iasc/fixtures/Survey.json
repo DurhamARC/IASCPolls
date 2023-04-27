@@ -1,0 +1,14 @@
+[
+{
+    "model": "iasc.survey",
+    "pk": 1,
+    "fields": {
+        "question": "Is Covid-19 caused by a virus?",
+        "active": true,
+        "kind": "LI",
+        "expiry": "2023-05-27T11:29:48Z",
+        "participants": 1,
+        "voted": 0
+    }
+}
+]

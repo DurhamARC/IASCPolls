@@ -1,0 +1,16 @@
+[
+{
+    "model": "iasc.discipline",
+    "pk": 1,
+    "fields": {
+        "name": "Research Software Engineer"
+    }
+},
+{
+    "model": "iasc.discipline",
+    "pk": 2,
+    "fields": {
+        "name": "Philosopher"
+    }
+}
+]

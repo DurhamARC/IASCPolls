@@ -1,0 +1,13 @@
+[
+{
+    "model": "iasc.result",
+    "pk": 1,
+    "fields": {
+        "unique_link": 1,
+        "survey_id": 1,
+        "vote": 1,
+        "institution": 1,
+        "discipline": 1
+    }
+}
+]
