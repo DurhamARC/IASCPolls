@@ -40,6 +40,7 @@ urlpatterns = [
     path("logout", views.UserLogoutView.as_view(), name="logout"),
     path("user", views.UserView.as_view(), name="user"),
     path("api/", include(router.urls)),
+    path("api/login", views.UserLoginView.as_view(), name="api/login"),
     path("admin/", admin.site.urls),
     path("favicon.ico", RedirectView.as_view(url=settings.STATIC_URL + "favicon.ico")),
 ]
