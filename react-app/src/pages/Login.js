@@ -1,30 +1,50 @@
-import React, { useState } from "react";
+import React, {useContext, useState} from "react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 
+import { AuthContext } from "../components/AuthContext";
+import { client } from "../App";
+
+
 export default function Login() {
-  const [email, setEmail] = useState("");
+  // not using isAuth or currentUser, indexes 0,2 in below import
+  const {isAuth, setAuth, currentUser, setCurrentUser} = useContext(AuthContext);
+
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  
+
   const handleChange = (event) => {
-    if (event.target.name === "email") {
-      setEmail(event.target.value);
+    if (event.target.name === "username") {
+      setUsername(event.target.value);
     } else if (event.target.name === "password") {
       setPassword(event.target.value);
     }
   };
 
-  const history = useNavigate();
+  const navigate = useNavigate();
 
-  const handleSubmit = (event) => {
+  const submitLogin = (event) => {
     event.preventDefault();
-    // Validate email and password
-    if (email === "example@email.com" && password === "password123") {
-      // Redirect to dashboard page
-      history.push("/dashboard");
+    // Validate username and password
+    if (username.length && password.length) {
+
+      client.post(
+          "/api/login",
+          {
+            username: username,
+            password: password
+          }
+      ).then((res) => {
+        setCurrentUser(username);
+        setAuth(true);
+
+        // Redirect to dashboard page
+        navigate("/dashboard");
+      });
+
     } else {
-      alert("Invalid email or password");
+      alert("Invalid username or password");
     }
   };
 
@@ -37,14 +57,14 @@ export default function Login() {
           <div>
             <h1>Login</h1>
           </div>
-            <form onSubmit={handleSubmit} className="login--form">
+            <form onSubmit={e => submitLogin(e)} className="login--form">
               <div>
-                <label htmlFor="email">Email</label>
+                <label htmlFor="username">Username</label>
                 <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={email}
+                  type="username"
+                  id="username"
+                  name="username"
+                  value={username}
                   onChange={handleChange}
                 />
               </div>
@@ -58,7 +78,7 @@ export default function Login() {
                   onChange={handleChange}
                 />
               </div>
-              <button type="submit" className="button ">Sign In</button>
+              <button type="submit" className="button">Sign In</button>
             </form>
           </div>
 

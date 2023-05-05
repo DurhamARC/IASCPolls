@@ -12,10 +12,20 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Create from './pages/Create';
 
+import axios from "axios";
+import {AuthProvider} from "./components/AuthContext";
+
+axios.defaults.xsrfCookieName = 'csrftoken';
+axios.defaults.xsrfHeaderName = 'X-CSRFToken'
+axios.defaults.withCredentials = true;
+
+export const client = axios.create({});
+
 function App() {
 
   return (
     <div className="App">
+      <AuthProvider>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -30,6 +40,7 @@ function App() {
           <Route path="/create" element={<Create />} />
         </Routes>
       </BrowserRouter>
+      </AuthProvider>
     </div>
   );
 }
