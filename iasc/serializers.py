@@ -7,7 +7,7 @@ from iasc import models
 
 
 class UserLoginSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField()
+    username = serializers.CharField()
     password = serializers.CharField()
 
     def check_user(self, data):
@@ -19,6 +19,10 @@ class UserLoginSerializer(serializers.ModelSerializer):
             # Backend did not authenticate the credentials
             raise ValidationError("Username or password incorrect")
         return user
+
+    class Meta:
+        model = UserModel
+        fields = ("username", "password")
 
 
 disciplineSlug = serializers.SlugRelatedField(

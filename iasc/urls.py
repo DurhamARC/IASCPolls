@@ -37,6 +37,7 @@ urlpatterns = [
     path("", include("frontend.urls"), name="index"),
     path("login", views.UserLoginView.as_view(), name="login"),
     path("api/", include(router.urls)),
+    path("api/login", views.UserLoginView.as_view(), name="api/login"),
     path("admin/", admin.site.urls),
     path("favicon.ico", RedirectView.as_view(url=settings.STATIC_URL + "favicon.ico")),
 ]
