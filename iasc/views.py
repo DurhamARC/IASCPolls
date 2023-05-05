@@ -1,8 +1,38 @@
-from rest_framework import viewsets
+from django.contrib.auth import login
+from rest_framework import viewsets, permissions, status
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.renderers import TemplateHTMLRenderer, JSONRenderer
+from rest_framework.views import APIView
+from rest_framework.response import Response
+
 from iasc import models, serializers
+from frontend import views as frontend_views
+
+
+class UserLoginView(APIView):
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = (SessionAuthentication,)
+    renderer_classes = (TemplateHTMLRenderer, JSONRenderer)
+
+    def get(self, request):
+        """Render the front-end React site on GET"""
+        return frontend_views.index(request)
+
+    # POST request for user login
+    def post(self, request):
+        # Check data is not blank
+        assert len(request.data["username"])
+        assert len(request.data["password"])
+
+        serializer = serializers.UserLoginSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            user = serializer.check_user(request.data)
+            login(self, user)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class ParticipantViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializers.ParticipantSerializer
     queryset = (
         models.Participant.objects.prefetch_related("institution", "discipline")
@@ -12,11 +42,13 @@ class ParticipantViewSet(viewsets.ModelViewSet):
 
 
 class SurveyViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     serializer_class = serializers.SurveySerializer
     queryset = models.Survey.objects.all().order_by("-expiry")
 
 
 class ActiveLinkViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializers.ActiveLinkSerializer
     queryset = (
         models.ActiveLink.objects.prefetch_related("participant_id")
@@ -26,6 +58,7 @@ class ActiveLinkViewSet(viewsets.ModelViewSet):
 
 
 class ResultViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializers.ResultSerializer
     queryset = (
         models.Result.objects.prefetch_related("institution", "discipline")

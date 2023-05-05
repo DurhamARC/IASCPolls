@@ -1,5 +1,25 @@
+from django.contrib.auth import authenticate
+
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
+
 from iasc import models
+
+
+class UserLoginSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField()
+    password = serializers.CharField()
+
+    def check_user(self, data):
+        """
+        Validate and log in user
+        """
+        user = authenticate(username=data["username"], password=data["password"])
+        if not user:
+            # Backend did not authenticate the credentials
+            raise ValidationError("Username or password incorrect")
+        return user
+
 
 disciplineSlug = serializers.SlugRelatedField(
     many=False, read_only=True, slug_field="name"
