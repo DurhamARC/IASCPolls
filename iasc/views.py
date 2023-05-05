@@ -1,4 +1,4 @@
-from django.contrib.auth import login
+from django.contrib.auth import login, logout, get_user_model
 from rest_framework import viewsets, permissions, status
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.renderers import TemplateHTMLRenderer, JSONRenderer
@@ -31,8 +31,31 @@ class UserLoginView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+class UserLogoutView(APIView):
+    def post(self, request):
+        logout(request)
+        return Response(status=status.HTTP_200_OK)
+
+
+class UserView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    authentication_classes = (SessionAuthentication,)
+
+    def get(self, request):
+        serializer = serializers.UserSerializer(request.user)
+        return Response({"user": serializer.data}, status=status.HTTP_200_OK)
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    UserModel = get_user_model()
+    permission_classes = (permissions.IsAuthenticated,)
+    authentication_classes = (SessionAuthentication,)
+    serializer_class = serializers.UserSerializer
+    queryset = UserModel.objects.all()
+
+
 class ParticipantViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = (permissions.IsAuthenticated,)
     serializer_class = serializers.ParticipantSerializer
     queryset = (
         models.Participant.objects.prefetch_related("institution", "discipline")
@@ -42,13 +65,13 @@ class ParticipantViewSet(viewsets.ModelViewSet):
 
 
 class SurveyViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = serializers.SurveySerializer
     queryset = models.Survey.objects.all().order_by("-expiry")
 
 
 class ActiveLinkViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = (permissions.IsAuthenticated,)
     serializer_class = serializers.ActiveLinkSerializer
     queryset = (
         models.ActiveLink.objects.prefetch_related("participant_id")
@@ -58,7 +81,7 @@ class ActiveLinkViewSet(viewsets.ModelViewSet):
 
 
 class ResultViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = (permissions.IsAuthenticated,)
     serializer_class = serializers.ResultSerializer
     queryset = (
         models.Result.objects.prefetch_related("institution", "discipline")
