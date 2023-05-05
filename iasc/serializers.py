@@ -1,9 +1,10 @@
-from django.contrib.auth import authenticate
-
+from django.contrib.auth import authenticate, get_user_model
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from iasc import models
+
+UserModel = get_user_model()
 
 
 class UserLoginSerializer(serializers.ModelSerializer):
@@ -19,6 +20,16 @@ class UserLoginSerializer(serializers.ModelSerializer):
             # Backend did not authenticate the credentials
             raise ValidationError("Username or password incorrect")
         return user
+
+
+class UserSerializer(serializers.ModelSerializer):
+    """
+    Serialize a user
+    """
+
+    class Meta:
+        model = UserModel
+        fields = ("username",)
 
 
 disciplineSlug = serializers.SlugRelatedField(

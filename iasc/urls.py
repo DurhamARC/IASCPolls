@@ -28,6 +28,7 @@ api_views = [
     (r"survey", views.SurveyViewSet, "survey"),
     (r"links", views.ActiveLinkViewSet, "links"),
     (r"result", views.ResultViewSet, "result"),
+    (r"user", views.UserViewSet, "user"),
 ]
 
 for v in api_views:
@@ -36,6 +37,8 @@ for v in api_views:
 urlpatterns = [
     path("", include("frontend.urls"), name="index"),
     path("login", views.UserLoginView.as_view(), name="login"),
+    path("logout", views.UserLogoutView.as_view(), name="logout"),
+    path("user", views.UserView.as_view(), name="user"),
     path("api/", include(router.urls)),
     path("admin/", admin.site.urls),
     path("favicon.ico", RedirectView.as_view(url=settings.STATIC_URL + "favicon.ico")),
