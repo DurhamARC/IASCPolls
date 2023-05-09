@@ -1,8 +1,9 @@
 name: Unit Tests
 on:
   workflow_run:
-    workflows: ["Lint"]
-    types: [completed]
+    workflows: ["lint"]
+    types:
+      - completed
 
 jobs:
   test:
