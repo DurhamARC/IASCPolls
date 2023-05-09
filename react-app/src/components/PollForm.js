@@ -6,6 +6,14 @@ export default function PollForm() {
   const [selectedOption, setSelectedOption] = useState("");
   const [optionSelected, setOptionSelected] = useState(false);
 
+  const options = [
+    { value: "1", label: "Strongly Agree" },
+    { value: "2", label: "Weakly Agree" },
+    { value: "3", label: "Neutral" },
+    { value: "4", label: "Weakly Disagree" },
+    { value: "5", label: "Strongly Disagree" },
+  ];
+
   function handleOptionChange(event) {
     setSelectedOption(event.target.value);
     setOptionSelected(true);
@@ -14,7 +22,7 @@ export default function PollForm() {
   function handleSubmit(event) {
     event.preventDefault();
     if (selectedOption !== "") {
-      
+      // TODO: submit request with uniqueid, qid, and option number
       navigate("/thankyou");
     } else {
       alert("Please select an option.");
@@ -26,77 +34,26 @@ export default function PollForm() {
       <div className="poll--options-wrapper">
         <form onSubmit={handleSubmit}>
           <ul className="poll--options">
-            <li>
-              <input
-                type="radio"
-                className="poll--checkbox"
-                id="strongly-agree"
-                name="poll-option"
-                value="strongly-agree"
-                checked={selectedOption === "strongly-agree"}
-                onChange={handleOptionChange}
-              />
-              <label htmlFor="strongly-agree">Strongly Agree</label>
-            </li>
-            <li>
-              <input
-                type="radio"
-                className="poll--checkbox"
-                id="weakly-agree"
-                name="poll-option"
-                value="weakly-agree"
-                checked={selectedOption === "weakly-agree"}
-                onChange={handleOptionChange}
-              />
-              <label htmlFor="weakly-agree">Weakly Agree</label>
-            </li>
-            <li>
-              <input
-                type="radio"
-                className="poll--checkbox"
-                id="neutral"
-                name="poll-option"
-                value="neutral"
-                checked={selectedOption === "neutral"}
-                onChange={handleOptionChange}
-              />
-              <label htmlFor="neutral">Neutral</label>
-            </li>
-            <li>
-              <input
-                type="radio"
-                className="poll--checkbox"
-                id="weakly-disagree"
-                name="poll-option"
-                value="weakly-disagree"
-                checked={selectedOption === "weakly-disagree"}
-                onChange={handleOptionChange}
-              />
-              <label htmlFor="weakly-disagree">Weakly Disagree</label>
-            </li>
-            <li>
-              <input
-                type="radio"
-                className="poll--checkbox"
-                id="strongly-disagree"
-                name="poll-option"
-                value="strongly-disagree"
-                checked={selectedOption === "strongly-disagree"}
-                onChange={handleOptionChange}
-              />
-              <label htmlFor="strongly-disagree">Strongly Disagree</label>
-            </li>
+            {options.map((option) => (
+              <li key={option.value}>
+                <input
+                  type="radio"
+                  className="poll--checkbox"
+                  id={`option-${option.value}`}
+                  name="poll-option"
+                  value={option.value}
+                  checked={selectedOption === option.value}
+                  onChange={handleOptionChange}
+                />
+                <label htmlFor={`option-${option.value}`}>{option.label}</label>
+              </li>
+            ))}
           </ul>
-        </form>
-      </div>
-      <button type="submit" className={"button poll--submit " + (optionSelected ? "button poll--submit-active" : "")}>
+          <button type="submit" className={"button poll--submit " + (optionSelected ? "button poll--submit-active" : "")}>
             Submit
           </button>
+        </form>
+      </div>
     </div>
   );
 }
-
-
-// need a way to keep a const that refers to number in option
-// on submit request will take uniqueid qid and option number
-
