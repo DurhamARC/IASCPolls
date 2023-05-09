@@ -123,6 +123,19 @@ class ActiveLink(models.Model):
                 name="unique_migration_host_combination",
             )
         ]
+        indexes = [models.Index(fields=["unique_link"])]
+
+    def vote(self, vote: models.JSONField):
+        participant = Participant.objects.get(id=self.participant_id.id)
+        result = Result.objects.create(
+            unique_link=self,
+            survey_id=self.survey_id,
+            vote=vote,
+            institution=participant.institution,
+            discipline=participant.discipline,
+        )
+        self.delete()
+        return result
 
     def __str__(self):
         return f"{self.unique_link}"
