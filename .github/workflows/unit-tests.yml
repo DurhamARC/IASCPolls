@@ -1,0 +1,31 @@
+name: Unit Tests
+on: [push, pull_request]
+
+jobs:
+  test:
+    name: Set up and test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -l {0}
+
+    services:
+      postgres:
+        image: postgres:15.2-alpine
+        env:
+          POSTGRES_USER: arc_iasc
+          POSTGRES_PASSWORD: arc_iasc
+          POSTGRES_DB: arc_iasc
+        ports:
+          - 5432:5432
+        # The Postgres container does not provide a healthcheck
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Run Django tests
+        env:
+          ALLOWED_HOSTS=localhost,127.0.0.1
+        run: python manage.py test
+        working-directory: manyfews
