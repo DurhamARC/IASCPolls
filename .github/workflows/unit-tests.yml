@@ -43,7 +43,7 @@ jobs:
           environment-file: conf/iasc.base.yml
           python-version: 3.9
           channels: conda-forge,auto,defaults
-          channel-priority: flexible
+          channel-priority: true
           auto-activate-base: false
           use-mamba: true
           # IMPORTANT! This needs to be set for caching to work properly:
