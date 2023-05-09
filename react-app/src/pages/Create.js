@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import NavBar from '../components/NavBar';
 import Footer from '../components/Footer';
+import StatementForm from '../components/CreateForm';
+import Progress from '../components/CreateProgress';
+import Completed from '../components/CreateCompleted';
 
 const Create = () => {
-  const [statement, setStatement] = useState('');
-  const [endDate, setEndDate] = useState('');
   const [file, setFile] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [completed, setCompleted] = useState(false);
@@ -17,8 +18,8 @@ const Create = () => {
         const newProgress = prevProgress + 1;
         return newProgress > 100 ? 100 : newProgress;
       });
-    }, 30);
-    
+    }, 10);
+
     try {
       // simulate sending emails for 3 seconds
       await new Promise((resolve) => setTimeout(resolve, 3000));
@@ -51,54 +52,34 @@ const Create = () => {
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
-    const formData = { statement, endDate }; // extract the fields you want to submit
-    handleSubmit(formData); // pass the extracted data to the handleSubmit function
+    const formData = { ...event.target.elements };
+    handleSubmit(formData);
+  };
+
+  const handleReset = () => {
+    setCompleted(false);
+    setProgress(0);
+    setFile(null);
   };
 
   return (
     <div className="container">
       <NavBar />
       <div className="create">
-        {submitting ? (
-          <div className="progress-ring">Sending Emails...</div>
-        ) : completed ? (
-          <div className="tick"></div>
+        {submitting && <Progress value={progress} />}
+        {completed ? (
+          <Completed
+            statement={file && file.name}
+            endDate={file && file.lastModifiedDate.toDateString()}
+            onReset={handleReset}
+          />
         ) : (
-          <form onSubmit={handleFormSubmit}>
-            <h1>Create</h1>
-            <label htmlFor="statement">Statement:</label>
-            <input
-              id="statement"
-              type="text"
-              value={statement}
-              onChange={(event) => setStatement(event.target.value)}
-            />
-
-            <label htmlFor="endDate">End Date:</label>
-            <input
-              id="endDate"
-              type="date"
-              value={endDate}
-              onChange={(event) => setEndDate(event.target.value)}
-            />
-            
-            <button type="submit">Submit</button>
-          </form>
-        )}
-
-        {progress > 0 && progress < 100 && (
-          <div className="progress-bar" style={{ width: `${progress}%` }} />
-        )}
-
-        {completed && (
-          <div className="next-step">
-            <h1>Completed!</h1>
-            <p>Confirmation of Survey</p>
-            <p> Statement: {statement} </p>
-            <p> End Date: {endDate} </p>
-            <p> File: {file && file.name} </p>
-            <button onClick={() => setCompleted(false)}>Reset</button>
-          </div>
+          <StatementForm
+            onFormSubmit={handleFormSubmit}
+            onFileUpload={handleFileUpload}
+            onDragOver={handleDragOver}
+            onDrop={handleDrop}
+          />
         )}
       </div>
       <Footer />
