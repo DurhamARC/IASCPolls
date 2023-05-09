@@ -1,5 +1,8 @@
 name: Unit Tests
-on: [push, pull_request]
+on:
+  workflow_run:
+    workflows: ["Lint"]
+    types: [completed]
 
 jobs:
   test:
@@ -38,6 +41,8 @@ jobs:
           activate-environment: anaconda-client-env
           environment-file: conf/iasc.base.yml
           python-version: 3.9
+          channels: conda-forge,auto,defaults
+          channel-priority: flexible
           auto-activate-base: false
           use-mamba: true
           # IMPORTANT! This needs to be set for caching to work properly:
