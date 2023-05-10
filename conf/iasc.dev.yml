@@ -1,0 +1,8 @@
+name: IASCPolls
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - black
+  - pre-commit
+prefix: /home/sam/miniconda3/envs/IASCPolls
