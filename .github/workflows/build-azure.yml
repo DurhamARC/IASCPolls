@@ -11,7 +11,13 @@ jobs:
   build:
     name: Call Azure Pipeline
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    if: |
+      github.event.workflow_run.conclusion == 'success' &&
+      contains('
+        refs/heads/main
+        refs/heads/release
+      ', github.ref)
 
     steps:
       - name: Azure Pipelines Action
