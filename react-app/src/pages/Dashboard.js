@@ -1,56 +1,51 @@
-import React from "react";
+import React from 'react';
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import questionData from '../databases/questions_overview.json';
+import Table from '../components/DashboardTable';
 
 export default function Dashboard() {
-        const jsonElements = Object.entries(questionData).map(([key, value]) => (
-          <div key={key} className="dashboard--question--entry">
-            <div className="question">{key}</div>
-            <div>{value[0]}</div>
-            <div className="dashboard--download--img"></div>
-            <div className="dashboard--download--img"></div>
-            <div className="dashboard--download--img"></div>
-          </div>
-        ));
+  const tableData = Object.entries(questionData).map(([key, value]) => ({
+    statement: key,
+    completed: value[0],
+    active: value[2] === "True",
+  }));
 
   return (
     <div className="container">
       <NavBar />
       <div className="dashboard">
         <div className="dashboard--overview">
-            <div className="dashboard--overview--create">
-                <a>
-                    <button className="button dashboard--button">
-                        <div className="dashboard--img"></div>
-                        Create
-                        </button>
-                </a>
-            </div>
-            <div className="dashboard--overview--content">
+          <div className="dashboard--overview--create">
+            <a>
+              <button className="button dashboard--button">
                 <div>
-                    <h2>Total Responses</h2>
-                    <h3>100,000</h3>
+                  <span class="material-symbols-outlined">
+                    edit_square
+                  </span>
                 </div>
                 <div>
-                    <h2>Live Questions</h2>
-                    <h3>3/52</h3>
+                  Create
                 </div>
+              </button>
+            </a>
+          </div>
+          <div className="dashboard--overview--content">
+            <div>
+              <h2>All</h2>
             </div>
+            <div>
+              <h2>Active</h2>
+            </div>
+            <div>
+              <h2>Inactive</h2>
+            </div>
+          </div>
         </div>
         <div className="dashboard--projects">
-            <div className="dashboard--overview--hello"> <h2>Hello USER!</h2> </div>
-                <div className="dashboard--overview--questions"> <div>
-                    <div className="dashboard--question--entry">
-                        <div className="question">Statement</div>
-                        <div>Completed</div>
-                        <div>Download</div>
-                        <div>Active</div>
-                        <div>Close</div>
-                    </div>
-                    {jsonElements}
-                </div>
-            </div>
+          <div className="dashboard--overview--questions">
+            <Table data={tableData} />
+          </div>
         </div>
       </div>
       <Footer />
