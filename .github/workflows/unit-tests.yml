@@ -29,13 +29,17 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
+      - run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+        name: Get current date for caching Conda envs
+        id: date
+
       - uses: actions/checkout@v2
 
       - uses: actions/cache@v3
         name: Cache Miniconda environment
         with:
           path: /usr/share/miniconda3/envs/anaconda-client-env
-          key: conda-${{ runner.os }}--${{ runner.arch }}--${{ steps.get-date.outputs.today }}-${{ hashFiles('conf/iasc.base.yml') }}-${{ env.CACHE_NUMBER }}
+          key: conda-${{ runner.os }}-${{ runner.arch }}-${{ steps.date.outputs.date }}-${{ hashFiles('conf/iasc.base.yml') }}-${{ env.CACHE_NUMBER }}
         env:
           # Increase this to manually invalidate the cache
           CACHE_NUMBER: 0 +
