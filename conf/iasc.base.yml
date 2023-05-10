@@ -1,6 +1,7 @@
 name: IASCPolls
 channels:
   - defaults
+  - conda-forge
 dependencies:
   - django==4.1
   - gunicorn
