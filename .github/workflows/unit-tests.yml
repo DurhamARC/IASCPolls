@@ -48,4 +48,4 @@ jobs:
         env:
           ALLOWED_HOSTS: localhost,127.0.0.1
         run: python manage.py test
-        working-directory: manyfews
+
