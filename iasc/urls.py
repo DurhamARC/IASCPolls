@@ -14,8 +14,6 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path, include
-from django.views.generic import RedirectView
-from django.conf import settings
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from rest_framework import routers
@@ -42,7 +40,6 @@ urlpatterns = [
     path("api/", include(router.urls)),
     path("api/login", views.UserLoginView.as_view(), name="api/login"),
     path("admin/", admin.site.urls),
-    path("favicon.ico", RedirectView.as_view(url=settings.STATIC_URL + "favicon.ico")),
 ]
 
 urlpatterns += staticfiles_urlpatterns()
