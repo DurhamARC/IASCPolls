@@ -5,6 +5,8 @@
 trigger:
 - none
 
+appendCommitMessageToRunName: true
+
 pool:
   name: Default
   demands:
