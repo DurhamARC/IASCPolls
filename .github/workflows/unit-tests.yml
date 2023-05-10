@@ -9,6 +9,7 @@ jobs:
   test:
     name: Set up and test
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     defaults:
       run:
