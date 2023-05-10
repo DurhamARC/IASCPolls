@@ -20,7 +20,7 @@ jobs:
         image: postgres:15.2-alpine
         env:
           POSTGRES_USER: arc_iasc
-          POSTGRES_PASSWORD: arc_iasc
+          POSTGRES_PASSWORD: ${{ secrets.DB_PASS }}
           POSTGRES_DB: arc_iasc
         ports:
           - 5432:5432
@@ -59,5 +59,6 @@ jobs:
       - name: Run Django tests
         env:
           ALLOWED_HOSTS: localhost,127.0.0.1
+          DB_PASS: ${{ secrets.DB_PASS }}
         run: python manage.py test
 
