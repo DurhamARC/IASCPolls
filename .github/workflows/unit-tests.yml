@@ -10,6 +10,11 @@ jobs:
     name: Set up and test
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        # Shell needs to use login mode to activate the Conda environment
+        shell: bash -l {0}
+
     services:
       postgres:
         image: postgres:15.2-alpine
@@ -36,6 +41,7 @@ jobs:
         id: cache
 
       - uses: conda-incubator/setup-miniconda@v2
+        name: Set Up Miniconda
         with:
           activate-environment: anaconda-client-env
           environment-file: conf/iasc.base.yml
@@ -43,6 +49,12 @@ jobs:
           channels: conda-forge
           # IMPORTANT! This needs to be set for caching to work properly:
           use-only-tar-bz2: true
+          auto-activate-base: false
+
+      - name: Test Conda environment is active
+        run: |
+          conda info
+          conda list
 
       - name: Run Django tests
         env:
