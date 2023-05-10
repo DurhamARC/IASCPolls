@@ -18,4 +18,4 @@ jobs:
             azure-pipeline-name: DurhamARC.IASCPolls
             azure-devops-project-url: ${{ secrets.AZURE_DEVOPS_URL }}
             azure-devops-token: ${{ secrets.AZURE_DEVOPS_TOKEN }}
-            azure-pipeline-variables: {"appendCommitMessageToRunName": "true"}
+            azure-pipeline-variables: '{"name":"GitHub Action", "appendCommitMessageToRunName": "true"}'
