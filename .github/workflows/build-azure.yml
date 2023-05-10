@@ -2,10 +2,10 @@ name: Release to Azure
 
 # Run this workflow after Unit Tests succeed
 on:
-workflow_run:
-  workflows: ["Unit Tests"]
-  types:
-    - completed
+  workflow_run:
+    workflows: ["Unit Tests"]
+    types:
+      - completed
 
 jobs:
   build:
