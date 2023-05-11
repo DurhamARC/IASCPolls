@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
@@ -6,13 +6,12 @@ import Footer from "../components/Footer";
 import { AuthContext } from "../components/AuthContext";
 import { client } from "../App";
 
-
 export default function Login() {
-  // not using isAuth or currentUser, indexes 0,2 in below import
-  const {isAuth, setAuth, currentUser, setCurrentUser} = useContext(AuthContext);
+  const { isAuth, setAuth, currentUser, setCurrentUser } = useContext(AuthContext);
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   const handleChange = (event) => {
     if (event.target.name === "username") {
@@ -28,13 +27,12 @@ export default function Login() {
     event.preventDefault();
     // Validate username and password
     if (username.length && password.length) {
-
       client.post(
-          "/api/login",
-          {
-            username: username,
-            password: password
-          }
+        "/api/login",
+        {
+          username: username,
+          password: password,
+        }
       ).then((res) => {
         setCurrentUser(username);
         setAuth(true);
@@ -42,9 +40,8 @@ export default function Login() {
         // Redirect to dashboard page
         navigate("/dashboard");
       });
-
     } else {
-      alert("Invalid username or password");
+      setPasswordError("Invalid username or password");
     }
   };
 
@@ -53,35 +50,36 @@ export default function Login() {
       <NavBar />
       <div className="login-box">
         <div className="login--content">
-            <div className="home-pic login--pic"></div>
+          <div className="home-pic login--pic"></div>
           <div>
             <h1>Login</h1>
           </div>
-            <form onSubmit={e => submitLogin(e)} className="login--form">
-              <div>
-                <label htmlFor="username">Username</label>
-                <input
-                  type="username"
-                  id="username"
-                  name="username"
-                  value={username}
-                  onChange={handleChange}
-                />
-              </div>
-              <div>
-                <label htmlFor="password">Password</label>
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  value={password}
-                  onChange={handleChange}
-                />
-              </div>
-              <button type="submit" className="button">Sign In</button>
-            </form>
-          </div>
-
+          <form onSubmit={submitLogin} className="login--form">
+            <div>
+              <label htmlFor="username">Username</label>
+              <input
+                type="username"
+                id="username"
+                name="username"
+                value={username}
+                onChange={handleChange}
+              />
+            </div>
+            <div>
+              <label htmlFor="password">Password</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                value={password}
+                onChange={handleChange}
+                style={{ borderColor: passwordError ? "red" : "" }}
+              />
+              {passwordError && <p style={{ color: "red" }}>{passwordError}</p>}
+            </div>
+            <button type="submit" className="button">Sign In</button>
+          </form>
+        </div>
       </div>
       <Footer />
     </div>
