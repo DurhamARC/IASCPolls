@@ -68,6 +68,7 @@ jobs:
 
   build:
     name: Call Azure Pipelines Build
+    needs: test
     runs-on: ubuntu-latest
 
     # Only run for Release or Main branches
