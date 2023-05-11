@@ -34,7 +34,7 @@ jobs:
         name: Cache Miniconda environment
         with:
           path: |
-            ${{ env.CONDA_PREFIX }}/envs
+            ${{ env.CONDA_PREFIX }}/envs/
             /home/runner/conda_pkgs_dir/
           key: conda-${{ runner.os }}-${{ runner.arch }}-${{ steps.date.outputs.date }}-${{ hashFiles('conf/iasc.base.yml') }}-${{ env.CACHE_NUMBER }}
         env:
