@@ -40,7 +40,7 @@ jobs:
         env:
           # Increase this to manually invalidate the cache
           CACHE_NUMBER: 0 +
-          CONDA_PREFIX: /usr/share/miniconda/
+          CONDA_PREFIX: /usr/share/miniconda
         id: cache
 
       - uses: conda-incubator/setup-miniconda@v2
