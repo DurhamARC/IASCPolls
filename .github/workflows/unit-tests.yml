@@ -33,11 +33,12 @@ jobs:
       - uses: actions/cache@v3
         name: Cache Miniconda environment
         with:
-          path: ${{ env.CONDA }}/envs
+          path: ${{ env.CONDA_PREFIX }}/envs
           key: conda-${{ runner.os }}-${{ runner.arch }}-${{ steps.date.outputs.date }}-${{ hashFiles('conf/iasc.base.yml') }}-${{ env.CACHE_NUMBER }}
         env:
           # Increase this to manually invalidate the cache
           CACHE_NUMBER: 0 +
+          CONDA_PREFIX: /usr/share/miniconda/
         id: cache
 
       - uses: conda-incubator/setup-miniconda@v2
@@ -50,7 +51,9 @@ jobs:
           # IMPORTANT! This needs to be set for caching to work properly:
           use-only-tar-bz2: true
           auto-activate-base: false
-
+        
+      - run: echo $CONDA_PREFIX
+      
       - name: Test Conda environment is active
         run: |
           conda info
