@@ -3,8 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import NavBar from "../components/NavBar";
 import PollForm from "../components/PollForm";
 import Footer from '../components/Footer';
-import uniquePolls from '../databases/live_polls.json';
-import idData from '../databases/unique_ids.json';
+import axios from 'axios';
 
 export default function Poll() {
   const location = useLocation();
@@ -17,35 +16,46 @@ export default function Poll() {
   const [pollQuestion, setPollQuestion] = useState('');
 
   useEffect(() => {
-    // Check if the unique ID exists
-    const idExists = idData[pollId] && idData[pollId].includes(uniqueId);
-    if (!idExists) {
-      // Redirect to the error page
-      history.push('/error');
-    } else {
-      // Load the poll question from the JSON data
-      const question = uniquePolls[pollId];
-      setPollQuestion(question || '');
-    }
-  }, [pollId, uniqueId, history]);
+    const fetchData = async () => {
+      try {
+        // Make the API call to check if the survey exists
+        const response = await axios.get(`/api/survey/${pollId}`);
+        const surveyData = response.data;
+
+        if (surveyData) {
+          // Survey exists, set the poll question
+          setPollQuestion(surveyData.question);
+        } else {
+          // Survey does not exist, redirect to the error page
+          history.push('/error');
+        }
+      } catch (error) {
+        console.error('Error fetching survey data:', error);
+        // Handle error and redirect to the error page
+        history.push('/error');
+      }
+    };
+
+    fetchData();
+  }, [pollId, history]);
 
   return (
     <div className="poll--total">
       <div className="background-blur"></div>
       <div className="background-blur mirror"></div>
       <NavBar />
-        <div className="poll">
-          <div className="poll--box">
-            <div className="poll--blurb">
-              Please read the following statement carefully and answer with a response that aligns with your perspective on the given topic.
-            </div>
-            <div className="poll--question">
-              {pollQuestion}
-            </div>
-            <PollForm/>
+      <div className="poll">
+        <div className="poll--box">
+          <div className="poll--blurb">
+            Please read the following statement carefully and answer with a response that aligns with your perspective on the given topic.
           </div>
+          <div className="poll--question">
+            {pollQuestion}
+          </div>
+          <PollForm uniqueId={uniqueId} />
         </div>
-      <Footer />
       </div>
+      <Footer />
+    </div>
   );
 }
