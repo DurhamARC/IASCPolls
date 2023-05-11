@@ -24,7 +24,7 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
-      - run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+      - run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
         name: Get current date for caching Conda envs
         id: date
 
