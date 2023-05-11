@@ -16,7 +16,7 @@ jobs:
         image: postgres:15.2-alpine
         env:
           POSTGRES_USER: arc_iasc
-          POSTGRES_PASSWORD: ${{ secrets.DB_PASS }}
+          POSTGRES_PASSWORD: arc_iasc_1234
           POSTGRES_DB: arc_iasc
         ports:
           - 5432:5432
@@ -24,7 +24,7 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
-      - run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+      - run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
         name: Get current date for caching Conda envs
         id: date
 
@@ -33,11 +33,14 @@ jobs:
       - uses: actions/cache@v3
         name: Cache Miniconda environment
         with:
-          path: ${{ env.CONDA }}/envs
+          path: |
+            ${{ env.CONDA_PREFIX }}/envs/
+            /home/runner/conda_pkgs_dir/
           key: conda-${{ runner.os }}-${{ runner.arch }}-${{ steps.date.outputs.date }}-${{ hashFiles('conf/iasc.base.yml') }}-${{ env.CACHE_NUMBER }}
         env:
           # Increase this to manually invalidate the cache
           CACHE_NUMBER: 0 +
+          CONDA_PREFIX: /usr/share/miniconda
         id: cache
 
       - uses: conda-incubator/setup-miniconda@v2
@@ -50,7 +53,9 @@ jobs:
           # IMPORTANT! This needs to be set for caching to work properly:
           use-only-tar-bz2: true
           auto-activate-base: false
-
+        
+      - run: echo $CONDA_PREFIX
+      
       - name: Test Conda environment is active
         run: |
           conda info
@@ -59,17 +64,20 @@ jobs:
       - name: Run Django tests
         env:
           ALLOWED_HOSTS: localhost,127.0.0.1
-          DB_PASS: ${{ secrets.DB_PASS }}
+          DB_PASS: arc_iasc_1234
+          # NB: Do not use secrets here; PRs do not allow them for security reasons.
         run: python manage.py test
 
 
   build:
     name: Call Azure Pipelines Build
+    needs: test
     runs-on: ubuntu-latest
 
-    # Only run for Release or Main branches
-    if: ${{ contains('refs/heads/main refs/heads/release', github.ref) }}
-    #if: ${{ github.ref == 'refs/heads/release' }}
+    # Only run for Release or Main branches, and NOT PRs
+    if: |
+      contains('refs/heads/main refs/heads/release', github.ref)
+      && github.event_name != 'pull_request'
 
     steps:
       - name: Azure Pipelines Action
