@@ -64,7 +64,8 @@ jobs:
       - name: Run Django tests
         env:
           ALLOWED_HOSTS: localhost,127.0.0.1
-          DB_PASS: ${{ secrets.DB_PASS }}
+          DB_PASS: arc_iasc_1234
+          # NB: Do not use secrets here; PRs do not allow them for security reasons.
         run: python manage.py test
 
 
