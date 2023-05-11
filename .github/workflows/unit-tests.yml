@@ -16,7 +16,7 @@ jobs:
         image: postgres:15.2-alpine
         env:
           POSTGRES_USER: arc_iasc
-          POSTGRES_PASSWORD: ${{ secrets.DB_PASS }}
+          POSTGRES_PASSWORD: arc_iasc_1234
           POSTGRES_DB: arc_iasc
         ports:
           - 5432:5432
@@ -73,9 +73,10 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
 
-    # Only run for Release or Main branches
-    if: ${{ contains('refs/heads/main refs/heads/release', github.ref) }}
-    #if: ${{ github.ref == 'refs/heads/release' }}
+    # Only run for Release or Main branches, and NOT PRs
+    if: |
+      contains('refs/heads/main refs/heads/release', github.ref)
+      && github.event_name != 'pull_request'
 
     steps:
       - name: Azure Pipelines Action
