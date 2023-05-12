@@ -24,7 +24,7 @@ const Table = ({ data }) => {
   };
 
   return (
-    <div>
+    <div className="dashboard--overview--questions">
       <table className="dashboard--question--table">
         <thead>
           <tr>
@@ -61,6 +61,8 @@ const Table = ({ data }) => {
           ))}
         </tbody>
       </table>
+
+
       <div className="dashboard--next--page">
         <button
           onClick={handlePrevPage}

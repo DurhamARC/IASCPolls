@@ -1,17 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
-import questionData from '../databases/questions_overview.json';
 import Table from '../components/DashboardTable';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
 export default function Dashboard() {
-  const tableData = Object.entries(questionData).map(([key, value]) => ({
-    statement: key,
-    completed: value[0],
-    active: value[2] === "True",
-  }));
 
   const navigate = useNavigate();
 
@@ -19,26 +13,24 @@ export default function Dashboard() {
     navigate('/create');
   };
 
-  const questionDatabase = useState('');
+  const [questionDatabase, setQuestionDatabase] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
-          try {
-            // Make the API call to check if the survey exists
-            const response = await axios.get(`/api/survey`);
-            const questionDatabase = response.data;
-            console.log(questionDatabase);
-
-          } catch (error) {
-            console.error('Error fetching survey data:', error);
-            // Handle error and redirect to the error page
-            navigate.push('/error');
-        }
-      };
+      try {
+        const response = await axios.get(`/api/survey`);
+        const questionData = response.data.results;
+        setQuestionDatabase(questionData);
+        console.log(questionData);
+      } catch (error) {
+        console.error('Error fetching survey data:', error);
+        navigate('/error');
+      }
+    };
     fetchData();
-    }, [questionDatabase, navigate]);
+  }, [navigate]);
 
-
+  
   return (
     <div className="container">
       <NavBar />
@@ -46,8 +38,7 @@ export default function Dashboard() {
         <div className="dashboard--overview">
 
 
-          <div className="dashboard--overview--create">
-            <a>
+          <div>
               <button onClick={createNew} className="button dashboard--button">
                 <div>
                   <span class="material-symbols-outlined">
@@ -58,12 +49,10 @@ export default function Dashboard() {
                   Create
                 </div>
               </button>
-            </a>
           </div>
 
 
-          <div className="dashboard--overview--create">
-            <a>
+          <div>
               <button onClick={createNew} className="button dashboard--button">
                 <div>
                   <span class="material-symbols-outlined">
@@ -74,26 +63,23 @@ export default function Dashboard() {
                   Add Participants
                 </div>
               </button>
-            </a>
           </div>
 
           
           <div className="dashboard--overview--content">
-            <div>
+            <div className="button dashboard--button">
               <h2>All</h2>
             </div>
-            <div>
+            <div className="button dashboard--button">
               <h2>Active</h2>
             </div>
-            <div>
+            <div className="button dashboard--button">
               <h2>Inactive</h2>
             </div>
           </div>
         </div>
         <div className="dashboard--projects">
-          <div className="dashboard--overview--questions">
             <Table data={questionDatabase} />
-          </div>
         </div>
       </div>
       <Footer />
