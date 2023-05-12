@@ -175,7 +175,7 @@ LOGGING = {
         "iasc": {  # Specific logger for your app
             "handlers": ["console"],
             "level": "INFO",
-            "propagate": True,
+            "propagate": False,
         },
     },
 }
