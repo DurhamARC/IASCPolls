@@ -5,8 +5,13 @@ from rest_framework.renderers import TemplateHTMLRenderer, JSONRenderer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from iasc import models, serializers
+from iasc import models, serializers, settings
 from frontend import views as frontend_views
+
+import pandas as pd
+import logging
+
+from django.shortcuts import render
 
 
 class UserLoginView(APIView):
@@ -70,6 +75,37 @@ class UserViewSet(viewsets.ModelViewSet):
     authentication_classes = (SessionAuthentication,)
     serializer_class = serializers.UserSerializer
     queryset = UserModel.objects.all()
+
+
+class UploadParticipantsView(APIView):
+    """
+    Upload Excel file of participants
+    """
+
+    if settings.DEBUG:
+
+        def get(self, request):
+            """
+            Render the test upload form (if in DEBUG mode)
+            """
+            return render(request, "testupload.html")
+
+    def post(self, request):
+        """
+        Upload Excel Spreadsheet with participant data
+        """
+        try:
+            file_obj = request.data["file"]
+            file_content = file_obj.read()
+            df = pd.read_excel(file_content, engine="openpyxl")
+            logging.info(df)
+            return Response(
+                {"status": "success", "message": "File uploaded."},
+                status=status.HTTP_200_OK,
+            )
+        except Exception as e:
+            error_message = str(e)
+            return Response({"status": "error", "message": error_message})
 
 
 class ParticipantViewSet(viewsets.ModelViewSet):

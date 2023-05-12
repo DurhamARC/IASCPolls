@@ -19,7 +19,6 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from rest_framework import routers
 from iasc import views
 
-
 router = routers.DefaultRouter()
 api_views = [
     (r"participants", views.ParticipantViewSet, "participants"),
@@ -39,6 +38,9 @@ urlpatterns = [
     path("user", views.UserView.as_view(), name="user"),
     path("api/", include(router.urls)),
     path("api/login", views.UserLoginView.as_view(), name="api/login"),
+    path(
+        "api/participants/upload", views.UploadParticipantsView.as_view(), name="upload"
+    ),
     path("admin/", admin.site.urls),
 ]
 

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<form action="/api/participants/upload" method="post" enctype="multipart/form-data">
+<label for="file">Upload an Excel file:</label>
+
+<input type="file" filename="upload.xlsx"
+       id="file" name="file"
+       accept=".xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, .xls, application/vnd.ms-excel">
+
+<input type="submit" name="Submit" value="Upload">
+{% csrf_token %}
+</form>
