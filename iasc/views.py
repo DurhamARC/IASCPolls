@@ -1,4 +1,5 @@
 from django.contrib.auth import login, logout, get_user_model
+from django.shortcuts import render
 from rest_framework import viewsets, permissions, status
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.renderers import TemplateHTMLRenderer, JSONRenderer
@@ -11,7 +12,8 @@ from frontend import views as frontend_views
 import pandas as pd
 import logging
 
-from django.shortcuts import render
+# Get logger
+log = logging.getLogger(__name__)
 
 
 class UserLoginView(APIView):
@@ -98,7 +100,7 @@ class UploadParticipantsView(APIView):
             file_obj = request.data["file"]
             file_content = file_obj.read()
             df = pd.read_excel(file_content, engine="openpyxl")
-            logging.info(df)
+            log.info(df)
             return Response(
                 {"status": "success", "message": "File uploaded."},
                 status=status.HTTP_200_OK,
