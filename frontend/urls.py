@@ -10,5 +10,6 @@ urlpatterns = [
     path("poll-temp", views.index),
     path("poll", views.index),
     path("dashboard", views.index),
+    path("create", views.index),
     path("favicon.ico", RedirectView.as_view(url=settings.STATIC_URL + "favicon.ico")),
 ]
