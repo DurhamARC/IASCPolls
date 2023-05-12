@@ -10,16 +10,29 @@ from frontend import views as frontend_views
 
 
 class UserLoginView(APIView):
+    """
+    Manage user logins
+    """
+
+    UserModel = get_user_model()
     permission_classes = (permissions.AllowAny,)
     authentication_classes = (SessionAuthentication,)
     renderer_classes = (TemplateHTMLRenderer, JSONRenderer)
+    queryset = UserModel.objects.all()
 
     def get(self, request):
-        """Render the front-end React site on GET"""
+        """
+        Render the front-end React site on GET
+        """
         return frontend_views.index(request)
 
-    # POST request for user login
     def post(self, request):
+        """
+        POST request for user login
+        @param request: {"username": "", "password": ""}
+        @return: {"first_name": ""}
+        """
+
         # Check data is not blank
         assert len(request.data["username"])
         assert len(request.data["password"])
@@ -28,7 +41,12 @@ class UserLoginView(APIView):
         if serializer.is_valid(raise_exception=True):
             user = serializer.check_user(request.data)
             login(request, user)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(
+                {
+                    "first_name": user.first_name,
+                },
+                status=status.HTTP_200_OK,
+            )
 
 
 class UserLogoutView(APIView):
