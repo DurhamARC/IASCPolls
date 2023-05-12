@@ -24,16 +24,14 @@ export default function PollForm({ uniqueId }) {
     event.preventDefault();
     if (selectedOption !== "") {
       try {
-        // Make the POST request to save the answer and unique ID
+        // REPLACE WITH ACTUAL DB
         await axios.post('/api/answers', {
           uniqueId: uniqueId,
           answer: selectedOption
-        });
-        navigate("/thankyou");
+        }).then((res) => {navigate("/thankyou")});
       } catch (error) {
         console.error('Error submitting answer:', error);
-        // Handle error if the POST request fails
-        // Display an error message or perform any necessary actions
+
       }
     } else {
       alert("Please select an option.");

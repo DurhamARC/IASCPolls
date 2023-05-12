@@ -3,7 +3,7 @@ import Symbol from './isActive';
 
 const Table = ({ data }) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(6);
+  const [itemsPerPage] = useState(8);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -30,18 +30,19 @@ const Table = ({ data }) => {
           <tr>
             <th>Statement</th>
             <th>Completed</th>
-            <th>Download</th>
+            <th>Participants</th>
             <th>Active</th>
+            <th>Results</th>
           </tr>
         </thead>
         <tbody>
           {currentItems.map((row, index) => (
             <tr key={index}>
-              <td>{row.statement}</td>
-              <td>{row.completed}</td>
+              <td>{row.question}</td>
+              <td>{row.voted * 100 / row.participants}%</td>
               <td>
                 <span className="material-symbols-outlined">
-                  download
+                  groups
                 </span>
               </td>
               <td>
@@ -51,11 +52,16 @@ const Table = ({ data }) => {
                   inactiveSymbol="stop_circle"
                 />
               </td>
+              <td>
+               <span className="material-symbols-outlined">
+                  download
+                </span>
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
-      <div className="pagination">
+      <div className="dashboard--next--page">
         <button
           onClick={handlePrevPage}
           disabled={currentPage === 1}
