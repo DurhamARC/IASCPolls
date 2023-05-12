@@ -1,4 +1,5 @@
 from django.contrib.auth import login, logout, get_user_model
+from django.core.exceptions import ValidationError
 from django.shortcuts import render
 from rest_framework import viewsets, permissions, status
 from rest_framework.authentication import SessionAuthentication
@@ -9,11 +10,7 @@ from rest_framework.response import Response
 from iasc import models, serializers, settings
 from frontend import views as frontend_views
 
-import pandas as pd
-import logging
-
-# Get logger
-log = logging.getLogger(__name__)
+from iasc.logic import parse_excel_sheet_to_database
 
 
 class UserLoginView(APIView):
@@ -97,15 +94,28 @@ class UploadParticipantsView(APIView):
         Upload Excel Spreadsheet with participant data
         """
         try:
+            if not {"institution", "file"} <= set(request.data.keys()):
+                raise ValidationError(
+                    'Upload form missing required fields: needs "file" and "institution"'
+                )
+
+            institution = request.data["institution"]
             file_obj = request.data["file"]
+
             file_content = file_obj.read()
-            df = pd.read_excel(file_content, engine="openpyxl")
-            log.info(df)
+            parse_excel_sheet_to_database(
+                file_content,
+                institution=institution,
+                create_disciplines=request.data.get("create_disciplines", False),
+                create_institutions=request.data.get("create_institutions", False),
+            )
+
             return Response(
                 {"status": "success", "message": "File uploaded."},
                 status=status.HTTP_200_OK,
             )
-        except Exception as e:
+
+        except ValidationError as e:
             error_message = str(e)
             return Response({"status": "error", "message": error_message})
 
