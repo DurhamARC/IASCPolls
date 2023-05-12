@@ -65,7 +65,7 @@ TBC: We could alternately return `302 Found` on success if a redirect is require
 # Surveys ⚠️
 
 ## Create Survey ⚠️
-`POST /api/survey/create`  
+`POST /api/surveys`  
 Create a survey in the database.
 
 ```javascript
@@ -90,10 +90,10 @@ size=10 *optional
 
 Optional paging arguments are `page` and `size`. Defaults to not paging, if these parameters are not provided.
 
-### List Active Surveys
-`GET /api/survey/list`  
+### List Surveys
+`GET /api/surveys`  
 
-Returns a filtered list of active surveys. Keys are `survey_id`, values are data. Also accessible on `GET /api/survey/list_active` with same parameters for convenience.
+Returns an unfiltered list of active surveys. Keys are `survey_id`, values are data.
 
 ```javascript
 {
@@ -116,17 +116,9 @@ Returns a filtered list of active surveys. Keys are `survey_id`, values are data
 }
 ```
 
-### List INACTIVE surveys
-`GET /api/survey/list_inactive`  
-As above, but filter surveys to show only those where `"active": False`
-
-### List ALL surveys
-`GET /api/survey/list_all?page=1&size=10`  
-Do not filter surveys, just retrieve everything.
-
 
 ## Close surveys ⚠️
-`POST /api/survey/deactivate`  
+`POST /api/surveys/deactivate`  
 The `survey_id` field accepts an integer for survey_id, OR a list.
 
 ```javascript
@@ -139,7 +131,7 @@ NB: 🛑 This is a destructive action! All data for the survey in the `active_li
 
 
 ## Download unique voting links ⚠️
-`GET /api/survey/links`
+`GET /api/links`
 
 Retrieve unique voting links. Takes the following arguments as GET parameters:
 ```javascript
@@ -155,7 +147,7 @@ If no data is available for the requested institution, returns `404 Not Found`.
 
 ## Data Entry ⚠️
 ### Upload
-`POST /api/participants`  
+`POST /api/participants/upload`  
 Takes a CSV or Excel spreadsheet which will be processed to populate the database.
 
 ### Status
@@ -203,34 +195,6 @@ Download a list of participants. Arguments are provide to allow filtering by ins
 ```javascript
 institution=["Durham University"]
 discipline=["Health Scientist"]
-```
-
-### List Disciplines
-`GET /api/participants/disciplines`  
-Returns a sorted list of *all* disciplines as a JSON object. Can be used to populate e.g. a filter dropdown.
-
-```javascript
-{
-    "disciplines": [
-        "Biologist",
-        "Chemist",
-        "Physicist",
-        "Health Scientist"
-    ]
-}
-```
-
-### List Institutions
-`GET /api/participants/institution`
-Return a sorted list of institutions as JSON. Can be used to populate e.g. a filter dropdown.
-
-```javascript
-{
-    "institutions": [
-        "Durham University",
-        "Unseen University"
-    ]
-}
 ```
 
 
