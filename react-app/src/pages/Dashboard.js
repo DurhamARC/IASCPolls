@@ -26,7 +26,8 @@ export default function Dashboard() {
           try {
             // Make the API call to check if the survey exists
             const response = await axios.get(`/api/survey`);
-            const surveyData = response.data;
+            const questionDatabase = response.data;
+            console.log(questionDatabase);
 
           } catch (error) {
             console.error('Error fetching survey data:', error);
