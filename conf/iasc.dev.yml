@@ -5,4 +5,5 @@ channels:
 dependencies:
   - black
   - pre-commit
+  - conda-lock
 prefix: /home/sam/miniconda3/envs/IASCPolls

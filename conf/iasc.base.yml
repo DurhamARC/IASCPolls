@@ -6,6 +6,8 @@ dependencies:
   - django==4.1
   - gunicorn
   - psycopg2
+  - pandas
+  - openpyxl
   - django-cors-headers
   - django-environ
   - django-webpack-loader
