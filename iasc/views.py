@@ -140,9 +140,7 @@ class ActiveLinkViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = serializers.ActiveLinkSerializer
     queryset = (
-        models.ActiveLink.objects.prefetch_related("participant_id")
-        .all()
-        .order_by("-id")
+        models.ActiveLink.objects.prefetch_related("participant").all().order_by("-id")
     )
 
 

@@ -10,5 +10,17 @@
         "participants": 1,
         "voted": 0
     }
+},
+{
+    "model": "iasc.survey",
+    "pk": 2,
+    "fields": {
+        "question": "Is a second question, more subtle than the first?",
+        "active": false,
+        "kind": "LI",
+        "expiry": "2000-01-01T00:00:00Z",
+        "participants": 3,
+        "voted": 2
+    }
 }
 ]
