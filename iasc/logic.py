@@ -42,6 +42,7 @@ def parse_excel_sheet_to_database(sheet, **kwargs):
 
     create_institutions = kwargs.get("create_institutions")
     create_disciplines = kwargs.get("create_disciplines")
+    ignore_conflicts = kwargs.get("ignore_conflicts")
 
     try:
         institution = kwargs["institution"]
@@ -88,7 +89,7 @@ def parse_excel_sheet_to_database(sheet, **kwargs):
                 for record in df.to_dict("records")
             ]
 
-        Participant.objects.bulk_create(participants)
+        Participant.objects.bulk_create(participants, ignore_conflicts=ignore_conflicts)
 
     except Institution.DoesNotExist as e:
         raise Institution.DoesNotExist(

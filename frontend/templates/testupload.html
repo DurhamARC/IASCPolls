@@ -48,6 +48,21 @@
         </div>
     </fieldset>
 
+    <fieldset>
+        <legend>Ignore Conflicts:</legend>
+        <span>For the case where a participant appears more than once, causing a conflict.</span>
+
+        <div>
+          <input type="radio" id="true" name="ignore_conflicts" value="True">
+          <label for="true">True</label>
+        </div>
+
+        <div>
+          <input type="radio" id="false" name="ignore_conflicts" value="False" checked>
+          <label for="false">False</label>
+        </div>
+    </fieldset>
+
     <input type="submit" name="Submit" value="Upload" />
 
     {% csrf_token %}

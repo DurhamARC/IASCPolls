@@ -77,6 +77,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 class UploadParticipantsView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
     """
     Upload Excel file of participants
     """
@@ -108,6 +109,7 @@ class UploadParticipantsView(APIView):
                 institution=institution,
                 create_disciplines=request.data.get("create_disciplines", False),
                 create_institutions=request.data.get("create_institutions", False),
+                ignore_conflicts=request.data.get("ignore_conflicts", False),
             )
 
             return Response(
