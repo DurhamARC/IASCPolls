@@ -131,7 +131,7 @@ class ActiveLink(models.Model):
         participant = Participant.objects.get(email=self.participant.email)
         result = Result.objects.create(
             unique_link=self,
-            survey_id=self.survey,
+            survey=self.survey,
             vote=vote,
             institution=participant.institution,
             discipline=participant.discipline,
