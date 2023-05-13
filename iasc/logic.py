@@ -6,16 +6,18 @@ from iasc.models import Participant, Discipline, Institution
 
 log = logging.getLogger(__name__)
 
+EXCLUDE_DEPARTMENTS = ["ALL"]
+
 
 def xl_disciplines_to_db(disciplines: list[str]):
     """
     Insert a list of disciplines into the database, ignoring duplicates
     @param disciplines: list[str]
     """
-    disciplines_db = Discipline.objects.all()
+    disciplines_db = (d.name for d in Discipline.objects.all())
     to_create = []
     for d in disciplines:
-        if d not in disciplines_db:
+        if d not in disciplines_db and d not in EXCLUDE_DEPARTMENTS:
             to_create += [Discipline(name=d)]
 
     log.info("Adding the following to the db:" + str(to_create))
@@ -64,8 +66,8 @@ def parse_excel_sheet_to_database(sheet, **kwargs):
         for department in disciplines_xl:
             df = pd.read_excel(xls, department)
             log.info(department)
-            if department == "ALL" and len:
-                log.warning("Skipping ALL sheet")
+            if department in EXCLUDE_DEPARTMENTS:
+                log.warning(f"Skipping {department} sheet")
                 continue
 
             log.info(df[:5])
