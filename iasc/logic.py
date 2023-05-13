@@ -1,12 +1,40 @@
+import secrets
+
 import pandas as pd
 import logging
 from thefuzz import process
 
-from iasc.models import Participant, Discipline, Institution
+from iasc import settings
+from iasc.models import Participant, Discipline, Institution, ActiveLink, Survey
 
 log = logging.getLogger(__name__)
 
 EXCLUDE_DEPARTMENTS = ["ALL"]
+
+
+def create_survey_in_db(question, expiry, **kwargs):
+    kind = kwargs.get("kind")
+    active = kwargs.get("active")
+    create_active_links = kwargs.get("create_active_links")
+
+    survey = Survey.objects.create(
+        question=question, active=active, kind=kind, expiry=expiry
+    )
+
+    if create_active_links:
+        to_create = []
+        for participant in Participant.objects.all():
+            to_create += [
+                ActiveLink(
+                    participant=participant,
+                    survey=survey,
+                    unique_link=secrets.token_urlsafe(settings.RANDOM_KEY_BYTES),
+                )
+            ]
+
+        ActiveLink.objects.bulk_create(to_create)
+        survey.participants = len(to_create)
+        survey.save()
 
 
 def xl_disciplines_to_db(disciplines: list):
@@ -25,7 +53,7 @@ def xl_disciplines_to_db(disciplines: list):
     Discipline.objects.bulk_create(to_create)
 
 
-def parse_excel_sheet_to_database(sheet, **kwargs):
+def parse_excel_sheet_to_db(sheet, **kwargs):
     """
     Take an Excel spreadsheet, and transform it into database objects in Django ORM
 

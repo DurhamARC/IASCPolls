@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from iasc import models, serializers, settings
 from frontend import views as frontend_views
 
-from iasc.logic import parse_excel_sheet_to_database
+from iasc.logic import parse_excel_sheet_to_db, create_survey_in_db
 
 
 class UserLoginView(APIView):
@@ -76,11 +76,54 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = UserModel.objects.all()
 
 
-class UploadParticipantsView(APIView):
+class CreateSurveyView(APIView):
+    """
+    Create Survey in Database
+    """
+
     permission_classes = (permissions.IsAuthenticated,)
+
+    if settings.DEBUG:
+
+        def get(self, request):
+            """
+            Render the test survey creation form (if in DEBUG mode)
+            """
+            return render(request, "testsurvey.html")
+
+    def post(self, request):
+        """
+        Create survey in database and associate participants with ActiveLinks
+        """
+        try:
+            fields = {"question", "expiry"}
+            if not fields <= set(request.data.keys()):
+                raise ValidationError(f"Upload form missing required fields: {fields}")
+
+            create_survey_in_db(
+                request.data["question"],
+                request.data["expiry"],
+                kind=request.data.get("kind", True),
+                active=request.data.get("active", True),
+                create_active_links=request.data.get("create_active_links", True),
+            )
+
+            return Response(
+                {"status": "success", "message": "Survey created."},
+                status=status.HTTP_200_OK,
+            )
+
+        except ValidationError as e:
+            error_message = str(e)
+            return Response({"status": "error", "message": error_message})
+
+
+class UploadParticipantsView(APIView):
     """
     Upload Excel file of participants
     """
+
+    permission_classes = (permissions.IsAuthenticated,)
 
     if settings.DEBUG:
 
@@ -95,18 +138,17 @@ class UploadParticipantsView(APIView):
         Upload Excel Spreadsheet with participant data
         """
         try:
-            if not {"institution", "file"} <= set(request.data.keys()):
-                raise ValidationError(
-                    'Upload form missing required fields: needs "file" and "institution"'
-                )
+            fields = {"institution", "file"}
+            if not fields <= set(request.data.keys()):
+                raise ValidationError(f"Upload form missing required fields: {fields}")
 
-            institution = request.data["institution"]
+            # Read file into variable
             file_obj = request.data["file"]
-
             file_content = file_obj.read()
-            parse_excel_sheet_to_database(
+
+            parse_excel_sheet_to_db(
                 file_content,
-                institution=institution,
+                institution=request.data["institution"],
                 create_disciplines=request.data.get("create_disciplines", False),
                 create_institutions=request.data.get("create_institutions", False),
                 ignore_conflicts=request.data.get("ignore_conflicts", False),

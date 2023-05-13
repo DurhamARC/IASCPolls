@@ -41,6 +41,7 @@ urlpatterns = [
     path(
         "api/participants/upload", views.UploadParticipantsView.as_view(), name="upload"
     ),
+    path("api/survey/create", views.CreateSurveyView.as_view(), name="create"),
     path("admin/", admin.site.urls),
 ]
 

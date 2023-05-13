@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<form id="create_survey" action="/api/survey/create" method="post" enctype="multipart/form-data">
+
+    <fieldset>
+        <legend>Create Survey:</legend>
+
+        <label for="question">Survey Question</label>
+        <input type="text" id="question" name="question"/>
+
+        <label for="expiry">Expiry</label>
+        <input type="datetime-local" id="expiry" name="expiry"/>
+    </fieldset>
+
+
+    <fieldset>
+        <legend>Active:</legend>
+
+        <div>
+          <input type="radio" id="true" name="active" value="True" checked>
+          <label for="true">True</label>
+        </div>
+
+        <div>
+          <input type="radio" id="false" name="active" value="False">
+          <label for="false">False</label>
+        </div>
+    </fieldset>
+
+
+    <fieldset>
+        <legend>Create Links:</legend>
+
+        <div>
+          <input type="radio" id="true" name="create_active_links" value="True" checked>
+          <label for="true">True</label>
+        </div>
+
+        <div>
+          <input type="radio" id="false" name="create_active_links" value="False">
+          <label for="false">False</label>
+        </div>
+    </fieldset>
+
+
+    <input type="submit" name="Submit" value="Create Survey" />
+
+    <input type="hidden" id="kind" name="kind" value="LI" />
+    {% csrf_token %}
+</form>
+
+<hr />
+<code>
+<span id="result"></span>
+</code>
+
+<script type="text/javascript">
+    function setDate() {
+        const dateControl = document.querySelector('input[type="datetime-local"]#expiry');
+        let date = new Date()
+        date.setHours(0,0,0,0);
+        date.setMonth(date.getMonth()+1)
+        dateControl.valueAsDate = date;
+    }
+
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
+
+    function processForm(e) {
+        if (e.preventDefault) e.preventDefault();
+
+        /* Handle form */
+        const elem = document.getElementById("create_survey")
+        const data = new FormData(elem);
+        const json = Object.fromEntries(data.entries());
+        /* console.log(elem, data, json) */
+
+        /* Set headers for JSON POST */
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', '/api/survey/create', true);
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhr.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
+
+        xhr.onload = function() {
+            console.log(this.responseText);
+            document.getElementById("result").innerText +=
+                `[${(new Date()).toLocaleTimeString()}]  ${this.responseText} \n`
+        };
+
+        xhr.send(JSON.stringify(json));
+
+        // Return false to prevent default form behavior
+        return false;
+    }
+
+    window.onload = function() {
+        const form = document.getElementById("create_survey");
+        if (form.attachEvent) {
+            form.attachEvent("submit", processForm);
+        } else {
+            form.addEventListener("submit", processForm);
+        }
+
+        setDate();
+    }
+</script>

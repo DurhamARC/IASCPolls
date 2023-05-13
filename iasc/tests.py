@@ -4,6 +4,8 @@ import secrets
 from django.db import models
 from django.test import TestCase
 from django.core.exceptions import ObjectDoesNotExist
+
+from iasc import settings
 from iasc.models import Institution, Discipline, Participant, ActiveLink, Survey, Result
 
 
@@ -32,7 +34,7 @@ class DatabaseModelTestCase(TestCase):
         ActiveLink.objects.create(
             participant=participant,
             survey=survey,
-            unique_link=secrets.token_hex(16),
+            unique_link=secrets.token_urlsafe(settings.RANDOM_KEY_BYTES),
         )
 
     def test_database_models(self):
