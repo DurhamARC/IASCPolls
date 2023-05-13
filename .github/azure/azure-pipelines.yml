@@ -96,7 +96,7 @@ stages:
               packageForLinux: '$(System.DefaultWorkingDirectory)/$(Build.BuildId).zip'
               RuntimeStack: '$(runtimeStack)'
               StartupCommand: >-
-                python -m pip install -r conf/requirements.txt &&
+                python -m pip install -r requirements.txt &&
                 python manage.py migrate &&
                 gunicorn --bind=0.0.0.0:8000 --access-logfile '-' --log-level=debug iasc.wsgi
               AppSettings: >-
@@ -125,4 +125,4 @@ stages:
                 . ./venv/bin/activate
                 echo "python is $(which python)"
                 echo "Install requirements..."
-                python -m pip install -r conf/requirements.txt
+                python -m pip install -r requirements.txt
