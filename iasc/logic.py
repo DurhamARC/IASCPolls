@@ -14,13 +14,14 @@ def xl_disciplines_to_db(disciplines: list):
     Insert a list of disciplines into the database, ignoring duplicates
     @param disciplines: list
     """
-    disciplines_db = (d.name for d in Discipline.objects.all())
+    disciplines_db = list(d.name for d in Discipline.objects.all())
     to_create = []
     for d in disciplines:
+        d = d.strip()
         if d not in disciplines_db and d not in EXCLUDE_DEPARTMENTS:
             to_create += [Discipline(name=d)]
 
-    log.info("Adding the following to the db:" + str(to_create))
+    log.info("Adding the following to the db: " + str(to_create))
     Discipline.objects.bulk_create(to_create)
 
 
