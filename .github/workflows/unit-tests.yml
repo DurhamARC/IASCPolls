@@ -24,11 +24,15 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
-      - run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+      - run: echo "date=$(date +'%Y-%m')" >> $GITHUB_OUTPUT
         name: Get current date for caching Conda envs
         id: date
 
       - uses: actions/checkout@v2
+
+      # https://github.com/actions/cache/issues/133#issuecomment-599102035
+      - name: Fix /usr/share/miniconda directory permissions
+        run: sudo chown -R $(whoami):$(id -ng) /usr/share/miniconda
 
       - uses: actions/cache@v3
         name: Cache Miniconda environment
