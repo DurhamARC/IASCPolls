@@ -9,10 +9,10 @@ log = logging.getLogger(__name__)
 EXCLUDE_DEPARTMENTS = ["ALL"]
 
 
-def xl_disciplines_to_db(disciplines: list[str]):
+def xl_disciplines_to_db(disciplines: list):
     """
     Insert a list of disciplines into the database, ignoring duplicates
-    @param disciplines: list[str]
+    @param disciplines: list
     """
     disciplines_db = (d.name for d in Discipline.objects.all())
     to_create = []
