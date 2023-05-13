@@ -45,7 +45,7 @@ class Participant(models.Model):
 
     # ID is automatically added by Django using DEFAULT_AUTO_FIELD
     # id = models.BigAutoField(primary_key=True, null=False)
-    email = models.CharField(
+    email = models.EmailField(
         max_length=255, help_text="Participant Email", primary_key=True
     )
     name = models.CharField(max_length=255, help_text="First & Family/Surname")
