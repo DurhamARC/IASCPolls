@@ -96,7 +96,8 @@ stages:
               packageForLinux: '$(System.DefaultWorkingDirectory)/$(Build.BuildId).zip'
               RuntimeStack: '$(runtimeStack)'
               StartupCommand: >-
-                apt install -y build-essential &&
+                apt update && 
+                apt install -y build-essential postgresql-client &&
                 python -m pip install -r requirements.txt &&
                 python manage.py migrate &&
                 gunicorn --bind=0.0.0.0:8000 --access-logfile '-' --log-level=debug iasc.wsgi
@@ -114,7 +115,8 @@ stages:
                 -DB_SSL_ENABLED "$(DB_SSL_ENABLED)"
               ScriptType: 'Inline Script'
               InlineScript: |
-                apt install -y build-essential
+                apt update
+                apt install -y build-essential postgresql-client
                 echo "Working directory is $(pwd)"
                 export WORKDIR=$(pwd)
                 echo "python3.8 is $(which python3.8)"
