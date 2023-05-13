@@ -13,4 +13,6 @@ dependencies:
   - django-webpack-loader
   - djangorestframework
   - whitenoise
+  - thefuzz
+  - python-levenshtein
 prefix: /home/sam/miniconda3/envs/IASCPolls

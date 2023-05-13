@@ -26,9 +26,9 @@ class SurveyAdmin(admin.ModelAdmin):
 
 @admin.register(Result)
 class ResultAdmin(admin.ModelAdmin):
-    list_display = ("unique_link", "survey_id", "vote", "institution", "discipline")
+    list_display = ("unique_link", "survey", "vote", "institution", "discipline")
 
 
 @admin.register(ActiveLink)
 class ActiveLinkAdmin(admin.ModelAdmin):
-    list_display = ("participant_id", "survey_id", "unique_link")
+    list_display = ("unique_link", "participant", "survey")

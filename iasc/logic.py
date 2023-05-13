@@ -1,9 +1,12 @@
 import pandas as pd
 import logging
+from thefuzz import process
 
 from iasc.models import Participant, Discipline, Institution
 
 log = logging.getLogger(__name__)
+
+EXCLUDE_DEPARTMENTS = ["ALL"]
 
 
 def xl_disciplines_to_db(disciplines: list[str]):
@@ -11,10 +14,10 @@ def xl_disciplines_to_db(disciplines: list[str]):
     Insert a list of disciplines into the database, ignoring duplicates
     @param disciplines: list[str]
     """
-    disciplines_db = Discipline.objects.all()
+    disciplines_db = (d.name for d in Discipline.objects.all())
     to_create = []
     for d in disciplines:
-        if d not in disciplines_db:
+        if d not in disciplines_db and d not in EXCLUDE_DEPARTMENTS:
             to_create += [Discipline(name=d)]
 
     log.info("Adding the following to the db:" + str(to_create))
@@ -39,6 +42,7 @@ def parse_excel_sheet_to_database(sheet, **kwargs):
 
     create_institutions = kwargs.get("create_institutions")
     create_disciplines = kwargs.get("create_disciplines")
+    ignore_conflicts = kwargs.get("ignore_conflicts")
 
     try:
         institution = kwargs["institution"]
@@ -63,25 +67,29 @@ def parse_excel_sheet_to_database(sheet, **kwargs):
         for department in disciplines_xl:
             df = pd.read_excel(xls, department)
             log.info(department)
-            if department == "ALL" and len:
-                log.warning("Skipping ALL sheet")
+            if department in EXCLUDE_DEPARTMENTS:
+                log.warning(f"Skipping {department} sheet")
                 continue
 
             log.info(df[:5])
 
+            # Use fuzzy logic (Levenshtein distance) to compute field keys, which can vary:
+            email_key = process.extractOne("Email Address", df.columns)[0]
+            name_key = process.extractOne("Name", df.columns)[0]
+
             # Participant: { name, title, email, institution, discipline }
             participants += [
                 Participant(
-                    name=record["First Name"],
+                    email=record[email_key],
+                    name=record[name_key],
                     title=record.get("Title", None),
-                    email=record["E-mail Address"],
                     institution=institution,
                     discipline=disciplines_db.filter(name=department).get(),
                 )
                 for record in df.to_dict("records")
             ]
 
-        Participant.objects.bulk_create(participants)
+        Participant.objects.bulk_create(participants, ignore_conflicts=ignore_conflicts)
 
     except Institution.DoesNotExist as e:
         raise Institution.DoesNotExist(

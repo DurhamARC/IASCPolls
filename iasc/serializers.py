@@ -63,7 +63,7 @@ class SurveySerializer(serializers.ModelSerializer):
 class ActiveLinkSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ActiveLink
-        fields = ["participant_id", "survey_id", "unique_link"]
+        fields = ["participant", "survey", "unique_link"]
 
 
 class ResultSerializer(serializers.ModelSerializer):
@@ -72,4 +72,4 @@ class ResultSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Result
-        fields = ["survey_id", "vote", "institution", "discipline"]
+        fields = ["survey", "vote", "institution", "discipline"]

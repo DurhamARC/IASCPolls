@@ -30,8 +30,8 @@ class DatabaseModelTestCase(TestCase):
         )
 
         ActiveLink.objects.create(
-            participant_id=participant,
-            survey_id=survey,
+            participant=participant,
+            survey=survey,
             unique_link=secrets.token_hex(16),
         )
 

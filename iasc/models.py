@@ -45,11 +45,13 @@ class Participant(models.Model):
 
     # ID is automatically added by Django using DEFAULT_AUTO_FIELD
     # id = models.BigAutoField(primary_key=True, null=False)
+    email = models.CharField(
+        max_length=255, help_text="Participant Email", primary_key=True
+    )
     name = models.CharField(max_length=255, help_text="First & Family/Surname")
     title = models.CharField(
         max_length=32, null=True, blank=True, help_text="Participant Title"
     )
-    email = models.CharField(max_length=255, help_text="Participant Email")
     institution = models.ForeignKey("Institution", on_delete=models.RESTRICT)
     discipline = models.ForeignKey("Discipline", on_delete=models.RESTRICT)
 
@@ -67,7 +69,7 @@ class Participant(models.Model):
         ordering = ["-email"]
 
     def __str__(self):
-        return f"{self.title} {self.name} <{self.email}>"
+        return f"{self.name} <{self.email}>"
 
 
 class Survey(models.Model):
@@ -110,8 +112,8 @@ class ActiveLink(models.Model):
 
     # Composite key
     # https://stackoverflow.com/questions/16800375/how-can-i-set-two-primary-key-fields-for-my-models-in-django
-    participant_id = models.ForeignKey("Participant", on_delete=models.CASCADE)
-    survey_id = models.ForeignKey("Survey", null=True, on_delete=models.SET_NULL)
+    participant = models.ForeignKey("Participant", on_delete=models.CASCADE)
+    survey = models.ForeignKey("Survey", null=True, on_delete=models.SET_NULL)
     unique_link = models.CharField(
         max_length=255, help_text="Per-participant / survey unique voting link"
     )
@@ -119,17 +121,17 @@ class ActiveLink(models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=["participant_id", "survey_id"],
+                fields=["participant", "survey"],
                 name="unique_migration_host_combination",
             )
         ]
         indexes = [models.Index(fields=["unique_link"])]
 
     def vote(self, vote: models.JSONField):
-        participant = Participant.objects.get(id=self.participant_id.id)
+        participant = Participant.objects.get(email=self.participant.email)
         result = Result.objects.create(
             unique_link=self,
-            survey_id=self.survey_id,
+            survey=self.survey,
             vote=vote,
             institution=participant.institution,
             discipline=participant.discipline,
@@ -151,7 +153,7 @@ class Result(models.Model):
     """
 
     unique_link = models.ForeignKey("ActiveLink", null=True, on_delete=models.SET_NULL)
-    survey_id = models.ForeignKey("Survey", null=True, on_delete=models.SET_NULL)
+    survey = models.ForeignKey("Survey", null=True, on_delete=models.SET_NULL)
     vote = models.JSONField(null=False, blank=False)
     institution = models.ForeignKey("Institution", null=True, on_delete=models.SET_NULL)
     discipline = models.ForeignKey("Discipline", null=True, on_delete=models.SET_NULL)
