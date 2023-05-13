@@ -1,5 +1,6 @@
 import pandas as pd
 import logging
+from thefuzz import process
 
 from iasc.models import Participant, Discipline, Institution
 
@@ -69,12 +70,16 @@ def parse_excel_sheet_to_database(sheet, **kwargs):
 
             log.info(df[:5])
 
+            # Use fuzzy logic (Levenshtein distance) to compute field keys, which can vary:
+            email_key = process.extractOne("Email Address", df.columns)[0]
+            name_key = process.extractOne("Name", df.columns)[0]
+
             # Participant: { name, title, email, institution, discipline }
             participants += [
                 Participant(
-                    name=record["First Name"],
+                    email=record[email_key],
+                    name=record[name_key],
                     title=record.get("Title", None),
-                    email=record["E-mail Address"],
                     institution=institution,
                     discipline=disciplines_db.filter(name=department).get(),
                 )
