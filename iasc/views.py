@@ -1,6 +1,9 @@
 from django.contrib.auth import login, logout, get_user_model
 from django.core.exceptions import ValidationError
 from django.shortcuts import render
+from django_filters import rest_framework as filters
+from drf_excel.mixins import XLSXFileMixin
+from drf_excel.renderers import XLSXRenderer
 from rest_framework import viewsets, permissions, status
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.renderers import TemplateHTMLRenderer, JSONRenderer
@@ -11,6 +14,10 @@ from iasc import models, serializers, settings
 from frontend import views as frontend_views
 
 from iasc.logic import parse_excel_sheet_to_db, create_survey_in_db
+from iasc.models import Institution, ActiveLink, Survey
+
+#
+# User management and login functionality
 
 
 class UserLoginView(APIView):
@@ -76,6 +83,10 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = UserModel.objects.all()
 
 
+#
+# Survey management
+
+
 class CreateSurveyView(APIView):
     """
     Create Survey in Database
@@ -116,6 +127,10 @@ class CreateSurveyView(APIView):
         except ValidationError as e:
             error_message = str(e)
             return Response({"status": "error", "message": error_message})
+
+
+#
+# Participant management
 
 
 class UploadParticipantsView(APIView):
@@ -164,7 +179,11 @@ class UploadParticipantsView(APIView):
             return Response({"status": "error", "message": error_message})
 
 
-class ParticipantViewSet(viewsets.ModelViewSet):
+#
+# DRF ViewSets for getting various data
+
+
+class ParticipantViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = serializers.ParticipantSerializer
     queryset = (
@@ -174,21 +193,48 @@ class ParticipantViewSet(viewsets.ModelViewSet):
     )
 
 
-class SurveyViewSet(viewsets.ModelViewSet):
+class SurveyViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = serializers.SurveySerializer
     queryset = models.Survey.objects.all().order_by("-expiry")
 
 
-class ActiveLinkViewSet(viewsets.ModelViewSet):
+class ActiveLinkViewSet(XLSXFileMixin, viewsets.ReadOnlyModelViewSet):
+    """
+    Get ActiveLinks as Excel Spreadsheet on route /api/links/?survey=1&institution=1
+    """
+
+    class InstitutionSearchFilter(filters.FilterSet):
+        institution = filters.CharFilter(field_name="participant__institution_id")
+
+        class Meta:
+            model = ActiveLink
+            fields = ["institution", "survey"]
+
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = serializers.ActiveLinkSerializer
     queryset = (
-        models.ActiveLink.objects.prefetch_related("participant").all().order_by("-id")
+        models.ActiveLink.objects.prefetch_related("participant", "survey")
+        .all()
+        .order_by("-participant_id")
     )
 
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = InstitutionSearchFilter
+    renderer_classes = (XLSXRenderer,)
 
-class ResultViewSet(viewsets.ModelViewSet):
+    def get_filename(self, request):
+        institution = (
+            Institution.objects.filter(id=request.GET["institution"]).get().name
+        )
+        institution = "_".join(institution.split(" "))
+        question = Survey.objects.filter(id=request.GET["survey"]).get().question
+        question = "_".join(question.split(" ")[:3])
+
+        return f"IASC_{request.GET['survey']}_{question}_-_{institution}.xlsx"
+
+
+class ResultViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = serializers.ResultSerializer
     queryset = (

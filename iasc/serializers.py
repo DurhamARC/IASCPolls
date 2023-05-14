@@ -61,9 +61,12 @@ class SurveySerializer(serializers.ModelSerializer):
 
 
 class ActiveLinkSerializer(serializers.ModelSerializer):
+    name = serializers.ReadOnlyField(source="participant.name")
+    email = serializers.ReadOnlyField(source="participant.email")
+
     class Meta:
         model = models.ActiveLink
-        fields = ["participant", "survey", "unique_link"]
+        fields = ["name", "email", "hyperlink"]
 
 
 class ResultSerializer(serializers.ModelSerializer):

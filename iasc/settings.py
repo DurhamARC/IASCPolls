@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "iasc",
     "webpack_loader",
     "rest_framework",
+    "django_filters",
     "corsheaders",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -148,7 +149,11 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.SessionAuthentication"
     ],
-    "DEFAULT_RENDERER_CLASSES": ("rest_framework.renderers.JSONRenderer",),
+    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
+    "DEFAULT_RENDERER_CLASSES": (
+        "rest_framework.renderers.JSONRenderer",
+        "drf_excel.renderers.XLSXRenderer",
+    ),
 }
 
 # Logging

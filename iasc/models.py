@@ -2,6 +2,8 @@ from django.db import models
 from django.utils.translation import gettext_lazy
 import datetime
 
+from iasc import settings
+
 
 class Institution(models.Model):
     """
@@ -117,6 +119,10 @@ class ActiveLink(models.Model):
     unique_link = models.CharField(
         max_length=255, help_text="Per-participant / survey unique voting link"
     )
+
+    @property
+    def hyperlink(self):
+        return f"{settings.CSRF_TRUSTED_ORIGINS[0]}/vote?survey={self.survey.id}&unique_id={self.unique_link}"
 
     class Meta:
         constraints = [
