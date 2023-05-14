@@ -4,6 +4,7 @@ channels:
   - conda-forge
 dependencies:
   - python=3.8
+  - pip
   - django==4.1
   - gunicorn
   - psycopg2
@@ -11,9 +12,13 @@ dependencies:
   - openpyxl
   - django-cors-headers
   - django-environ
+  - django-filter
   - django-webpack-loader
   - djangorestframework
+  - djangorestframework-filters
   - whitenoise
   - thefuzz
   - python-levenshtein
+  - pip:
+    - drf-excel
 prefix: /home/sam/miniconda3/envs/IASCPolls
