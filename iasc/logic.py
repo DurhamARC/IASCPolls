@@ -74,7 +74,7 @@ def parse_excel_sheet_to_db(sheet, **kwargs):
     ignore_conflicts = kwargs.get("ignore_conflicts")
 
     try:
-        institution = kwargs["institution"]
+        institution_name = kwargs["institution"]
         participants = []
         xls = pd.ExcelFile(sheet, engine="openpyxl")
         disciplines_db = Discipline.objects.all()
@@ -82,11 +82,11 @@ def parse_excel_sheet_to_db(sheet, **kwargs):
 
         # Get institution, or create it if that setting is on:
         try:
-            institution = Institution.objects.get(name=institution)
+            institution = Institution.objects.get(name=institution_name)
         except Institution.DoesNotExist as e:
             if not create_institutions:
                 raise e
-            institution = Institution.objects.create(name=institution)
+            institution = Institution.objects.create(name=institution_name)
 
         # Create disciplines from those in the sheet, if that setting is on:
         if create_disciplines:
