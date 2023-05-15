@@ -120,6 +120,38 @@ class CreateSurveyView(APIView):
             return Response({"status": "error", "message": error_message})
 
 
+class SubmitVoteView(APIView):
+    """
+    Take and ActiveLink and cast a vote
+    """
+
+    permission_classes = (permissions.AllowAny,)
+
+    if settings.DEBUG:
+
+        def get(self, request):
+            """
+            Render the test voting form (if in DEBUG mode)
+            """
+            return render(request, "testvote.html")
+
+    def post(self, request):
+        try:
+            uid = request.data["unique_link"]
+            link = ActiveLink.objects.filter(unique_link=uid).get()
+            vote = request.data["vote"]
+            link.vote(vote)
+
+            return Response(
+                {"status": "success", "message": "Voted."},
+                status=status.HTTP_200_OK,
+            )
+
+        except (ValidationError, ActiveLink.DoesNotExist) as e:
+            error_message = str(e)
+            return Response({"status": "error", "message": error_message})
+
+
 #
 # Participant management
 

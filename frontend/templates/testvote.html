@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<form id="vote_form" action="/api/vote" method="post" enctype="multipart/form-data">
+
+    <fieldset>
+        <legend>Vote:</legend>
+
+        <input type="radio" id="strongly_disagree" name="vote" value="1">
+        <label for="strongly_disagree">Strongly Disagree</label>
+        <input type="radio" id="disagree" name="vote" value="2">
+        <label for="disagree">Disagree</label>
+        <input type="radio" id="neutral" name="vote" value="3">
+        <label for="neutral">Neutral</label>
+        <input type="radio" id="agree" name="vote" value="4">
+        <label for="agree">Agree</label>
+        <input type="radio" id="strongly_agree" name="vote" value="5">
+        <label for="strongly_agree">Strongly Agree</label>
+    </fieldset>
+
+    <fieldset>
+        <legend>ActiveLink:</legend>
+
+        <input type="text" id="unique_link" name="unique_link" value=""/>
+        <label for="unique_link">Unique Link</label>
+    </fieldset>
+
+    <input type="submit" name="Submit" value="Vote" />
+    {% csrf_token %}
+</form>
+
+<hr />
+<code>
+<span id="result"></span>
+</code>
+
+{%  include "ajax.html" %}
+<script type="text/javascript">
+    const API_ROUTE_URI = "/api/vote";
+    const FORM_ELEMENT = "vote_form";
+</script>
+
