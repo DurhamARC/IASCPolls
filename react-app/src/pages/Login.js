@@ -28,7 +28,7 @@ export default function Login() {
     // Validate username and password
     if (username.length && password.length) {
       client.post(
-        "/api/login",
+        "/login",
         {
           username: username,
           password: password,
