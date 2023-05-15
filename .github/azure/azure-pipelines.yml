@@ -112,7 +112,14 @@ stages:
                 -DB_USER "$(DB_USER)"
                 -DB_SSL_ENABLED "$(DB_SSL_ENABLED)"
               ScriptType: 'Inline Script'
+              # sed -i lines: https://stackoverflow.com/a/76095392/1681205
               InlineScript: |
+                sed -i s/deb.debian.org/archive.debian.org/g /etc/apt/sources.list
+                sed -i 's|security.debian.org|archive.debian.org/|g' /etc/apt/sources.list
+                sed -i '/stretch-updates/d' /etc/apt/sources.list
+                apt-get update
+                apt-get install -y build-essential postgresql-client
+
                 echo "Working directory is $(pwd)"
                 export WORKDIR=$(pwd)
                 echo "python3.8 is $(which python3.8)"
