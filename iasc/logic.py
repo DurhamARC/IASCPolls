@@ -92,6 +92,7 @@ def parse_excel_sheet_to_db(sheet, **kwargs):
         for department in disciplines_xl:
             df = pd.read_excel(xls, department)
             log.info(department)
+            department = department.strip()
             if department in EXCLUDE_DEPARTMENTS:
                 log.warning(f"Skipping {department} sheet")
                 continue
