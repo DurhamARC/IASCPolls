@@ -35,9 +35,7 @@ urlpatterns = [
     path("", include("frontend.urls"), name="index"),
     path("login", views.UserLoginView.as_view(), name="login"),
     path("logout", views.UserLogoutView.as_view(), name="logout"),
-    path("user", views.UserView.as_view(), name="user"),
     path("api/", include(router.urls)),
-    path("api/login", views.UserLoginView.as_view(), name="api/login"),
     path(
         "api/participants/upload", views.UploadParticipantsView.as_view(), name="upload"
     ),
