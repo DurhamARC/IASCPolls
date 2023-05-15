@@ -137,9 +137,9 @@ class SubmitVoteView(APIView):
 
     def post(self, request):
         try:
-            uid = request.data["unique_link"]
+            uid = request.data["unique_link"].strip()
             link = ActiveLink.objects.filter(unique_link=uid).get()
-            vote = request.data["vote"]
+            vote = request.data["vote"].strip()
             link.vote(vote)
 
             return Response(
