@@ -1,10 +1,7 @@
-import secrets
-
 import pandas as pd
 import logging
 from thefuzz import process
 
-from iasc import settings
 from iasc.models import Participant, Discipline, Institution, ActiveLink, Survey
 
 log = logging.getLogger(__name__)
@@ -28,7 +25,6 @@ def create_survey_in_db(question, expiry, **kwargs):
                 ActiveLink(
                     participant=participant,
                     survey=survey,
-                    unique_link=secrets.token_urlsafe(settings.RANDOM_KEY_BYTES),
                 )
             ]
 

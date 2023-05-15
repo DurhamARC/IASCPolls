@@ -1,20 +1,10 @@
 [
 {
     "model": "iasc.activelink",
-    "pk": 1,
+    "pk": "Cupn29bzCkqQWvGO4dgAu7Zcw6gJmdwJs9ytt7Vqn8k",
     "fields": {
         "participant": "samantha.finnigan@durham.ac.uk",
-        "survey": 1,
-        "unique_link": "32412424"
-    }
-},
-{
-    "model": "iasc.activelink",
-    "pk": 2,
-    "fields": {
-        "participant": "peter.vickers@durham.ac.uk",
-        "survey": 1,
-        "unique_link": "1345362"
+        "survey": 2
     }
 }
 ]

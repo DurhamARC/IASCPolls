@@ -3,9 +3,11 @@
     "model": "iasc.result",
     "pk": 1,
     "fields": {
-        "unique_link": 1,
-        "survey": 1,
-        "vote": 1,
+        "unique_link": "Cupn29bzCkqQWvGO4dgAu7Zcw6gJmdwJs9ytt7Vqn8k",
+        "survey": 2,
+        "vote": {
+            "vote": 2
+        },
         "institution": 1,
         "discipline": 1
     }

@@ -1,11 +1,8 @@
 import datetime
-import secrets
 
-from django.db import models
 from django.test import TestCase
 from django.core.exceptions import ObjectDoesNotExist
 
-from iasc import settings
 from iasc.models import Institution, Discipline, Participant, ActiveLink, Survey, Result
 
 
@@ -31,14 +28,10 @@ class DatabaseModelTestCase(TestCase):
             voted=0,
         )
 
-        ActiveLink.objects.create(
-            participant=participant,
-            survey=survey,
-            unique_link=secrets.token_urlsafe(settings.RANDOM_KEY_BYTES),
-        )
+        ActiveLink.objects.create(participant=participant, survey=survey)
 
     def test_database_models(self):
-        link = ActiveLink.objects.get(id=1)
+        link = ActiveLink.objects.get()
         uid = str(link.unique_link)
         vote = str({"vote": 5})
         link.vote(vote)
