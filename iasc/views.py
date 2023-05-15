@@ -220,7 +220,6 @@ class SurveyViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = serializers.SurveySerializer
     queryset = models.Survey.objects.all().order_by("-expiry")
-    filter_backends = (filters.DjangoFilterBackend,)
 
 
 class ActiveLinkViewSet(XLSXFileMixin, viewsets.ReadOnlyModelViewSet):
