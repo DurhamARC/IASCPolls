@@ -1,9 +1,7 @@
 import React from 'react';
 
-const Progress = ({ progress }) => {
-  return (
-    <div className="progress-bar" style={{ width: `${progress}%` }} />
-  );
+const Progress = () => {
+  return <div className="loading-bar" />;
 };
 
 export default Progress;
