@@ -1,6 +1,5 @@
 // CreateContainer.js
 import React, { useState, useEffect, useRef } from 'react';
-import { Navigate } from 'react-router-dom';
 import StatementForm from './CreateForm';
 import Progress from './CreateProgress';
 import Completed from './CreateCompleted';
