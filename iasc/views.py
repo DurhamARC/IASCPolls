@@ -248,6 +248,10 @@ class ActiveLinkViewSet(XLSXFileMixin, viewsets.ReadOnlyModelViewSet):
     filterset_class = InstitutionSearchFilter
     renderer_classes = (XLSXRenderer,)
 
+    column_header = xlformat.COLUMN_HEADER
+    body = xlformat.BODY
+    column_data_styles = xlformat.DATA_STYLES
+
     def get_filename(self, request):
         institution = (
             Institution.objects.filter(id=request.GET["institution"]).get().name
