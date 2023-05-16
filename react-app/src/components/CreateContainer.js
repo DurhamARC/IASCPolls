@@ -1,8 +1,6 @@
 // CreateContainer.js
 import React, { useState, useEffect, useRef } from 'react';
 import StatementForm from './CreateForm';
-import Progress from './CreateProgress';
-import Completed from './CreateCompleted';
 
 const CreateContainer = ({ onClose }) => {
   const [submitting, setSubmitting] = useState(false);
@@ -27,7 +25,7 @@ const CreateContainer = ({ onClose }) => {
     setSubmitting(true);
     try {
       // Simulate API call or any async task
-      await new Promise((resolve) => setTimeout(resolve, 3000));
+      await new Promise((resolve) => setTimeout(resolve, 1500));
       setCompleted(true);
     } catch (error) {
       console.log(error);
@@ -38,6 +36,25 @@ const CreateContainer = ({ onClose }) => {
 
   const handleReset = () => {
     setCompleted(false);
+  };
+
+  const Progress = () => {
+    return (
+    <div>
+      <h4>Creating survery unique links...</h4>
+      <div className="loading-bar" />
+    </div>
+    );
+  };
+
+  const Completed = () => {
+    return (
+      <div className="next-step">
+        <h1>Completed!</h1>
+        <p>Confirmation of Survey</p>
+        <button onClick={handleReset}>Reset</button>
+      </div>
+    );
   };
 
   return (
@@ -51,7 +68,7 @@ const CreateContainer = ({ onClose }) => {
               <StatementForm onSubmit={handleSubmit} />
             )}
             {completed && (
-              <Completed onReset={handleReset} />
+              <Completed />
             )}
           </>
         )}
