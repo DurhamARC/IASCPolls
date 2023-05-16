@@ -1,5 +1,6 @@
 from django.contrib.auth import login, logout, get_user_model
 from django.core.exceptions import ValidationError
+from django.http import JsonResponse
 from django.shortcuts import render
 from django_filters import rest_framework as filters
 from drf_excel.mixins import XLSXFileMixin
@@ -10,7 +11,7 @@ from rest_framework.renderers import TemplateHTMLRenderer, JSONRenderer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from iasc import models, serializers, settings
+from iasc import models, serializers, settings, xlformat
 from frontend import views as frontend_views
 
 from iasc.logic import parse_excel_sheet_to_db, create_survey_in_db
@@ -236,6 +237,7 @@ class ActiveLinkViewSet(XLSXFileMixin, viewsets.ReadOnlyModelViewSet):
 
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = serializers.ActiveLinkSerializer
+    pagination_class = None
     queryset = (
         models.ActiveLink.objects.prefetch_related("participant", "survey")
         .all()
@@ -255,6 +257,21 @@ class ActiveLinkViewSet(XLSXFileMixin, viewsets.ReadOnlyModelViewSet):
         question = "_".join(question.split(" ")[:3])
 
         return f"IASC_{request.GET['survey']}_{question}_-_{institution}.xlsx"
+
+    def finalize_response(self, request, response, *args, **kwargs):
+        """
+        Intercept response and return "HTTP 204 NO CONTENT" if no data returned from query
+        (i.e. don't download empty Excel sheets)
+        """
+        response = super().finalize_response(request, response, *args, **kwargs)
+
+        if len(response.data) == 0:
+            return JsonResponse(
+                {"status": "notfound", "message": "No data matched the request"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        return response
 
 
 class ResultViewSet(viewsets.ReadOnlyModelViewSet):
