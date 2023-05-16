@@ -27,7 +27,7 @@ const UploadButton = () => {
     <div>
       <input
         type="file"
-        accept=".xlsx, .xls, .csv"
+        accept=".xlsx, .xls"
         style={{ display: 'none' }}
         ref={fileInputRef}
         onChange={handleSelectedFile}

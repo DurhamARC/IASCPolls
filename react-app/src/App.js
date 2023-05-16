@@ -2,12 +2,11 @@
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
-import Poll from './pages/Poll';
+import Poll from './pages/Survey';
 import About from './pages/About';
 import Thanks from './pages/Thanks';
 import Ethics from './pages/Ethics';
 import Error from './pages/Error';
-import PollTemp from './pages/Poll-temp';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Create from './pages/Create';
@@ -34,7 +33,6 @@ function App() {
           <Route path="/thankyou" element={<Thanks />} />
           <Route path="/ethics" element={<Ethics />} />
           <Route path="/error" element={<Error />} />
-          <Route path="/poll-temp" element={<PollTemp />} />
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/create" element={<Create />} />

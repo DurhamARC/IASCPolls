@@ -39,7 +39,7 @@ const Table = ({ data }) => {
           {currentItems.map((row, index) => (
             <tr key={index}>
               <td>{row.question}</td>
-              <td>{row.voted * 100 / row.participants}%</td>
+              <td>{Math.round(row.voted * 100 / row.participants)}%</td>
               <td>
                 <span className="material-symbols-outlined">
                   groups

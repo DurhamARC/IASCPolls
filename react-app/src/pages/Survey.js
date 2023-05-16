@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import NavBar from "../components/NavBar";
-import PollForm from "../components/PollForm";
+import PollForm from "../components/SurveyForm";
 import Footer from '../components/Footer';
 import axios from 'axios';
 

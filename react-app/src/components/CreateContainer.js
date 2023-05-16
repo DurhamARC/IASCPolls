@@ -1,12 +1,28 @@
-import React, { useState } from 'react';
+// CreateContainer.js
+import React, { useState, useEffect, useRef } from 'react';
 import { Navigate } from 'react-router-dom';
 import StatementForm from './CreateForm';
 import Progress from './CreateProgress';
 import Completed from './CreateCompleted';
 
-const CreateContainer = () => {
+const CreateContainer = ({ onClose }) => {
   const [submitting, setSubmitting] = useState(false);
   const [completed, setCompleted] = useState(false);
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (containerRef.current && !containerRef.current.contains(event.target)) {
+        onClose();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [onClose]);
 
   const handleSubmit = async () => {
     setSubmitting(true);
@@ -27,7 +43,7 @@ const CreateContainer = () => {
 
   return (
     <div className="overlay">
-      <div className="create-container">
+      <div className="create-container" ref={containerRef}>
         {submitting ? (
           <Progress />
         ) : (
