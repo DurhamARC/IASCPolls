@@ -286,9 +286,7 @@ class XLSActiveLinkViewSet(mixins.IASCXLSXFileMixin, ActiveLinkViewSet):
         self.column_header["column_width"] = [30, 40, 70]
 
 
-class ZipActiveLinkViewSet(
-    mixins.IASCZipFileMixin, mixins.IASCXLSXFileMixin, ActiveLinkViewSet
-):
+class ZipActiveLinkViewSet(mixins.IASCZipFileMixin, XLSActiveLinkViewSet):
     """
     Retrieve Excel files as Zip file for multiple institutions
     """
@@ -296,6 +294,12 @@ class ZipActiveLinkViewSet(
     serializer_class = serializers.MultiFileSerializer
     renderer_classes = (renderers.ZipXLSRenderer,)
     pagination_class = None
+    xlsx_custom_cols = {
+        "name": {"label": "Name"},
+        "email": {"label": "Email"},
+        "hyperlink": {"label": "Hyperlink"},
+    }
+    xlsx_ignore_headers = ["filename"]
 
 
 class ResultViewSet(viewsets.ReadOnlyModelViewSet):
