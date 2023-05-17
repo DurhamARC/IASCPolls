@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<form id="close_survey" action="/api/survey/create" method="post" enctype="multipart/form-data">
+
+    <fieldset>
+        <legend>Close Survey:</legend>
+
+        <label for="survey_id">Survey:</label>
+        <select id="survey_id" name="survey_id">
+            <option>Choose an option</option>
+        </select>
+    </fieldset>
+
+    <input type="submit" name="Submit" value="Close Survey" />
+    {% csrf_token %}
+</form>
+
+<hr />
+<code>
+<span id="result"></span>
+</code>
+
+{%  include "ajax.html" %}
+<script type="text/javascript">
+
+    const API_ROUTE_URI = "/api/survey/close";
+    const FORM_ELEMENT = "close_survey";
+    const SELECT_DROPDOWN = document.getElementById("survey_id");
+
+    const LOAD_FUNCTION = function (res) {
+        console.log(">>" + this.responseText)
+        result = JSON.parse(this.responseText)
+        if(result.status === "success"){
+            let selected = SELECT_DROPDOWN.options[SELECT_DROPDOWN.selectedIndex];
+            SELECT_DROPDOWN.removeChild(selected)
+        }
+    }
+
+    function populateDropdown() {
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', "/api/survey?active=true", true);
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhr.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
+
+        xhr.onload = function() {
+            const results = JSON.parse(this.responseText).results;
+
+            for(let i = 0; i < results.length; i++) {
+                console.log(results[i]);
+
+                let opt = results[i];
+                var el = document.createElement("option");
+                el.textContent = opt.question;
+                el.value = opt.id;
+                SELECT_DROPDOWN.appendChild(el);
+            }
+        };
+
+        xhr.send();
+    }
+
+    window.addEventListener('load', (event) => {
+        populateDropdown();
+    });
+</script>

@@ -12,7 +12,12 @@ from rest_framework.response import Response
 
 from iasc import serializers, settings, mixins, renderers
 from frontend import views as frontend_views
-from iasc.filters import InstitutionFilter, ResultFilter, ParticipantInstitutionFilter
+from iasc.filters import (
+    InstitutionFilter,
+    ResultFilter,
+    ParticipantInstitutionFilter,
+    SurveyFilter,
+)
 
 from iasc.logic import parse_excel_sheet_to_db, create_survey_in_db
 from iasc.models import ActiveLink, Result, Participant, Survey
@@ -122,6 +127,43 @@ class CreateSurveyView(APIView):
             return Response({"status": "error", "message": error_message})
 
 
+class CloseSurveyView(APIView):
+    """
+    Close/Deactivate Survey in Database
+    """
+
+    permission_classes = (permissions.IsAuthenticated,)
+
+    if settings.DEBUG:
+
+        def get(self, request):
+            """
+            Render the test survey creation form (if in DEBUG mode)
+            """
+            return render(request, "testclose.html")
+
+    def post(self, request):
+        survey_id = int(request.data["survey_id"].strip())
+        survey = Survey.objects.filter(id=survey_id).get()
+
+        if survey.active is True:
+            survey.active = False
+            survey.save()
+
+            return Response(
+                {"status": "success", "message": "Closed"},
+                status=status.HTTP_200_OK,
+            )
+
+        return Response(
+            {
+                "status": "failure",
+                "message": f"Survey {survey_id} not active or not found",
+            },
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+
 class SubmitVoteView(APIView):
     """
     Take and ActiveLink and cast a vote
@@ -145,7 +187,7 @@ class SubmitVoteView(APIView):
             link.vote(vote)
 
             return Response(
-                {"status": "success", "message": "Voted."},
+                {"status": "success", "message": "Voted"},
                 status=status.HTTP_200_OK,
             )
 
@@ -224,6 +266,8 @@ class SurveyViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = serializers.SurveySerializer
     queryset = Survey.objects.all().order_by("-expiry")
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = SurveyFilter
 
 
 class SurveyInstitutionViewSet(viewsets.ReadOnlyModelViewSet):

@@ -27,6 +27,16 @@
                 `[${(new Date()).toLocaleTimeString()}]  ${this.responseText} \n`
         };
 
+
+        try {
+            if (typeof LOAD_FUNCTION !== undefined) {
+                xhr.addEventListener('load', LOAD_FUNCTION);
+            }
+        }
+        catch(e) {
+            console.log('missingVar is not defined');
+        }
+
         xhr.send(JSON.stringify(json));
 
         // Return false to prevent default form behavior

@@ -57,7 +57,7 @@ class ParticipantSerializer(serializers.ModelSerializer):
 class SurveySerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Survey
-        fields = ["question", "active", "kind", "expiry", "participants", "voted"]
+        fields = ["id", "question", "active", "kind", "expiry", "participants", "voted"]
 
 
 class SurveyInstitutionSerializer(serializers.ModelSerializer):

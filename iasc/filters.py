@@ -1,6 +1,6 @@
 from django_filters import rest_framework as filters
 
-from iasc.models import Result, ActiveLink, Participant
+from iasc.models import Result, ActiveLink, Participant, Survey
 
 
 class ResultFilter(filters.FilterSet):
@@ -27,3 +27,12 @@ class ParticipantInstitutionFilter(filters.FilterSet):
     class Meta:
         model = Participant
         fields = ["institution", "discipline"]
+
+
+class SurveyFilter(filters.FilterSet):
+    active = filters.BooleanFilter(field_name="active")
+    kind = filters.CharFilter(field_name="kind")
+
+    class Meta:
+        model = Survey
+        fields = ["active", "kind"]
