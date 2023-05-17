@@ -1,21 +1,21 @@
+import copy
+
 from django.contrib.auth import login, logout, get_user_model
 from django.core.exceptions import ValidationError
-from django.http import JsonResponse
 from django.shortcuts import render
 from django_filters import rest_framework as filters
-from drf_excel.mixins import XLSXFileMixin
-from drf_excel.renderers import XLSXRenderer
 from rest_framework import viewsets, permissions, status
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.renderers import TemplateHTMLRenderer, JSONRenderer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from iasc import models, serializers, settings, xlformat
+from iasc import serializers, settings, mixins
 from frontend import views as frontend_views
 
 from iasc.logic import parse_excel_sheet_to_db, create_survey_in_db
-from iasc.models import Institution, ActiveLink, Survey
+from iasc.models import ActiveLink, Result, Participant, Survey
+
 
 #
 # User management and login functionality
@@ -211,7 +211,7 @@ class ParticipantViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = serializers.ParticipantSerializer
     queryset = (
-        models.Participant.objects.prefetch_related("institution", "discipline")
+        Participant.objects.prefetch_related("institution", "discipline")
         .all()
         .order_by("-email")
     )
@@ -220,16 +220,21 @@ class ParticipantViewSet(viewsets.ReadOnlyModelViewSet):
 class SurveyViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = serializers.SurveySerializer
-    queryset = models.Survey.objects.all().order_by("-expiry")
+    queryset = Survey.objects.all().order_by("-expiry")
 
 
-class ActiveLinkViewSet(XLSXFileMixin, viewsets.ReadOnlyModelViewSet):
+class ActiveLinkViewSet(mixins.IASCXLSXFileMixin, viewsets.ReadOnlyModelViewSet):
     """
     Get ActiveLinks as Excel Spreadsheet on route /api/links/?survey=1&institution=1
     """
 
-    class InstitutionSearchFilter(filters.FilterSet):
-        institution = filters.CharFilter(field_name="participant__institution_id")
+    def __init__(self, **kwargs):
+        super()
+        self.column_header = copy.copy(self.column_header)
+        self.column_header["titles"] = ["Name", "E-mail Address", "Unique Link"]
+
+    class InstitutionFilter(filters.FilterSet):
+        institution = filters.NumberFilter(field_name="participant__institution_id")
 
         class Meta:
             model = ActiveLink
@@ -239,50 +244,36 @@ class ActiveLinkViewSet(XLSXFileMixin, viewsets.ReadOnlyModelViewSet):
     serializer_class = serializers.ActiveLinkSerializer
     pagination_class = None
     queryset = (
-        models.ActiveLink.objects.prefetch_related("participant", "survey")
+        ActiveLink.objects.prefetch_related("participant", "survey")
         .all()
         .order_by("-participant_id")
     )
 
     filter_backends = (filters.DjangoFilterBackend,)
-    filterset_class = InstitutionSearchFilter
-    renderer_classes = (XLSXRenderer,)
-
-    column_header = xlformat.COLUMN_HEADER
-    body = xlformat.BODY
-    column_data_styles = xlformat.DATA_STYLES
-
-    def get_filename(self, request):
-        institution = (
-            Institution.objects.filter(id=request.GET["institution"]).get().name
-        )
-        institution = "_".join(institution.split(" "))
-        question = Survey.objects.filter(id=request.GET["survey"]).get().question
-        question = "_".join(question.split(" ")[:3])
-
-        return f"IASC_{request.GET['survey']}_{question}_-_{institution}.xlsx"
-
-    def finalize_response(self, request, response, *args, **kwargs):
-        """
-        Intercept response and return "HTTP 204 NO CONTENT" if no data returned from query
-        (i.e. don't download empty Excel sheets)
-        """
-        response = super().finalize_response(request, response, *args, **kwargs)
-
-        if len(response.data) == 0:
-            return JsonResponse(
-                {"status": "notfound", "message": "No data matched the request"},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-
-        return response
+    filterset_class = InstitutionFilter
 
 
 class ResultViewSet(viewsets.ReadOnlyModelViewSet):
+    class ResultFilter(filters.FilterSet):
+        institution = filters.NumberFilter(field_name="institution_id")
+        survey = filters.NumberFilter(field_name="survey_id")
+
+        class Meta:
+            model = Result
+            fields = ["institution", "survey"]
+
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = serializers.ResultSerializer
+
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = ResultFilter
+
     queryset = (
-        models.Result.objects.prefetch_related("institution", "discipline")
+        Result.objects.prefetch_related("institution", "discipline")
         .all()
         .order_by("-id")
     )
+
+
+class XLSResultViewSet(mixins.IASCXLSXFileMixin, ResultViewSet):
+    filename_string = "Results-{}-{}-{}.{}"
