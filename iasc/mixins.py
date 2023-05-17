@@ -20,6 +20,7 @@ class IASCXLSXFileMixin(XLSXFileMixin):
     def get_filename(self, request):
         extension = ".xlsx"
 
+        institution = "ALL"
         if "institution" in request.GET:
             institution = Institution.objects.filter(id=request.GET["institution"])
             institution = "_".join(institution.get().name.split(" "))
