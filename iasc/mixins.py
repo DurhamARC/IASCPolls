@@ -1,10 +1,46 @@
 from django.core.exceptions import BadRequest
 from django.http import JsonResponse
+from django.utils.encoding import escape_uri_path
 from drf_excel.mixins import XLSXFileMixin
 from drf_excel.renderers import XLSXRenderer
+from rest_framework.response import Response
 from rest_framework import status
 
 from iasc.models import Institution, Survey
+
+
+def get_survey_detail(request):
+    if "survey" not in request.GET:
+        raise BadRequest("Missing survey query parameter: ?survey=n")
+
+    survey_id = request.GET["survey"]
+    question = Survey.objects.filter(id=request.GET["survey"]).get().question
+    question = "_".join(question.split(" ")[:3])
+
+    return survey_id, question
+
+
+class IASCZipFileMixin(object):
+    filename = "IASC-{}-{}-export.zip"
+
+    def get_filename(self, request=None, *args, **kwargs):
+        survey_id, question = get_survey_detail(request)
+        return self.filename.format(survey_id, question)
+
+    def finalize_response(self, request, response, *args, **kwargs):
+        """
+        Return the response with the proper content disposition and the customized
+        filename instead of the browser default (or lack thereof).
+        """
+        response = super().finalize_response(request, response, *args, **kwargs)
+        is_zip = response.accepted_renderer.format == "zip"
+
+        if is_zip and isinstance(response, Response):
+            response["content-disposition"] = "attachment; filename={}".format(
+                escape_uri_path(self.get_filename(request=request, *args, **kwargs)),
+            )
+
+        return response
 
 
 class IASCXLSXFileMixin(XLSXFileMixin):
@@ -14,26 +50,19 @@ class IASCXLSXFileMixin(XLSXFileMixin):
     defaults for renderer_classes, column_header, body, and column_data_styles
     """
 
-    filename_string = "IASC-{}-{}-{}.{}"
+    filename_string = "IASC-{}-{}-{}.xlsx"
     renderer_classes = (XLSXRenderer,)
     pagination_class = None
 
     def get_filename(self, request):
-        extension = ".xlsx"
-
         institution = "ALL"
         if "institution" in request.GET:
             institution = Institution.objects.filter(id=request.GET["institution"])
             institution = "_".join(institution.get().name.split(" "))
 
-        if "survey" not in request.GET:
-            raise BadRequest("Missing survey query parameter: ?survey=n")
+        survey_id, question = get_survey_detail(request)
 
-        survey_id = request.GET["survey"]
-        question = Survey.objects.filter(id=request.GET["survey"]).get().question
-        question = "_".join(question.split(" ")[:3])
-
-        return self.filename_string.format(survey_id, question, institution, extension)
+        return self.filename_string.format(survey_id, question, institution)
 
     def finalize_response(self, request, response, *args, **kwargs):
         """
@@ -51,7 +80,6 @@ class IASCXLSXFileMixin(XLSXFileMixin):
         return response
 
     column_header = {
-        "column_width": [30, 40, 70],
         "height": 25,
         "style": {
             "fill": {

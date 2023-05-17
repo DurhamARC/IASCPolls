@@ -84,3 +84,15 @@ class ResultSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Result
         fields = ["survey", "vote", "institution", "discipline"]
+
+
+class MultiFileSerializer(ActiveLinkSerializer):
+    filename = serializers.SerializerMethodField()
+    # institution = serializers.ReadOnlyField(source="participant.institution.name")
+
+    def get_filename(self, obj):
+        return f"{obj.participant.institution.id}-{'_'.join(obj.participant.institution.name.strip().split(' '))}.xlsx"
+
+    class Meta:
+        model = models.ActiveLink
+        fields = ["filename", "name", "email", "hyperlink"]

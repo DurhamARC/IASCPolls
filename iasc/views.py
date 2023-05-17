@@ -10,7 +10,7 @@ from rest_framework.renderers import TemplateHTMLRenderer, JSONRenderer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from iasc import serializers, settings, mixins
+from iasc import serializers, settings, mixins, renderers
 from frontend import views as frontend_views
 
 from iasc.logic import parse_excel_sheet_to_db, create_survey_in_db
@@ -283,12 +283,19 @@ class XLSActiveLinkViewSet(mixins.IASCXLSXFileMixin, ActiveLinkViewSet):
         super()
         self.column_header = copy.copy(self.column_header)
         self.column_header["titles"] = ["Name", "E-mail Address", "Unique Link"]
+        self.column_header["column_width"] = [30, 40, 70]
 
 
-class ZipActiveLinkViewSet(ActiveLinkViewSet):
+class ZipActiveLinkViewSet(
+    mixins.IASCZipFileMixin, mixins.IASCXLSXFileMixin, ActiveLinkViewSet
+):
     """
-    Retrieve Excel files as Zip file for multiple instititutions
+    Retrieve Excel files as Zip file for multiple institutions
     """
+
+    serializer_class = serializers.MultiFileSerializer
+    renderer_classes = (renderers.ZipXLSRenderer,)
+    pagination_class = None
 
 
 class ResultViewSet(viewsets.ReadOnlyModelViewSet):

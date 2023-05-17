@@ -29,6 +29,7 @@ api_views = [
     ),
     (r"survey", views.SurveyViewSet, "survey"),
     (r"links/xls", views.XLSActiveLinkViewSet, "links/xls"),
+    (r"links/zip", views.ZipActiveLinkViewSet, "links/zip"),
     (r"links", views.ActiveLinkViewSet, "links"),
     (r"result/xls", views.XLSResultViewSet, "result/xls"),
     (r"result", views.ResultViewSet, "result"),
