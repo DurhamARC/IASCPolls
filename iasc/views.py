@@ -12,6 +12,7 @@ from rest_framework.response import Response
 
 from iasc import serializers, settings, mixins, renderers
 from frontend import views as frontend_views
+from iasc.filters import InstitutionFilter, ResultFilter, ParticipantInstitutionFilter
 
 from iasc.logic import parse_excel_sheet_to_db, create_survey_in_db
 from iasc.models import ActiveLink, Result, Participant, Survey
@@ -215,20 +216,14 @@ class ParticipantViewSet(viewsets.ReadOnlyModelViewSet):
         .all()
         .order_by("-email")
     )
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = ParticipantInstitutionFilter
 
 
 class SurveyViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = serializers.SurveySerializer
     queryset = Survey.objects.all().order_by("-expiry")
-
-
-class InstitutionFilter(filters.FilterSet):
-    institution = filters.NumberFilter(field_name="participant__institution_id")
-
-    class Meta:
-        model = ActiveLink
-        fields = ["institution", "survey"]
 
 
 class SurveyInstitutionViewSet(viewsets.ReadOnlyModelViewSet):
@@ -294,11 +289,6 @@ class ZipActiveLinkViewSet(mixins.IASCZipFileMixin, XLSActiveLinkViewSet):
     serializer_class = serializers.MultiFileSerializer
     renderer_classes = (renderers.ZipXLSRenderer,)
     pagination_class = None
-    xlsx_custom_cols = {
-        "name": {"label": "Name"},
-        "email": {"label": "Email"},
-        "hyperlink": {"label": "Hyperlink"},
-    }
     xlsx_ignore_headers = ["filename"]
 
 
@@ -306,14 +296,6 @@ class ResultViewSet(viewsets.ReadOnlyModelViewSet):
     """
     Retrieve results as JSON on route /api/result/?survey=1&institution=1
     """
-
-    class ResultFilter(filters.FilterSet):
-        institution = filters.NumberFilter(field_name="institution_id")
-        survey = filters.NumberFilter(field_name="survey_id")
-
-        class Meta:
-            model = Result
-            fields = ["institution", "survey"]
 
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = serializers.ResultSerializer
