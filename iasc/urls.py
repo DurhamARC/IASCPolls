@@ -22,6 +22,11 @@ from iasc import views
 router = routers.DefaultRouter()
 api_views = [
     (r"participants", views.ParticipantViewSet, "participants"),
+    (
+        r"survey/(?P<survey_id>.+)/institutions",
+        views.SurveyInstitutionViewSet,
+        "survey/survey_id/institutions",
+    ),
     (r"survey", views.SurveyViewSet, "survey"),
     (r"links/xls", views.XLSActiveLinkViewSet, "links/xls"),
     (r"links", views.ActiveLinkViewSet, "links"),

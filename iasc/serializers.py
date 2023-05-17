@@ -60,6 +60,14 @@ class SurveySerializer(serializers.ModelSerializer):
         fields = ["question", "active", "kind", "expiry", "participants", "voted"]
 
 
+class SurveyInstitutionSerializer(serializers.ModelSerializer):
+    institution = serializers.ReadOnlyField(source="participant.institution.name")
+
+    class Meta:
+        model = models.ActiveLink
+        fields = ["institution"]
+
+
 class ActiveLinkSerializer(serializers.ModelSerializer):
     name = serializers.ReadOnlyField(source="participant.name")
     email = serializers.ReadOnlyField(source="participant.email")

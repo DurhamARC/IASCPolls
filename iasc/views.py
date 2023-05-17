@@ -223,17 +223,45 @@ class SurveyViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Survey.objects.all().order_by("-expiry")
 
 
+class InstitutionFilter(filters.FilterSet):
+    institution = filters.NumberFilter(field_name="participant__institution_id")
+
+    class Meta:
+        model = ActiveLink
+        fields = ["institution", "survey"]
+
+
+class SurveyInstitutionViewSet(viewsets.ReadOnlyModelViewSet):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    queryset = ActiveLink.objects.select_related("participant").distinct(
+        "survey_id", "participant__institution_id"
+    )
+    pagination_class = None
+    serializer_class = serializers.SurveyInstitutionSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = InstitutionFilter
+
+    def list(
+        self, request, *args, **kwargs
+    ):  # Override list method to list the data as a dictionary instead of array
+        response = super(SurveyInstitutionViewSet, self).list(
+            request, *args, **kwargs
+        )  # Call the original 'list'
+        response_list = []
+        for item in response.data:
+            response_list.append(item["institution"])
+        response.data = response_list  # Customize response data into dictionary with id as keys instead of using array
+        return response  # Return response with this custom representation
+
+    def get_queryset(self):
+        sid = self.kwargs["survey_id"]
+        return self.queryset.filter(survey_id=sid)
+
+
 class ActiveLinkViewSet(viewsets.ReadOnlyModelViewSet):
     """
     Retrieve ActiveLinks as JSON  on route /api/links/?survey=1&institution=1
     """
-
-    class InstitutionFilter(filters.FilterSet):
-        institution = filters.NumberFilter(field_name="participant__institution_id")
-
-        class Meta:
-            model = ActiveLink
-            fields = ["institution", "survey"]
 
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = serializers.ActiveLinkSerializer
