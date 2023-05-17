@@ -111,7 +111,7 @@ p, ol, ul {
   align-items: center;
   width: 95%;
   text-align: center; /* center the navigation bar */
-  z-index: 9999; 
+  z-index: 998; 
   top: 0;
   left: 0;
   padding: 30px;
@@ -896,10 +896,13 @@ p, ol, ul {
   height: 90%;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: center;
 }
 
+.dashboard--overview div{
+  padding:2rem;
+}
 
 .dashboard--projects{
   width: 60%;
@@ -1045,26 +1048,31 @@ p, ol, ul {
 
 
 
-.create{
+.create-container {
+  background-color: #fff;
   border: 2px solid rgb(221, 210, 210);
   width: 50vw;
-}
-
-.create form {
+  height: 50vh;
+  padding: 2rem;
   display: flex;
   flex-direction: column;
-  align-items: left;
-  padding: 2rem;
+  justify-content: space-evenly;
 }
 
-.create label {
+.create-container form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.create-container label {
   margin-top: 1rem;
   font-size: 1.5rem;
 }
 
-.create  input[type="text"],
-.create  input[type="date"],
-.create  input[type="file"] {
+.create-container input[type="text"],
+.create-container input[type="date"],
+.create-container input[type="file"] {
   margin-bottom: 1rem;
   padding: 0.5rem;
   border-radius: 0.25rem;
@@ -1073,12 +1081,12 @@ p, ol, ul {
   width: 100%;
 }
 
-.create input[type="file"] {
+.create-container input[type="file"] {
   height: 3rem;
   overflow: hidden;
 }
 
-.create button[type="submit"] {
+.create-container button[type="submit"] {
   margin-top: 1rem;
   padding: 0.5rem 1rem;
   background-color: #007bff;
@@ -1089,16 +1097,16 @@ p, ol, ul {
   cursor: pointer;
 }
 
-.create button[type="submit"]:hover {
+.create-container button[type="submit"]:hover {
   background-color: #0062cc;
 }
 
-.create input[type="file"]:focus {
+.create-container input[type="file"]:focus {
   outline: none;
   border: 1px solid #007bff;
 }
 
-.create input[type="file"]::before {
+.create-container input[type="file"]::before {
   content: 'Choose a file or drag it here';
   display: block;
   margin-top: -2rem;
@@ -1108,11 +1116,11 @@ p, ol, ul {
   text-align: center;
 }
 
-.create input[type="file"]:hover::before {
+.create-container input[type="file"]:hover::before {
   color: #007bff;
 }
 
-.create--statement {
+.create-container .create--statement {
   width: 100%;
   height: 100px;
   resize: none;
@@ -1120,6 +1128,31 @@ p, ol, ul {
   padding: 10px;
   box-sizing: border-box;
 }
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999; /* Ensure the overlay appears above other content */
+}
+
+.blur {
+  filter: blur(4px); /* Apply blur effect to the content */
+}
+
+
+
+
+
+
+
+
 
 
 .progress-bar {
@@ -1150,3 +1183,81 @@ p, ol, ul {
   align-items: center;
   margin-top: 2rem;
 }
+
+
+
+
+
+
+
+
+
+.loading-bar {
+  width: 100%;
+  height: 4px;
+  background-color: #e0e0e0;
+  position: relative;
+}
+
+.loading-bar:before {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background-color: #2196f3;
+  animation: loading-progress 2s ease-in-out infinite;
+}
+
+@keyframes loading-progress {
+  0% {
+    width: 0;
+  }
+  50% {
+    width: 50%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+
+
+
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.add-participants-container {
+  background-color: #fff;
+  border: 2px solid rgb(221, 210, 210);
+  width: 50vw;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.add-participants-upload-button {
+  margin-bottom: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 0.25rem;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+

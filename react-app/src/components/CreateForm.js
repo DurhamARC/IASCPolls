@@ -1,42 +1,51 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-const CreateForm = ({ statement, endDate, file, onStatementChange, onEndDateChange, onFileChange, onSubmit }) => {
+const CreateForm = ({ onSubmit }) => {
+  const [title, setTitle] = useState('');
+  const [statement, setStatement] = useState('');
+  const [endDate, setEndDate] = useState('');
+
+  const handleTitleChange = (event) => {
+    setTitle(event.target.value);
+  };
+
+  const handleStatementChange = (event) => {
+    setStatement(event.target.value);
+  };
+
+  const handleEndDateChange = (event) => {
+    setEndDate(event.target.value);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    onSubmit();
+  };
+
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={handleSubmit}>
       <label htmlFor="title">Title:</label>
       <input
         id="title"
         type="text"
+        value={title}
+        onChange={handleTitleChange}
         placeholder="Enter your dashboard title"
       />
       <label htmlFor="statement">Statement:</label>
       <textarea
         id="statement"
         value={statement}
-        onChange={onStatementChange}
+        onChange={handleStatementChange}
         className="create--statement"
         placeholder="Enter the statement the participants will see"
-        style={{
-          width: '100%',
-          height: '100px',
-          resize: 'none',
-          padding: '10px',
-          boxSizing: 'border-box',
-          fontSize: '1.5rem'
-        }}
       />
       <label htmlFor="endDate">Select End Date:</label>
       <input
         id="endDate"
         type="date"
         value={endDate}
-        onChange={onEndDateChange}
-      />
-      <label htmlFor="file">Upload File:</label>
-      <input
-        id="file"
-        type="file"
-        onChange={onFileChange}
+        onChange={handleEndDateChange}
       />
       <button type="submit">Submit</button>
     </form>
