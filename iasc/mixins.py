@@ -16,6 +16,7 @@ class IASCXLSXFileMixin(XLSXFileMixin):
 
     filename_string = "IASC-{}-{}-{}.{}"
     renderer_classes = (XLSXRenderer,)
+    pagination_class = None
 
     def get_filename(self, request):
         extension = ".xlsx"

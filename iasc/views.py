@@ -223,15 +223,10 @@ class SurveyViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Survey.objects.all().order_by("-expiry")
 
 
-class ActiveLinkViewSet(mixins.IASCXLSXFileMixin, viewsets.ReadOnlyModelViewSet):
+class ActiveLinkViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    Get ActiveLinks as Excel Spreadsheet on route /api/links/?survey=1&institution=1
+    Retrieve ActiveLinks as JSON  on route /api/links/?survey=1&institution=1
     """
-
-    def __init__(self, **kwargs):
-        super()
-        self.column_header = copy.copy(self.column_header)
-        self.column_header["titles"] = ["Name", "E-mail Address", "Unique Link"]
 
     class InstitutionFilter(filters.FilterSet):
         institution = filters.NumberFilter(field_name="participant__institution_id")
@@ -242,18 +237,37 @@ class ActiveLinkViewSet(mixins.IASCXLSXFileMixin, viewsets.ReadOnlyModelViewSet)
 
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = serializers.ActiveLinkSerializer
-    pagination_class = None
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = InstitutionFilter
     queryset = (
         ActiveLink.objects.prefetch_related("participant", "survey")
         .all()
         .order_by("-participant_id")
     )
 
-    filter_backends = (filters.DjangoFilterBackend,)
-    filterset_class = InstitutionFilter
+
+class XLSActiveLinkViewSet(mixins.IASCXLSXFileMixin, ActiveLinkViewSet):
+    """
+    Get ActiveLinks as Excel Spreadsheet on route /api/links/xls/?survey=1&institution=1
+    """
+
+    def __init__(self, **kwargs):
+        super()
+        self.column_header = copy.copy(self.column_header)
+        self.column_header["titles"] = ["Name", "E-mail Address", "Unique Link"]
+
+
+class ZipActiveLinkViewSet(ActiveLinkViewSet):
+    """
+    Retrieve Excel files as Zip file for multiple instititutions
+    """
 
 
 class ResultViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    Retrieve results as JSON on route /api/result/?survey=1&institution=1
+    """
+
     class ResultFilter(filters.FilterSet):
         institution = filters.NumberFilter(field_name="institution_id")
         survey = filters.NumberFilter(field_name="survey_id")
@@ -264,7 +278,6 @@ class ResultViewSet(viewsets.ReadOnlyModelViewSet):
 
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = serializers.ResultSerializer
-
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = ResultFilter
 
@@ -276,4 +289,8 @@ class ResultViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class XLSResultViewSet(mixins.IASCXLSXFileMixin, ResultViewSet):
+    """
+    Retrieve results as Excel Spreadsheet on route /api/result/xls/?survey=1&institution=1
+    """
+
     filename_string = "Results-{}-{}-{}.{}"

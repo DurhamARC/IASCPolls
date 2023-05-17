@@ -23,6 +23,7 @@ router = routers.DefaultRouter()
 api_views = [
     (r"participants", views.ParticipantViewSet, "participants"),
     (r"survey", views.SurveyViewSet, "survey"),
+    (r"links/xls", views.XLSActiveLinkViewSet, "links/xls"),
     (r"links", views.ActiveLinkViewSet, "links"),
     (r"result/xls", views.XLSResultViewSet, "result/xls"),
     (r"result", views.ResultViewSet, "result"),
