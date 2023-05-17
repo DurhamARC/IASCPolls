@@ -6,6 +6,7 @@ dependencies:
   - python=3.8
   - pip
   - django==4.1
+  - requests
   - gunicorn
   - psycopg2
   - pandas
