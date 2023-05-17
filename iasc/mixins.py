@@ -10,7 +10,8 @@ from iasc.models import Institution, Survey
 class IASCXLSXFileMixin(XLSXFileMixin):
     """
     Mixin class applied to classes using IASCFileMixin
-    Overrides get_filename
+    Overrides get_filename and finalize_response, and provides
+    defaults for renderer_classes, column_header, body, and column_data_styles
     """
 
     filename_string = "IASC-{}-{}-{}.{}"
