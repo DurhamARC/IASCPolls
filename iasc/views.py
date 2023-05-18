@@ -367,4 +367,4 @@ class XLSResultViewSet(mixins.IASCXLSXFileMixin, ResultViewSet):
     Retrieve results as Excel Spreadsheet on route /api/result/xls/?survey=1&institution=1
     """
 
-    filename_string = "Results-{}-{}-{}.{}"
+    filename_string = "Results-{}-{}-{}.xlsx"
