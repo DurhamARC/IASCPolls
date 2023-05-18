@@ -1,5 +1,6 @@
 import pandas as pd
 import logging
+from django.db import transaction
 from thefuzz import process
 
 from iasc.models import Participant, Discipline, Institution, ActiveLink, Survey
@@ -9,6 +10,7 @@ log = logging.getLogger(__name__)
 EXCLUDE_DEPARTMENTS = ["ALL"]
 
 
+@transaction.atomic
 def create_survey_in_db(question, expiry, **kwargs):
     kind = kwargs.get("kind")
     active = kwargs.get("active")
@@ -49,6 +51,7 @@ def xl_disciplines_to_db(disciplines: list):
     Discipline.objects.bulk_create(to_create)
 
 
+@transaction.atomic
 def parse_excel_sheet_to_db(sheet, **kwargs):
     """
     Take an Excel spreadsheet, and transform it into database objects in Django ORM
