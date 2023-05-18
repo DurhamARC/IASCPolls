@@ -3,10 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <title>Download Results</title>
+    <script type="text/javascript">{% include "test/cookie.js" %}</script>
+    <script type="text/javascript">{% include "test/dropdown.js" %}</script>
 </head>
 <body>
 
 <h1>Download Results</h1>
+
+<form method="get" id="download_results" action="/api/result/xls/">
+
+    <fieldset>
+        <legend>Select Survey:</legend>
+        {% include "test/surveydropdown.html" %}
+    </fieldset>
+
+    <input type="submit" value="Get Results" />
+</form>
+
+<form method="get" id="download_all" action="/api/result/zip/">
+    <input type="submit" value="Just Get ALL Results" />
+</form>
+
+<script type="text/javascript">
+    const FORM_ELEMENT = "download_results";
+    const SELECT_DROPDOWN = document.getElementById("survey");
+
+    window.addEventListener('load', (event) => {
+        populateSurveyDropdown("/api/survey/results/");
+    });
+</script>
 
 <br /><hr />
 <div style="text-align: right">

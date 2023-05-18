@@ -70,6 +70,7 @@ class SurveyInstitutionSerializer(serializers.ModelSerializer):
 
 
 class SurveyResultSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(source="survey.id")
     count = serializers.SerializerMethodField()
     question = serializers.CharField(source="survey.question")
 
@@ -78,7 +79,7 @@ class SurveyResultSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Result
-        fields = ["survey_id", "question", "count"]
+        fields = ["id", "question", "count"]
 
 
 class ActiveLinkSerializer(serializers.ModelSerializer):

@@ -254,6 +254,14 @@ class SurveyResultsViewSet(viewsets.ReadOnlyModelViewSet):
     pagination_class = None
     serializer_class = serializers.SurveyResultSerializer
 
+    def list(self, request, *args, **kwargs):
+        """
+        Override list method to add metadata
+        """
+        response = super(SurveyResultsViewSet, self).list(request, *args, **kwargs)
+        response.data = {"count": len(response.data), "results": response.data}
+        return response
+
 
 class SurveyInstitutionViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
@@ -269,8 +277,7 @@ class SurveyInstitutionViewSet(viewsets.ReadOnlyModelViewSet):
         """
         Override list method to add metadata
         """
-        response = super(SurveyInstitutionViewSet, self)
-        response = response.list(request, *args, **kwargs)
+        response = super(SurveyInstitutionViewSet, self).list(request, *args, **kwargs)
         response.data = {"count": len(response.data), "results": response.data}
         return response
 
