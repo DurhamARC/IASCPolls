@@ -11,7 +11,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 
-from iasc import serializers, mixins, renderers
+from iasc import serializers, mixins
 from frontend import views as frontend_views
 from iasc.filters import (
     InstitutionFilter,
@@ -247,6 +247,14 @@ class SurveyViewSet(viewsets.ReadOnlyModelViewSet):
     filterset_class = SurveyFilter
 
 
+class SurveyResultsViewSet(viewsets.ReadOnlyModelViewSet):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    queryset = Result.objects.distinct("survey_id")
+
+    pagination_class = None
+    serializer_class = serializers.SurveyResultSerializer
+
+
 class SurveyInstitutionViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     queryset = ActiveLink.objects.select_related("participant").distinct(
@@ -288,10 +296,11 @@ class ActiveLinkViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class XLSActiveLinkViewSet(mixins.IASCXLSXFileMixin, ActiveLinkViewSet):
-    serializer_class = serializers.ActiveLinkSerializer
     """
     Get ActiveLinks as Excel Spreadsheet on route /api/links/xls/?survey=1&institution=1
     """
+
+    serializer_class = serializers.ActiveLinkSerializer
 
     def __init__(self, **kwargs):
         super()

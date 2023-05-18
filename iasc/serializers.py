@@ -69,6 +69,18 @@ class SurveyInstitutionSerializer(serializers.ModelSerializer):
         fields = ["id", "institution"]
 
 
+class SurveyResultSerializer(serializers.ModelSerializer):
+    count = serializers.SerializerMethodField()
+    question = serializers.CharField(source="survey.question")
+
+    def get_count(self, obj):
+        return models.Result.objects.filter(survey_id=obj.survey.id).count()
+
+    class Meta:
+        model = models.Result
+        fields = ["survey_id", "question", "count"]
+
+
 class ActiveLinkSerializer(serializers.ModelSerializer):
     name = serializers.ReadOnlyField(source="participant.name")
     email = serializers.ReadOnlyField(source="participant.email")
