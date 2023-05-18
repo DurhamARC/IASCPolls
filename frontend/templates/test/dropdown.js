@@ -24,5 +24,5 @@ function populateSurveyDropdown(url) {
 }
 
 window.addEventListener('load', (event) => {
-    populateSurveyDropdown("/api/survey?active=true");
+    populateSurveyDropdown("/api/survey/?active=true");
 });

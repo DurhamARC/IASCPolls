@@ -129,8 +129,8 @@ class CloseSurveyView(ViewSet):
 
     @transaction.atomic
     def create(self, request):
-        survey_id = int(request.data["survey_id"].strip())
-        survey = Survey.objects.filter(id=survey_id).get()
+        survey = int(request.data["survey"].strip())
+        survey = Survey.objects.filter(id=survey).get()
 
         if survey.active:
             survey.active = False
@@ -142,7 +142,7 @@ class CloseSurveyView(ViewSet):
             return Response(
                 {
                     "status": "success",
-                    "message": f"Closed survey {survey_id}: {survey.question}",
+                    "message": f"Closed survey {survey}: {survey.question}",
                     "deleted": total[0],
                 },
                 status=status.HTTP_200_OK,
@@ -151,7 +151,7 @@ class CloseSurveyView(ViewSet):
         return Response(
             {
                 "status": "failure",
-                "message": f"Survey {survey_id} not active or not found",
+                "message": f"Survey {survey} not active or not found",
             },
             status=status.HTTP_400_BAD_REQUEST,
         )
