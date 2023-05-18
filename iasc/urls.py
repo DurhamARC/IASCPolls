@@ -37,6 +37,7 @@ api_views = [
     (r"links/zip", views.ZipActiveLinkViewSet, "links/zip"),
     (r"links", views.ActiveLinkViewSet, "links"),
     (r"result/xls", views.XLSResultViewSet, "result/xls"),
+    (r"result/zip", views.ZipResultViewSet, "result/zip"),
     (r"result", views.ResultViewSet, "result"),
     (r"user", views.UserViewSet, "user"),
 ]

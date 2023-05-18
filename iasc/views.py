@@ -321,7 +321,7 @@ class ZipActiveLinkViewSet(mixins.IASCZipFileMixin, XLSActiveLinkViewSet):
     Retrieve Excel files as Zip file for multiple institutions
     """
 
-    serializer_class = serializers.MultiFileSerializer
+    serializer_class = serializers.MultiLinkSerializer
 
 
 class ResultViewSet(viewsets.ReadOnlyModelViewSet):
@@ -347,3 +347,14 @@ class XLSResultViewSet(mixins.IASCXLSXFileMixin, ResultViewSet):
     """
 
     filename_string = "Results-{}-{}-{}.xlsx"
+
+
+class ZipResultViewSet(mixins.IASCZipFileMixin, XLSResultViewSet):
+    """
+    Retrieve Excel files as Zip file for multiple institutions
+    """
+
+    serializer_class = serializers.MultiResultSerializer
+
+    def get_filename(self, request=None, *args, **kwargs):
+        return "all_results.zip"

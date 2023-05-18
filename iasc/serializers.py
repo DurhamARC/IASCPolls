@@ -103,15 +103,26 @@ class ResultSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Result
-        fields = ["survey", "vote", "institution", "discipline"]
+        fields = ["vote", "institution", "discipline"]
 
 
-class MultiFileSerializer(ActiveLinkSerializer):
+class MultiLinkSerializer(ActiveLinkSerializer):
     filename = serializers.SerializerMethodField()
 
     def get_filename(self, obj):
-        return f"{obj.participant.institution.id}-{'_'.join(obj.participant.institution.name.strip().split(' '))}.xlsx"
+        return f"IASC-{obj.participant.institution.id}-{'_'.join(obj.participant.institution.name.strip().split(' '))}.xlsx"
 
     class Meta:
         model = models.ActiveLink
         fields = ["filename", "name", "email", "hyperlink"]
+
+
+class MultiResultSerializer(ResultSerializer):
+    filename = serializers.SerializerMethodField()
+
+    def get_filename(self, obj):
+        return f"Results-{obj.survey.id}-{'_'.join(obj.survey.question.strip().split(' '))}.xlsx"
+
+    class Meta:
+        model = models.ActiveLink
+        fields = ["filename", "survey", "vote", "institution", "discipline"]
