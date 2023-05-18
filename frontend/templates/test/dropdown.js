@@ -1,6 +1,6 @@
 /* dropdown.js */
 
-function populateSurveyDropdown(url) {
+function populateSurveyDropdown(url, callback) {
     let xhr = new XMLHttpRequest();
     xhr.open('GET', url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
@@ -20,9 +20,13 @@ function populateSurveyDropdown(url) {
         }
     };
 
+    try {
+        if (typeof callback !== undefined)
+            xhr.addEventListener('load', callback);
+    }
+    catch(e) {
+        console.log('callback is not defined');
+    }
+
     xhr.send();
 }
-
-window.addEventListener('load', (event) => {
-    populateSurveyDropdown("/api/survey/?active=true");
-});

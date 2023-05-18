@@ -17,13 +17,66 @@
         {% include "test/surveydropdown.html" %}
     </fieldset>
 
+    <fieldset>
+        <legend>Get Links for Institution</legend>
+            <label for="institution">Institution:</label>
+            <select id="institution" name="institution">
+                <option value="">ALL</option>
+            </select>
+    </fieldset>
+
     <input type="submit" value="Get Links" />
 </form>
 
 <script type="text/javascript">
-    const API_ROUTE_URI = "/api/survey/close/";
     const FORM_ELEMENT = "close_survey";
     const SELECT_DROPDOWN = document.getElementById("survey");
+    let INSTITUTION_DROPDOWN = document.getElementById("institution");
+
+    function populateInstitutionDropdown(url) {
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhr.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
+
+        xhr.onload = function () {
+            const results = JSON.parse(this.responseText).results;
+
+            let select = document.createElement("select");
+            select.name = "institution";
+            select.id = "institution";
+
+            INSTITUTION_DROPDOWN = document.getElementById("institution");
+            INSTITUTION_DROPDOWN.replaceWith(select);
+
+            // Add new children to the dropdown
+            let el = document.createElement("option");
+            el.textContent = "ALL";
+            el.value = "";
+            select.appendChild(el);
+
+            for (let i = 0; i < results.length; i++) {
+                let opt = results[i];
+                el = document.createElement("option");
+
+                el.textContent = `${opt.id}: ${opt.institution}`;
+                el.value = opt.id;
+                select.appendChild(el);
+            }
+        };
+
+        xhr.send();
+    }
+
+    window.addEventListener('load', (event) => {
+        let changeevent = (event) => {
+            let selected = SELECT_DROPDOWN.options[SELECT_DROPDOWN.selectedIndex]
+            populateInstitutionDropdown(`/api/survey/${selected.value}/institutions/`);
+        }
+
+        SELECT_DROPDOWN.addEventListener("change", changeevent);
+        populateSurveyDropdown("/api/survey/?active=true", changeevent);
+    });
 </script>
 
 <br /><hr />

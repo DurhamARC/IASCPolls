@@ -40,6 +40,10 @@
             SELECT_DROPDOWN.removeChild(selected)
         }
     }
+
+    window.addEventListener('load', (event) => {
+        populateSurveyDropdown("/api/survey/?active=true");
+    });
 </script>
 
 

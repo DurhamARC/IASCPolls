@@ -257,17 +257,14 @@ class SurveyInstitutionViewSet(viewsets.ReadOnlyModelViewSet):
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = InstitutionFilter
 
-    def list(
-        self, request, *args, **kwargs
-    ):  # Override list method to list the data as a dictionary instead of array
-        response = super(SurveyInstitutionViewSet, self).list(
-            request, *args, **kwargs
-        )  # Call the original 'list'
-        response_list = []
-        for item in response.data:
-            response_list.append(item["institution"])
-        response.data = response_list  # Customize response data into dictionary with id as keys instead of using array
-        return response  # Return response with this custom representation
+    def list(self, request, *args, **kwargs):
+        """
+        Override list method to add metadata
+        """
+        response = super(SurveyInstitutionViewSet, self)
+        response = response.list(request, *args, **kwargs)
+        response.data = {"count": len(response.data), "results": response.data}
+        return response
 
     def get_queryset(self):
         sid = self.kwargs["survey_id"]
