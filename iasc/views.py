@@ -3,6 +3,7 @@ import copy
 from django.contrib.auth import login, logout, get_user_model
 from django.core.exceptions import ValidationError
 from django.shortcuts import render
+from django.db import transaction
 from django_filters import rest_framework as filters
 from rest_framework import viewsets, permissions, status
 from rest_framework.authentication import SessionAuthentication
@@ -142,16 +143,24 @@ class CloseSurveyView(APIView):
             """
             return render(request, "testclose.html")
 
+    @transaction.atomic
     def post(self, request):
         survey_id = int(request.data["survey_id"].strip())
         survey = Survey.objects.filter(id=survey_id).get()
 
-        if survey.active is True:
+        if survey.active:
             survey.active = False
             survey.save()
 
+            links = ActiveLink.objects.filter(survey=survey)
+            total = links.delete()
+
             return Response(
-                {"status": "success", "message": "Closed"},
+                {
+                    "status": "success",
+                    "message": f"Closed survey {survey_id}: {survey.question}",
+                    "deleted": total[0],
+                },
                 status=status.HTTP_200_OK,
             )
 
