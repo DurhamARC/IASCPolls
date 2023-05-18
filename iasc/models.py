@@ -1,6 +1,6 @@
 import secrets
 
-from django.db import models
+from django.db import models, transaction
 from django.utils.translation import gettext_lazy
 import datetime
 
@@ -150,6 +150,7 @@ class ActiveLink(models.Model):
         ]
         indexes = [models.Index(fields=["unique_link"])]
 
+    @transaction.atomic
     def vote(self, vote: models.JSONField):
         participant = Participant.objects.get(email=self.participant.email)
         result = Result.objects.create(

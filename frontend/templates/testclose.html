@@ -10,7 +10,7 @@
 
         <label for="survey_id">Survey:</label>
         <select id="survey_id" name="survey_id">
-            <option>Choose an option</option>
+            <option disabled>Choose an option</option>
         </select>
     </fieldset>
 
@@ -53,7 +53,7 @@
 
                 let opt = results[i];
                 var el = document.createElement("option");
-                el.textContent = opt.question;
+                el.textContent = `${opt.id}: ${opt.question}`;
                 el.value = opt.id;
                 SELECT_DROPDOWN.appendChild(el);
             }
