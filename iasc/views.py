@@ -306,9 +306,6 @@ class ZipActiveLinkViewSet(mixins.IASCZipFileMixin, XLSActiveLinkViewSet):
     """
 
     serializer_class = serializers.MultiFileSerializer
-    renderer_classes = (renderers.ZipXLSRenderer,)
-    pagination_class = None
-    xlsx_ignore_headers = ["filename"]
 
 
 class ResultViewSet(viewsets.ReadOnlyModelViewSet):
