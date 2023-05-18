@@ -77,6 +77,12 @@ class ActiveLinkSerializer(serializers.ModelSerializer):
         fields = ["name", "email", "hyperlink"]
 
 
+class ActiveLinkSurveySerializer(ActiveLinkSerializer):
+    class Meta:
+        model = models.ActiveLink
+        fields = ["survey", "name", "email", "hyperlink"]
+
+
 class ResultSerializer(serializers.ModelSerializer):
     discipline = disciplineSlug
     institution = institutionSlug

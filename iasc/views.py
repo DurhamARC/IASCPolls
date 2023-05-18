@@ -313,7 +313,7 @@ class ActiveLinkViewSet(viewsets.ReadOnlyModelViewSet):
     """
 
     permission_classes = (permissions.IsAuthenticated,)
-    serializer_class = serializers.ActiveLinkSerializer
+    serializer_class = serializers.ActiveLinkSurveySerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = InstitutionFilter
     queryset = (
@@ -324,6 +324,7 @@ class ActiveLinkViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class XLSActiveLinkViewSet(mixins.IASCXLSXFileMixin, ActiveLinkViewSet):
+    serializer_class = serializers.ActiveLinkSerializer
     """
     Get ActiveLinks as Excel Spreadsheet on route /api/links/xls/?survey=1&institution=1
     """
