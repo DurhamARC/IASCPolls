@@ -60,7 +60,7 @@
 {%  include "ajax.html" %}
 <script type="text/javascript">
 
-    const API_ROUTE_URI = "/api/survey/create";
+    const API_ROUTE_URI = "/api/survey/create/";
     const FORM_ELEMENT = "create_survey";
 
     function setDate() {
@@ -75,3 +75,11 @@
         setDate();
     });
 </script>
+
+<br /><hr />
+<div style="text-align: right">
+    <a href="/api/participants/upload/">&lsaquo;&lsaquo; Upload Participants</a>
+    ||
+    <a href="/api/links/">Download Links &rsaquo;&rsaquo;</a>
+</div>
+

@@ -26,7 +26,7 @@
 {%  include "ajax.html" %}
 <script type="text/javascript">
 
-    const API_ROUTE_URI = "/api/survey/close";
+    const API_ROUTE_URI = "/api/survey/close/";
     const FORM_ELEMENT = "close_survey";
     const SELECT_DROPDOWN = document.getElementById("survey_id");
 
@@ -39,9 +39,9 @@
         }
     }
 
-    function populateDropdown() {
+    function populateDropdown(url) {
         let xhr = new XMLHttpRequest();
-        xhr.open('GET', "/api/survey?active=true", true);
+        xhr.open('GET', url, true);
         xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         xhr.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
 
@@ -63,6 +63,6 @@
     }
 
     window.addEventListener('load', (event) => {
-        populateDropdown();
+        populateDropdown("/api/survey?active=true");
     });
 </script>
