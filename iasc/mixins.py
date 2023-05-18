@@ -1,11 +1,12 @@
 from django.core.exceptions import BadRequest
-from django.http import JsonResponse
+from django.http import HttpResponse
 from django.utils.encoding import escape_uri_path
 from drf_excel.mixins import XLSXFileMixin
 from drf_excel.renderers import XLSXRenderer
 from rest_framework.response import Response
 from rest_framework import status
 
+from iasc import renderers
 from iasc.models import Institution, Survey
 
 
@@ -22,6 +23,9 @@ def get_survey_detail(request):
 
 class IASCZipFileMixin(object):
     filename = "IASC-{}-{}-export.zip"
+    renderer_classes = (renderers.ZipXLSRenderer,)
+    pagination_class = None
+    xlsx_ignore_headers = ["filename"]
 
     def get_filename(self, request=None, *args, **kwargs):
         survey_id, question = get_survey_detail(request)
@@ -72,7 +76,7 @@ class IASCXLSXFileMixin(XLSXFileMixin):
         response = super().finalize_response(request, response, *args, **kwargs)
 
         if len(response.data) == 0:
-            return JsonResponse(
+            return HttpResponse(
                 {"status": "notfound", "message": "No data matched the request"},
                 status=status.HTTP_404_NOT_FOUND,
             )

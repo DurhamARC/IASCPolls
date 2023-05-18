@@ -62,10 +62,24 @@ class SurveySerializer(serializers.ModelSerializer):
 
 class SurveyInstitutionSerializer(serializers.ModelSerializer):
     institution = serializers.ReadOnlyField(source="participant.institution.name")
+    id = serializers.ReadOnlyField(source="participant.institution.id")
 
     class Meta:
         model = models.ActiveLink
-        fields = ["institution"]
+        fields = ["id", "institution"]
+
+
+class SurveyResultSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(source="survey.id")
+    count = serializers.SerializerMethodField()
+    question = serializers.CharField(source="survey.question")
+
+    def get_count(self, obj):
+        return models.Result.objects.filter(survey_id=obj.survey.id).count()
+
+    class Meta:
+        model = models.Result
+        fields = ["id", "question", "count"]
 
 
 class ActiveLinkSerializer(serializers.ModelSerializer):
@@ -77,21 +91,38 @@ class ActiveLinkSerializer(serializers.ModelSerializer):
         fields = ["name", "email", "hyperlink"]
 
 
+class ActiveLinkSurveySerializer(ActiveLinkSerializer):
+    class Meta:
+        model = models.ActiveLink
+        fields = ["survey", "name", "email", "hyperlink"]
+
+
 class ResultSerializer(serializers.ModelSerializer):
     discipline = disciplineSlug
     institution = institutionSlug
 
     class Meta:
         model = models.Result
-        fields = ["survey", "vote", "institution", "discipline"]
+        fields = ["vote", "institution", "discipline"]
 
 
-class MultiFileSerializer(ActiveLinkSerializer):
+class MultiLinkSerializer(ActiveLinkSerializer):
     filename = serializers.SerializerMethodField()
 
     def get_filename(self, obj):
-        return f"{obj.participant.institution.id}-{'_'.join(obj.participant.institution.name.strip().split(' '))}.xlsx"
+        return f"IASC-{obj.participant.institution.id}-{'_'.join(obj.participant.institution.name.strip().split(' '))}.xlsx"
 
     class Meta:
         model = models.ActiveLink
         fields = ["filename", "name", "email", "hyperlink"]
+
+
+class MultiResultSerializer(ResultSerializer):
+    filename = serializers.SerializerMethodField()
+
+    def get_filename(self, obj):
+        return f"Results-{obj.survey.id}-{'_'.join(obj.survey.question.strip().split(' '))}.xlsx"
+
+    class Meta:
+        model = models.ActiveLink
+        fields = ["filename", "survey", "vote", "institution", "discipline"]

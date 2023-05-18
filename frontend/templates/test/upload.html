@@ -3,7 +3,9 @@
 <head></head>
 <body>
 
-<form action="/api/participants/upload" method="post" enctype="multipart/form-data">
+<h1>Upload Participants</h1>
+
+<form action="/api/participants/upload/" method="post" enctype="multipart/form-data">
 
     <fieldset>
         <legend>Upload an Excel File</legend>
@@ -63,7 +65,12 @@
         </div>
     </fieldset>
 
-    <input type="submit" name="Submit" value="Upload" />
+    <input type="submit" value="Upload" />
 
     {% csrf_token %}
 </form>
+
+<br /><hr />
+<div style="text-align: right">
+<a href="/test/survey/">Create Survey &rsaquo;&rsaquo;</a>
+</div>

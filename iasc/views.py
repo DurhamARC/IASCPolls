@@ -2,7 +2,6 @@ import copy
 
 from django.contrib.auth import login, logout, get_user_model
 from django.core.exceptions import ValidationError
-from django.shortcuts import render
 from django.db import transaction
 from django_filters import rest_framework as filters
 from rest_framework import viewsets, permissions, status
@@ -10,8 +9,9 @@ from rest_framework.authentication import SessionAuthentication
 from rest_framework.renderers import TemplateHTMLRenderer, JSONRenderer
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.viewsets import ViewSet
 
-from iasc import serializers, settings, mixins, renderers
+from iasc import serializers, mixins
 from frontend import views as frontend_views
 from iasc.filters import (
     InstitutionFilter,
@@ -86,22 +86,14 @@ class UserViewSet(viewsets.ModelViewSet):
 # Survey management
 
 
-class CreateSurveyView(APIView):
+class CreateSurveyView(ViewSet):
     """
     Create Survey in Database
     """
 
     permission_classes = (permissions.IsAuthenticated,)
 
-    if settings.DEBUG:
-
-        def get(self, request):
-            """
-            Render the test survey creation form (if in DEBUG mode)
-            """
-            return render(request, "testsurvey.html")
-
-    def post(self, request):
+    def create(self, request):
         """
         Create survey in database and associate participants with ActiveLinks
         """
@@ -128,25 +120,17 @@ class CreateSurveyView(APIView):
             return Response({"status": "error", "message": error_message})
 
 
-class CloseSurveyView(APIView):
+class CloseSurveyView(ViewSet):
     """
     Close/Deactivate Survey in Database
     """
 
     permission_classes = (permissions.IsAuthenticated,)
 
-    if settings.DEBUG:
-
-        def get(self, request):
-            """
-            Render the test survey creation form (if in DEBUG mode)
-            """
-            return render(request, "testclose.html")
-
     @transaction.atomic
-    def post(self, request):
-        survey_id = int(request.data["survey_id"].strip())
-        survey = Survey.objects.filter(id=survey_id).get()
+    def create(self, request):
+        survey = int(request.data["survey"].strip())
+        survey = Survey.objects.filter(id=survey).get()
 
         if survey.active:
             survey.active = False
@@ -158,7 +142,7 @@ class CloseSurveyView(APIView):
             return Response(
                 {
                     "status": "success",
-                    "message": f"Closed survey {survey_id}: {survey.question}",
+                    "message": f"Closed survey {survey}: {survey.question}",
                     "deleted": total[0],
                 },
                 status=status.HTTP_200_OK,
@@ -167,28 +151,20 @@ class CloseSurveyView(APIView):
         return Response(
             {
                 "status": "failure",
-                "message": f"Survey {survey_id} not active or not found",
+                "message": f"Survey {survey} not active or not found",
             },
             status=status.HTTP_400_BAD_REQUEST,
         )
 
 
-class SubmitVoteView(APIView):
+class SubmitVoteView(ViewSet):
     """
     Take and ActiveLink and cast a vote
     """
 
     permission_classes = (permissions.AllowAny,)
 
-    if settings.DEBUG:
-
-        def get(self, request):
-            """
-            Render the test voting form (if in DEBUG mode)
-            """
-            return render(request, "testvote.html")
-
-    def post(self, request):
+    def create(self, request):
         try:
             uid = request.data["unique_link"].strip()
             link = ActiveLink.objects.filter(unique_link=uid).get()
@@ -209,22 +185,14 @@ class SubmitVoteView(APIView):
 # Participant management
 
 
-class UploadParticipantsView(APIView):
+class UploadParticipantsView(ViewSet):
     """
     Upload Excel file of participants
     """
 
     permission_classes = (permissions.IsAuthenticated,)
 
-    if settings.DEBUG:
-
-        def get(self, request):
-            """
-            Render the test upload form (if in DEBUG mode)
-            """
-            return render(request, "testupload.html")
-
-    def post(self, request):
+    def create(self, request):
         """
         Upload Excel Spreadsheet with participant data
         """
@@ -279,6 +247,22 @@ class SurveyViewSet(viewsets.ReadOnlyModelViewSet):
     filterset_class = SurveyFilter
 
 
+class SurveyResultsViewSet(viewsets.ReadOnlyModelViewSet):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    queryset = Result.objects.distinct("survey_id")
+
+    pagination_class = None
+    serializer_class = serializers.SurveyResultSerializer
+
+    def list(self, request, *args, **kwargs):
+        """
+        Override list method to add metadata
+        """
+        response = super(SurveyResultsViewSet, self).list(request, *args, **kwargs)
+        response.data = {"count": len(response.data), "results": response.data}
+        return response
+
+
 class SurveyInstitutionViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     queryset = ActiveLink.objects.select_related("participant").distinct(
@@ -289,17 +273,13 @@ class SurveyInstitutionViewSet(viewsets.ReadOnlyModelViewSet):
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = InstitutionFilter
 
-    def list(
-        self, request, *args, **kwargs
-    ):  # Override list method to list the data as a dictionary instead of array
-        response = super(SurveyInstitutionViewSet, self).list(
-            request, *args, **kwargs
-        )  # Call the original 'list'
-        response_list = []
-        for item in response.data:
-            response_list.append(item["institution"])
-        response.data = response_list  # Customize response data into dictionary with id as keys instead of using array
-        return response  # Return response with this custom representation
+    def list(self, request, *args, **kwargs):
+        """
+        Override list method to add metadata
+        """
+        response = super(SurveyInstitutionViewSet, self).list(request, *args, **kwargs)
+        response.data = {"count": len(response.data), "results": response.data}
+        return response
 
     def get_queryset(self):
         sid = self.kwargs["survey_id"]
@@ -312,7 +292,7 @@ class ActiveLinkViewSet(viewsets.ReadOnlyModelViewSet):
     """
 
     permission_classes = (permissions.IsAuthenticated,)
-    serializer_class = serializers.ActiveLinkSerializer
+    serializer_class = serializers.ActiveLinkSurveySerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = InstitutionFilter
     queryset = (
@@ -327,6 +307,8 @@ class XLSActiveLinkViewSet(mixins.IASCXLSXFileMixin, ActiveLinkViewSet):
     Get ActiveLinks as Excel Spreadsheet on route /api/links/xls/?survey=1&institution=1
     """
 
+    serializer_class = serializers.ActiveLinkSerializer
+
     def __init__(self, **kwargs):
         super()
         self.column_header = copy.copy(self.column_header)
@@ -339,10 +321,7 @@ class ZipActiveLinkViewSet(mixins.IASCZipFileMixin, XLSActiveLinkViewSet):
     Retrieve Excel files as Zip file for multiple institutions
     """
 
-    serializer_class = serializers.MultiFileSerializer
-    renderer_classes = (renderers.ZipXLSRenderer,)
-    pagination_class = None
-    xlsx_ignore_headers = ["filename"]
+    serializer_class = serializers.MultiLinkSerializer
 
 
 class ResultViewSet(viewsets.ReadOnlyModelViewSet):
@@ -368,3 +347,14 @@ class XLSResultViewSet(mixins.IASCXLSXFileMixin, ResultViewSet):
     """
 
     filename_string = "Results-{}-{}-{}.xlsx"
+
+
+class ZipResultViewSet(mixins.IASCZipFileMixin, XLSResultViewSet):
+    """
+    Retrieve Excel files as Zip file for multiple institutions
+    """
+
+    serializer_class = serializers.MultiResultSerializer
+
+    def get_filename(self, request=None, *args, **kwargs):
+        return "all_results.zip"

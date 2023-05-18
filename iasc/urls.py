@@ -21,17 +21,23 @@ from iasc import views
 
 router = routers.DefaultRouter()
 api_views = [
+    (r"participants/upload", views.UploadParticipantsView, "participants/upload"),
     (r"participants", views.ParticipantViewSet, "participants"),
     (
         r"survey/(?P<survey_id>.+)/institutions",
         views.SurveyInstitutionViewSet,
         "survey/survey_id/institutions",
     ),
+    (r"survey/create", views.CreateSurveyView, "survey/create"),
+    (r"survey/close", views.CloseSurveyView, "survey/close"),
+    (r"survey/results", views.SurveyResultsViewSet, "survey/results"),
     (r"survey", views.SurveyViewSet, "survey"),
+    (r"vote", views.SubmitVoteView, "vote"),
     (r"links/xls", views.XLSActiveLinkViewSet, "links/xls"),
     (r"links/zip", views.ZipActiveLinkViewSet, "links/zip"),
     (r"links", views.ActiveLinkViewSet, "links"),
     (r"result/xls", views.XLSResultViewSet, "result/xls"),
+    (r"result/zip", views.ZipResultViewSet, "result/zip"),
     (r"result", views.ResultViewSet, "result"),
     (r"user", views.UserViewSet, "user"),
 ]
@@ -44,12 +50,6 @@ urlpatterns = [
     path("login", views.UserLoginView.as_view(), name="login"),
     path("logout", views.UserLogoutView.as_view(), name="logout"),
     path("api/", include(router.urls)),
-    path(
-        "api/participants/upload", views.UploadParticipantsView.as_view(), name="upload"
-    ),
-    path("api/survey/create", views.CreateSurveyView.as_view(), name="create"),
-    path("api/survey/close", views.CloseSurveyView.as_view(), name="close"),
-    path("api/vote", views.SubmitVoteView.as_view(), name="vote"),
     path("admin/", admin.site.urls),
 ]
 
