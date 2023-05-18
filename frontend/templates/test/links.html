@@ -10,7 +10,7 @@
 
 <h1>Download Links</h1>
 
-<form method="get" action="/api/links/zip/">
+<form method="get" id="download_links" action="/api/links/zip/">
     <fieldset>
         <legend>Get Links for Survey:</legend>
 
@@ -29,9 +29,28 @@
 </form>
 
 <script type="text/javascript">
-    const FORM_ELEMENT = "close_survey";
+    const FORM_ELEMENT = "download_links";
     const SELECT_DROPDOWN = document.getElementById("survey");
     let INSTITUTION_DROPDOWN = document.getElementById("institution");
+    const ACTIONS = {
+        "zip": "/api/links/zip/",
+        "xls": "/api/links/xls/",
+    }
+
+    function select_dropdown_change(event){
+        let selected = SELECT_DROPDOWN.options[SELECT_DROPDOWN.selectedIndex]
+        populateInstitutionDropdown(`/api/survey/${selected.value}/institutions/`);
+        document.getElementById(FORM_ELEMENT).action = ACTIONS['zip'];
+    }
+
+    function institution_dropdown_change(event) {
+        console.log(event.target.selectedOptions[0].value)
+        if(event.target.selectedOptions[0].value === "") {
+            document.getElementById(FORM_ELEMENT).action = ACTIONS['zip'];
+            return
+        }
+        document.getElementById(FORM_ELEMENT).action = ACTIONS['xls'];
+    }
 
     function populateInstitutionDropdown(url) {
         let xhr = new XMLHttpRequest();
@@ -49,33 +68,41 @@
             INSTITUTION_DROPDOWN = document.getElementById("institution");
             INSTITUTION_DROPDOWN.replaceWith(select);
 
-            // Add new children to the dropdown
-            let el = document.createElement("option");
-            el.textContent = "ALL";
-            el.value = "";
-            select.appendChild(el);
-
-            for (let i = 0; i < results.length; i++) {
-                let opt = results[i];
-                el = document.createElement("option");
-
-                el.textContent = `${opt.id}: ${opt.institution}`;
-                el.value = opt.id;
+            if(results.length === 0) {
+                let el = document.createElement("option");
+                el.textContent = "None Available";
+                el.disabled = true;
+                el.selected = true;
                 select.appendChild(el);
             }
+            else {
+                // Add new children to the dropdown
+                let el = document.createElement("option");
+                el.textContent = "ALL";
+                el.value = "";
+                select.appendChild(el);
+
+                for (let i = 0; i < results.length; i++) {
+                    let opt = results[i];
+                    el = document.createElement("option");
+
+                    el.textContent = `${opt.id}: ${opt.institution}`;
+                    el.value = opt.id;
+                    select.appendChild(el);
+                }
+            }
+
+            document.getElementById("institution").addEventListener("change", institution_dropdown_change);
         };
 
         xhr.send();
     }
 
     window.addEventListener('load', (event) => {
-        let changeevent = (event) => {
-            let selected = SELECT_DROPDOWN.options[SELECT_DROPDOWN.selectedIndex]
-            populateInstitutionDropdown(`/api/survey/${selected.value}/institutions/`);
-        }
+        SELECT_DROPDOWN.addEventListener("change", select_dropdown_change);
+        populateSurveyDropdown("/api/survey/?active=true", select_dropdown_change);
 
-        SELECT_DROPDOWN.addEventListener("change", changeevent);
-        populateSurveyDropdown("/api/survey/?active=true", changeevent);
+        document.getElementById("institution").addEventListener("change", institution_dropdown_change);
     });
 </script>
 
