@@ -10,6 +10,7 @@ from rest_framework.authentication import SessionAuthentication
 from rest_framework.renderers import TemplateHTMLRenderer, JSONRenderer
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.viewsets import ViewSet
 
 from iasc import serializers, settings, mixins, renderers
 from frontend import views as frontend_views
@@ -86,7 +87,7 @@ class UserViewSet(viewsets.ModelViewSet):
 # Survey management
 
 
-class CreateSurveyView(APIView):
+class CreateSurveyView(ViewSet):
     """
     Create Survey in Database
     """
@@ -95,13 +96,13 @@ class CreateSurveyView(APIView):
 
     if settings.DEBUG:
 
-        def get(self, request):
+        def list(self, request):
             """
             Render the test survey creation form (if in DEBUG mode)
             """
             return render(request, "testsurvey.html")
 
-    def post(self, request):
+    def create(self, request):
         """
         Create survey in database and associate participants with ActiveLinks
         """
@@ -128,7 +129,7 @@ class CreateSurveyView(APIView):
             return Response({"status": "error", "message": error_message})
 
 
-class CloseSurveyView(APIView):
+class CloseSurveyView(ViewSet):
     """
     Close/Deactivate Survey in Database
     """
@@ -137,14 +138,14 @@ class CloseSurveyView(APIView):
 
     if settings.DEBUG:
 
-        def get(self, request):
+        def list(self, request):
             """
             Render the test survey creation form (if in DEBUG mode)
             """
             return render(request, "testclose.html")
 
     @transaction.atomic
-    def post(self, request):
+    def create(self, request):
         survey_id = int(request.data["survey_id"].strip())
         survey = Survey.objects.filter(id=survey_id).get()
 
@@ -173,7 +174,7 @@ class CloseSurveyView(APIView):
         )
 
 
-class SubmitVoteView(APIView):
+class SubmitVoteView(ViewSet):
     """
     Take and ActiveLink and cast a vote
     """
@@ -182,13 +183,13 @@ class SubmitVoteView(APIView):
 
     if settings.DEBUG:
 
-        def get(self, request):
+        def list(self, request):
             """
             Render the test voting form (if in DEBUG mode)
             """
             return render(request, "testvote.html")
 
-    def post(self, request):
+    def create(self, request):
         try:
             uid = request.data["unique_link"].strip()
             link = ActiveLink.objects.filter(unique_link=uid).get()
@@ -209,7 +210,7 @@ class SubmitVoteView(APIView):
 # Participant management
 
 
-class UploadParticipantsView(APIView):
+class UploadParticipantsView(ViewSet):
     """
     Upload Excel file of participants
     """
@@ -218,13 +219,13 @@ class UploadParticipantsView(APIView):
 
     if settings.DEBUG:
 
-        def get(self, request):
+        def list(self, request):
             """
             Render the test upload form (if in DEBUG mode)
             """
             return render(request, "testupload.html")
 
-    def post(self, request):
+    def create(self, request):
         """
         Upload Excel Spreadsheet with participant data
         """
