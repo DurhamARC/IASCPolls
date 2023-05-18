@@ -21,40 +21,40 @@ if settings.DEBUG:
             """
             Render index page for test pages
             """
-            return render(request, "testindex.html")
+            return render(request, "test/index.html")
 
         def upload(self, request):
             """
             Render the test upload form (if in DEBUG mode)
             """
-            return render(request, "testupload.html")
+            return render(request, "test/upload.html")
 
         def survey(self, request):
             """
             Render the test survey creation form (if in DEBUG mode)
             """
-            return render(request, "testsurvey.html")
+            return render(request, "test/survey.html")
 
         def download(self, request):
             """
             Render the test link download form (if in DEBUG mode)
             """
-            return render(request, "testdownload.html")
+            return render(request, "test/download.html")
 
         def vote(self, request):
             """
             Render the test voting form (if in DEBUG mode)
             """
-            return render(request, "testvote.html")
+            return render(request, "test/vote.html")
 
         def close(self, request):
             """
             Render the test survey closure form (if in DEBUG mode)
             """
-            return render(request, "testclose.html")
+            return render(request, "test/close.html")
 
         def results(self, request):
             """
             Render the test voting form (if in DEBUG mode)
             """
-            return render(request, "testresults.html")
+            return render(request, "test/results.html")
