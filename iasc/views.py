@@ -3,6 +3,7 @@ import copy
 from django.contrib.auth import login, logout, get_user_model
 from django.core.exceptions import ValidationError
 from django.db import transaction
+from django.http import HttpResponseRedirect
 from django_filters import rest_framework as filters
 from rest_framework import viewsets, permissions, status
 from rest_framework.authentication import SessionAuthentication
@@ -69,9 +70,9 @@ class UserLoginView(APIView):
 
 
 class UserLogoutView(APIView):
-    def post(self, request):
+    def get(self, request):
         logout(request)
-        return Response(status=status.HTTP_200_OK)
+        return HttpResponseRedirect("/")
 
 
 class UserViewSet(viewsets.ModelViewSet):
