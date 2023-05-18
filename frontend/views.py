@@ -17,44 +17,44 @@ if settings.DEBUG:
         Container for test view render methods. Note: used as raw functions, not django.View object.
         """
 
-        def index(self, request):
+        def index(self):
             """
             Render index page for test pages
             """
-            return render(request, "test/index.html")
+            return render(self, "test/index.html")
 
-        def upload(self, request):
+        def upload(self):
             """
             Render the test upload form (if in DEBUG mode)
             """
-            return render(request, "test/upload.html")
+            return render(self, "test/upload.html")
 
-        def survey(self, request):
+        def survey(self):
             """
             Render the test survey creation form (if in DEBUG mode)
             """
-            return render(request, "test/survey.html")
+            return render(self, "test/survey.html")
 
-        def download(self, request):
+        def download(self):
             """
             Render the test link download form (if in DEBUG mode)
             """
-            return render(request, "test/download.html")
+            return render(self, "test/links.html")
 
-        def vote(self, request):
+        def vote(self):
             """
             Render the test voting form (if in DEBUG mode)
             """
-            return render(request, "test/vote.html")
+            return render(self, "test/vote.html")
 
-        def close(self, request):
+        def close(self):
             """
             Render the test survey closure form (if in DEBUG mode)
             """
-            return render(request, "test/close.html")
+            return render(self, "test/close.html")
 
-        def results(self, request):
+        def results(self):
             """
             Render the test voting form (if in DEBUG mode)
             """
-            return render(request, "test/results.html")
+            return render(self, "test/results.html")
