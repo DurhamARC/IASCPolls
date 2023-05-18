@@ -2,7 +2,6 @@ import copy
 
 from django.contrib.auth import login, logout, get_user_model
 from django.core.exceptions import ValidationError
-from django.shortcuts import render
 from django.db import transaction
 from django_filters import rest_framework as filters
 from rest_framework import viewsets, permissions, status
@@ -12,7 +11,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 
-from iasc import serializers, settings, mixins, renderers
+from iasc import serializers, mixins, renderers
 from frontend import views as frontend_views
 from iasc.filters import (
     InstitutionFilter,
@@ -94,14 +93,6 @@ class CreateSurveyView(ViewSet):
 
     permission_classes = (permissions.IsAuthenticated,)
 
-    if settings.DEBUG:
-
-        def list(self, request):
-            """
-            Render the test survey creation form (if in DEBUG mode)
-            """
-            return render(request, "testsurvey.html")
-
     def create(self, request):
         """
         Create survey in database and associate participants with ActiveLinks
@@ -135,14 +126,6 @@ class CloseSurveyView(ViewSet):
     """
 
     permission_classes = (permissions.IsAuthenticated,)
-
-    if settings.DEBUG:
-
-        def list(self, request):
-            """
-            Render the test survey creation form (if in DEBUG mode)
-            """
-            return render(request, "testclose.html")
 
     @transaction.atomic
     def create(self, request):
@@ -181,14 +164,6 @@ class SubmitVoteView(ViewSet):
 
     permission_classes = (permissions.AllowAny,)
 
-    if settings.DEBUG:
-
-        def list(self, request):
-            """
-            Render the test voting form (if in DEBUG mode)
-            """
-            return render(request, "testvote.html")
-
     def create(self, request):
         try:
             uid = request.data["unique_link"].strip()
@@ -216,14 +191,6 @@ class UploadParticipantsView(ViewSet):
     """
 
     permission_classes = (permissions.IsAuthenticated,)
-
-    if settings.DEBUG:
-
-        def list(self, request):
-            """
-            Render the test upload form (if in DEBUG mode)
-            """
-            return render(request, "testupload.html")
 
     def create(self, request):
         """
