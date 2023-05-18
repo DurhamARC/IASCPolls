@@ -2,9 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Vote</title>
+    <script type="text/javascript">{% include "test/cookie.js" %}</script>
+    <script type="text/javascript">{% include "test/ajax.js" %}</script>
 </head>
 <body>
+
+<h1>Vote</h1>
 
 <form id="vote_form" action="/api/vote/" method="post" enctype="multipart/form-data">
 
@@ -39,9 +43,15 @@
 <span id="result"></span>
 </code>
 
-{%  include "ajax.html" %}
 <script type="text/javascript">
-    const API_ROUTE_URI = "/api/vote";
+    const API_ROUTE_URI = "/api/vote/";
     const FORM_ELEMENT = "vote_form";
 </script>
 
+
+<br /><hr />
+<div style="text-align: right">
+    <a href="/test/links/">&lsaquo;&lsaquo; Download Links</a>
+    ||
+    <a href="/test/close/">Close Survey &rsaquo;&rsaquo;</a>
+</div>

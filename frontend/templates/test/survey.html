@@ -1,7 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-<head></head>
+<head>
+    <meta charset="UTF-8">
+    <title>Create Survey</title>
+    <script type="text/javascript">{% include "test/cookie.js" %}</script>
+    <script type="text/javascript">{% include "test/ajax.js" %}</script>
+</head>
 <body>
+
+<h1>Create Survey</h1>
 
 <form id="create_survey" action="/api/survey/create" method="post" enctype="multipart/form-data">
 
@@ -46,7 +53,7 @@
     </fieldset>
 
 
-    <input type="submit" name="Submit" value="Create Survey" />
+    <input type="submit" value="Create Survey" />
 
     <input type="hidden" id="kind" name="kind" value="LI" />
     {% csrf_token %}
@@ -57,9 +64,7 @@
 <span id="result"></span>
 </code>
 
-{%  include "ajax.html" %}
 <script type="text/javascript">
-
     const API_ROUTE_URI = "/api/survey/create/";
     const FORM_ELEMENT = "create_survey";
 
@@ -78,8 +83,8 @@
 
 <br /><hr />
 <div style="text-align: right">
-    <a href="/api/participants/upload/">&lsaquo;&lsaquo; Upload Participants</a>
+    <a href="/test/upload/">&lsaquo;&lsaquo; Upload Participants</a>
     ||
-    <a href="/api/links/">Download Links &rsaquo;&rsaquo;</a>
+    <a href="/test/links/">Download Links &rsaquo;&rsaquo;</a>
 </div>
 

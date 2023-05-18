@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Download Links</title>
+    <script type="text/javascript">{% include "test/cookie.js" %}</script>
+    <script type="text/javascript">{% include "test/dropdown.js" %}</script>
+</head>
+<body>
+
+<h1>Download Links</h1>
+
+<form method="get" action="/api/links/zip/">
+    <fieldset>
+        <legend>Get Links for Survey:</legend>
+
+        {% include "test/surveydropdown.html" %}
+    </fieldset>
+
+    <input type="submit" value="Get Links" />
+</form>
+
+<script type="text/javascript">
+    const API_ROUTE_URI = "/api/survey/close/";
+    const FORM_ELEMENT = "close_survey";
+    const SELECT_DROPDOWN = document.getElementById("survey_id");
+</script>
+
+<br /><hr />
+<div style="text-align: right">
+    <a href="/test/survey/">&lsaquo;&lsaquo; Create Survey</a>
+    ||
+    <a href="/test/vote/">Vote &rsaquo;&rsaquo;</a>
+</div>
+

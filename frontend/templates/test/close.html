@@ -1,20 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-<head></head>
+<head>
+    <meta charset="UTF-8">
+    <title>Close Survey</title>
+    <script type="text/javascript">{% include "test/cookie.js" %}</script>
+    <script type="text/javascript">{% include "test/ajax.js" %}</script>
+    <script type="text/javascript">{% include "test/dropdown.js" %}</script>
+</head>
 <body>
+
+<h1>Close Survey</h1>
 
 <form id="close_survey" action="/api/survey/create" method="post" enctype="multipart/form-data">
 
     <fieldset>
         <legend>Close Survey:</legend>
-
-        <label for="survey_id">Survey:</label>
-        <select id="survey_id" name="survey_id">
-            <option disabled>Choose an option</option>
-        </select>
+        {% include "test/surveydropdown.html" %}
     </fieldset>
 
-    <input type="submit" name="Submit" value="Close Survey" />
+    <input type="submit" name="submit" value="Close Survey" />
     {% csrf_token %}
 </form>
 
@@ -23,9 +27,7 @@
 <span id="result"></span>
 </code>
 
-{%  include "ajax.html" %}
 <script type="text/javascript">
-
     const API_ROUTE_URI = "/api/survey/close/";
     const FORM_ELEMENT = "close_survey";
     const SELECT_DROPDOWN = document.getElementById("survey_id");
@@ -38,31 +40,13 @@
             SELECT_DROPDOWN.removeChild(selected)
         }
     }
-
-    function populateDropdown(url) {
-        let xhr = new XMLHttpRequest();
-        xhr.open('GET', url, true);
-        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-        xhr.setRequestHeader("X-CSRFToken", getCookie("csrftoken"));
-
-        xhr.onload = function() {
-            const results = JSON.parse(this.responseText).results;
-
-            for(let i = 0; i < results.length; i++) {
-                console.log(results[i]);
-
-                let opt = results[i];
-                var el = document.createElement("option");
-                el.textContent = `${opt.id}: ${opt.question}`;
-                el.value = opt.id;
-                SELECT_DROPDOWN.appendChild(el);
-            }
-        };
-
-        xhr.send();
-    }
-
-    window.addEventListener('load', (event) => {
-        populateDropdown("/api/survey?active=true");
-    });
 </script>
+
+
+<br /><hr />
+<div style="text-align: right">
+    <a href="/test/vote/">&lsaquo;&lsaquo; Vote</a>
+    ||
+    <a href="/test/results/">Download Results &rsaquo;&rsaquo;</a>
+</div>
+
