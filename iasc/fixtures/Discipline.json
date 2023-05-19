@@ -10,7 +10,42 @@
     "model": "iasc.discipline",
     "pk": 2,
     "fields": {
-        "name": "Philosopher"
+        "name": "Philosophy"
+    }
+},
+{
+    "model": "iasc.discipline",
+    "pk": 3,
+    "fields": {
+        "name": "Biology"
+    }
+},
+{
+    "model": "iasc.discipline",
+    "pk": 4,
+    "fields": {
+        "name": "Physics"
+    }
+},
+{
+    "model": "iasc.discipline",
+    "pk": 5,
+    "fields": {
+        "name": "Chemistry"
+    }
+},
+{
+    "model": "iasc.discipline",
+    "pk": 6,
+    "fields": {
+        "name": "Earth Sciences"
+    }
+},
+{
+    "model": "iasc.discipline",
+    "pk": 7,
+    "fields": {
+        "name": "Health Sciences"
     }
 }
 ]

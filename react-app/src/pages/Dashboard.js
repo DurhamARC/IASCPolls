@@ -1,51 +1,97 @@
-import React from 'react';
-import NavBar from "../components/NavBar";
-import Footer from "../components/Footer";
-import questionData from '../databases/questions_overview.json';
+import React, { useState, useEffect, useRef, useContext } from 'react';
+import { Navigate } from 'react-router-dom';
+import NavBar from '../components/NavBar';
+import Footer from '../components/Footer';
 import Table from '../components/DashboardTable';
+import CreateContainer from '../components/CreateContainer';
+import AddParticipants from '../components/AddParticipants';
+import axios from 'axios';
+import { AuthContext } from "../components/AuthContext";
 
 export default function Dashboard() {
-  const tableData = Object.entries(questionData).map(([key, value]) => ({
-    statement: key,
-    completed: value[0],
-    active: value[2] === "True",
-  }));
+  const [showCreateContainer, setShowCreateContainer] = useState(false);
+  const [showAddParticipants, setShowAddParticipants] = useState(false);
+  const [questionDatabase, setQuestionDatabase] = useState([]);
+  const dashboardRef = useRef(null);
+
+  const { isAuth, setAuth, currentUser, setCurrentUser } = useContext(AuthContext);
+  const isLocal = process.env.NODE_ENV === 'development';
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('/api/survey');
+        const questionData = response.data.results;
+        setQuestionDatabase(questionData);
+        console.log(questionData);
+      } catch (error) {
+        console.error('Error fetching survey data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const createNew = () => {
+    setShowCreateContainer(true);
+  };
+
+  const closeCreateContainer = () => {
+    setShowCreateContainer(false);
+  };
+
+  const openAddParticipants = () => {
+    setShowAddParticipants(true);
+  };
+
+  const closeAddParticipants = () => {
+    setShowAddParticipants(false);
+  };
+
+  const handleClickOutside = (event) => {
+    if (dashboardRef.current && !dashboardRef.current.contains(event.target)) {
+      closeCreateContainer();
+      closeAddParticipants();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  if (!isAuth && !isLocal) {
+    return <Navigate to="/login" />;
+  }
 
   return (
     <div className="container">
       <NavBar />
-      <div className="dashboard">
+      <div className="dashboard" ref={dashboardRef}>
         <div className="dashboard--overview">
-          <div className="dashboard--overview--create">
-            <a>
-              <button className="button dashboard--button">
-                <div>
-                  <span class="material-symbols-outlined">
-                    edit_square
-                  </span>
-                </div>
-                <div>
-                  Create
-                </div>
-              </button>
-            </a>
+          <div>
+            <button onClick={createNew} className="button dashboard--button">
+              <div>
+                <span className="material-symbols-outlined">edit_square</span>
+              </div>
+              <div>Create</div>
+            </button>
           </div>
-          <div className="dashboard--overview--content">
-            <div>
-              <h2>All</h2>
-            </div>
-            <div>
-              <h2>Active</h2>
-            </div>
-            <div>
-              <h2>Inactive</h2>
-            </div>
+          <div>
+            <button onClick={openAddParticipants} className="button dashboard--button">
+              <div>
+                <span className="material-symbols-outlined">contact_page</span>
+              </div>
+              <div>Add Participants</div>
+            </button>
           </div>
         </div>
         <div className="dashboard--projects">
-          <div className="dashboard--overview--questions">
-            <Table data={tableData} />
-          </div>
+          {showCreateContainer && <CreateContainer onClose={closeCreateContainer} />}
+          {showAddParticipants && <AddParticipants onClose={closeAddParticipants} />}
+          <Table data={questionDatabase} />
         </div>
       </div>
       <Footer />

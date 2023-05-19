@@ -39,6 +39,7 @@ CSRF_TRUSTED_ORIGINS = env.list(
     "CSRF_TRUSTED_ORIGINS", default=["http://localhost:8000", "http://127.0.0.1:8000"]
 )
 CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS", default=CSRF_TRUSTED_ORIGINS)
+CORS_ALLOW_CREDENTIALS = True
 
 # Site URL (or short URL) for use in messages
 SITE_URL = env.str("SITE_URL", "http://localhost:8000")
@@ -50,6 +51,7 @@ INSTALLED_APPS = [
     "iasc",
     "webpack_loader",
     "rest_framework",
+    "django_filters",
     "corsheaders",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -67,13 +69,13 @@ WEBPACK_LOADER = {
 }
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
-    "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
@@ -137,17 +139,50 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Rest Framework
 # https://django-rest-framework-json-api.readthedocs.io/en/stable/usage.html
+
 REST_FRAMEWORK = {
     "PAGE_SIZE": 10,
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
-    "DEFAULT_PERMISSION_CLASSES": [
-        # Production: "rest_framework.permissions.IsAuthenticated"
-        "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"
+    "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.SessionAuthentication"
     ],
-    "DEFAULT_RENDERER_CLASSES": ("rest_framework.renderers.JSONRenderer",),
+    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
+    "DEFAULT_RENDERER_CLASSES": (
+        "rest_framework.renderers.JSONRenderer",
+        "drf_excel.renderers.XLSXRenderer",
+    ),
+}
+
+# Logging
+# https://docs.djangoproject.com/en/4.2/topics/logging/
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "WARNING",
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["console"],
+            "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
+            "propagate": False,
+        },
+        "iasc": {  # Specific logger for your app
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+    },
 }
 
 # Internationalization
@@ -168,3 +203,10 @@ STATIC_ROOT = os.path.join(BASE_DIR, "frontend/static")
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# How many bits of randomness to generate for ActiveLinks.
+# The more bits, the lower the probability of collision, but the longer and less readable the key
+RANDOM_KEY_BYTES = 32
+
+# Raise value for max upload fields, useful when creating/deleting large amounts of data
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 100_000

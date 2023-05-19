@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 
-export default function PollForm() {
+export default function PollForm({ uniqueId, pollId }) {
   const navigate = useNavigate();
   const [selectedOption, setSelectedOption] = useState("");
   const [optionSelected, setOptionSelected] = useState(false);
@@ -19,11 +20,20 @@ export default function PollForm() {
     setOptionSelected(true);
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
     if (selectedOption !== "") {
-      // TODO: submit request with uniqueid, qid, and option number
-      navigate("/thankyou");
+      try {
+        const data = {
+          unique_id: uniqueId,
+          vote: parseInt(selectedOption)
+        };
+
+        await axios.post('/api/vote/', data);
+        navigate("/thankyou");
+      } catch (error) {
+        console.error('Error submitting answer:', error);
+      }
     } else {
       alert("Please select an option.");
     }
@@ -33,6 +43,7 @@ export default function PollForm() {
     <div>
       <div className="poll--options-wrapper">
         <form onSubmit={handleSubmit}>
+
           <ul className="poll--options">
             {options.map((option) => (
               <li key={option.value}>
@@ -49,7 +60,13 @@ export default function PollForm() {
               </li>
             ))}
           </ul>
-          <button type="submit" className={"button poll--submit " + (optionSelected ? "button poll--submit-active" : "")}>
+          <button
+            type="submit"
+            className={
+              "button poll--submit " +
+              (optionSelected ? "button poll--submit-active" : "")
+            }
+          >
             Submit
           </button>
         </form>

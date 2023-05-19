@@ -14,7 +14,9 @@ export default function Symbol(props) {
           setIsActive(!isActive);
         }
       }
+      // post this to a database
     };
+
   
     const style = {
       color: isActive ? 'green' : 'red'

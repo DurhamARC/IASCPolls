@@ -1,10 +1,11 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
+# Build and Deploy Python Code App on Azure
+# Manually triggered from build-azure.yml
 # https://aka.ms/yaml
 
 trigger:
-- main
+- none
+
+appendCommitMessageToRunName: true
 
 pool:
   name: Default
@@ -114,14 +115,13 @@ stages:
               InlineScript: |
                 echo "Working directory is $(pwd)"
                 export WORKDIR=$(pwd)
-                echo "python3.8 is $(which python3.8)"
+                echo "python is $(python --version) in $(which python)"
                 echo "\$PYTHONPATH is $PYTHONPATH"
                 echo "\$PATH is $PATH"
                 echo "Creating virtual environment:"
-                python3.8 -m venv venv
+                python -m venv venv
                 chmod +x ./venv/bin/activate
                 echo "Activating virtual environment:"
                 . ./venv/bin/activate
-                echo "python is $(which python)"
                 echo "Install requirements..."
                 python -m pip install -r requirements.txt

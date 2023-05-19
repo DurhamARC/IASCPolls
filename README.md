@@ -1,7 +1,9 @@
 # IASCPolls
 
+[![Unit Tests](https://github.com/DurhamARC/IASCPolls/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/DurhamARC/IASCPolls/actions/workflows/unit-tests.yml)
 [![License: MIT](https://img.shields.io/github/license/DurhamARC/IASCPolls)](https://github.com/DurhamARC/IASCPolls/blob/main/LICENSE)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
 
 Polling System developed for the Institute for Ascertaining Scientific Consensus 
 (IASC). This platform provides a tailored architecture for surveying consensus 

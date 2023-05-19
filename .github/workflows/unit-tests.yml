@@ -1,0 +1,92 @@
+name: Unit Tests
+on: [push, pull_request]
+
+jobs:
+  test:
+    name: Set up and test
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        # Shell needs to use login mode to activate the Conda environment
+        shell: bash -l {0}
+
+    services:
+      postgres:
+        image: postgres:15.2-alpine
+        env:
+          POSTGRES_USER: arc_iasc
+          POSTGRES_PASSWORD: arc_iasc_1234
+          POSTGRES_DB: arc_iasc
+        ports:
+          - 5432:5432
+        # The Postgres container does not provide a healthcheck
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+      - run: echo "date=$(date +'%Y-%m')" >> $GITHUB_OUTPUT
+        name: Get current date for caching Conda envs
+        id: date
+
+      - uses: actions/checkout@v2
+
+      # https://github.com/actions/cache/issues/133#issuecomment-599102035
+      - name: Fix /usr/share/miniconda directory permissions
+        run: sudo chown -R $(whoami):$(id -ng) /usr/share/miniconda
+
+      - uses: actions/cache@v3
+        name: Cache Miniconda environment
+        with:
+          path: |
+            ${{ env.CONDA_PREFIX }}/envs/
+            /home/runner/conda_pkgs_dir/
+          key: conda-${{ runner.os }}-${{ runner.arch }}-${{ steps.date.outputs.date }}-${{ hashFiles('conf/iasc.base.yml') }}-${{ env.CACHE_NUMBER }}
+        env:
+          # Increase this to manually invalidate the cache
+          CACHE_NUMBER: 0 +
+          CONDA_PREFIX: /usr/share/miniconda
+        id: cache
+
+      - uses: conda-incubator/setup-miniconda@v2
+        name: Set Up Miniconda
+        with:
+          activate-environment: anaconda-client-env
+          environment-file: conf/iasc.base.yml
+          python-version: 3.8
+          channels: conda-forge
+          # IMPORTANT! This needs to be set for caching to work properly:
+          use-only-tar-bz2: true
+          auto-activate-base: false
+        
+      - run: echo $CONDA_PREFIX
+      
+      - name: Test Conda environment is active
+        run: |
+          conda info
+          conda list
+
+      - name: Run Django tests
+        env:
+          ALLOWED_HOSTS: localhost,127.0.0.1
+          DB_PASS: arc_iasc_1234
+          # NB: Do not use secrets here; PRs do not allow them for security reasons.
+        run: python manage.py test
+
+
+  build:
+    name: Call Azure Pipelines Build
+    needs: test
+    runs-on: ubuntu-latest
+
+    # Only run for Release or Main branches, and NOT PRs
+    if: |
+      contains('refs/heads/main refs/heads/release', github.ref)
+      && github.event_name != 'pull_request'
+
+    steps:
+      - name: Azure Pipelines Action
+        uses: Azure/pipelines@v1.2
+        with:
+          azure-pipeline-name: DurhamARC.IASCPolls
+          azure-devops-project-url: ${{ secrets.AZURE_DEVOPS_URL }}
+          azure-devops-token: ${{ secrets.AZURE_DEVOPS_TOKEN }}

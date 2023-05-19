@@ -1,6 +1,10 @@
-from django.db import models
+import secrets
+
+from django.db import models, transaction
 from django.utils.translation import gettext_lazy
 import datetime
+
+from iasc import settings
 
 
 class Institution(models.Model):
@@ -45,11 +49,16 @@ class Participant(models.Model):
 
     # ID is automatically added by Django using DEFAULT_AUTO_FIELD
     # id = models.BigAutoField(primary_key=True, null=False)
+    email = models.EmailField(
+        max_length=255,
+        help_text="Participant Email",
+        primary_key=True,
+        unique=True,
+    )
     name = models.CharField(max_length=255, help_text="First & Family/Surname")
     title = models.CharField(
         max_length=32, null=True, blank=True, help_text="Participant Title"
     )
-    email = models.CharField(max_length=255, help_text="Participant Email")
     institution = models.ForeignKey("Institution", on_delete=models.RESTRICT)
     discipline = models.ForeignKey("Discipline", on_delete=models.RESTRICT)
 
@@ -67,7 +76,7 @@ class Participant(models.Model):
         ordering = ["-email"]
 
     def __str__(self):
-        return f"{self.title} {self.name} <{self.email}>"
+        return f"{self.name} <{self.email}>"
 
 
 class Survey(models.Model):
@@ -103,6 +112,14 @@ class Survey(models.Model):
         return f"{self.id}: {self.question[:75] if len(self.question) > 75 else self.question}"
 
 
+def generate_unique_link():
+    """
+    Method associated with ActiveLink model, used to generate unique primary keys
+    @return:
+    """
+    return secrets.token_urlsafe(settings.RANDOM_KEY_BYTES)
+
+
 class ActiveLink(models.Model):
     """
     ActiveLink temporarily links participant responses to identities in the database, while the survey is running
@@ -110,19 +127,41 @@ class ActiveLink(models.Model):
 
     # Composite key
     # https://stackoverflow.com/questions/16800375/how-can-i-set-two-primary-key-fields-for-my-models-in-django
-    participant_id = models.ForeignKey("Participant", on_delete=models.CASCADE)
-    survey_id = models.ForeignKey("Survey", null=True, on_delete=models.SET_NULL)
+    participant = models.ForeignKey("Participant", on_delete=models.CASCADE)
+    survey = models.ForeignKey("Survey", null=True, on_delete=models.SET_NULL)
     unique_link = models.CharField(
-        max_length=255, help_text="Per-participant / survey unique voting link"
+        max_length=255,
+        help_text="Per-participant / survey unique voting link",
+        primary_key=True,
+        unique=True,
+        default=generate_unique_link,
     )
+
+    @property
+    def hyperlink(self):
+        return f"{settings.CSRF_TRUSTED_ORIGINS[0]}/vote?survey={self.survey.id}&unique_id={self.unique_link}"
 
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=["participant_id", "survey_id"],
+                fields=["participant", "survey"],
                 name="unique_migration_host_combination",
             )
         ]
+        indexes = [models.Index(fields=["unique_link"])]
+
+    @transaction.atomic
+    def vote(self, vote: models.JSONField):
+        participant = Participant.objects.get(email=self.participant.email)
+        result = Result.objects.create(
+            unique_link=self,
+            survey=self.survey,
+            vote=vote,
+            institution=participant.institution,
+            discipline=participant.discipline,
+        )
+        self.delete()
+        return result
 
     def __str__(self):
         return f"{self.unique_link}"
@@ -137,8 +176,13 @@ class Result(models.Model):
     the demographic data into the Results table at the time when that link is broken (i.e., when a vote is cast).
     """
 
-    unique_link = models.ForeignKey("ActiveLink", null=True, on_delete=models.SET_NULL)
-    survey_id = models.ForeignKey("Survey", null=True, on_delete=models.SET_NULL)
+    unique_link = models.ForeignKey(
+        "ActiveLink",
+        null=True,
+        on_delete=models.SET_NULL,
+        to_field="unique_link",
+    )
+    survey = models.ForeignKey("Survey", null=True, on_delete=models.SET_NULL)
     vote = models.JSONField(null=False, blank=False)
     institution = models.ForeignKey("Institution", null=True, on_delete=models.SET_NULL)
     discipline = models.ForeignKey("Discipline", null=True, on_delete=models.SET_NULL)

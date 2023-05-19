@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vote</title>
+    <script type="text/javascript">{% include "test/cookie.js" %}</script>
+    <script type="text/javascript">{% include "test/ajax.js" %}</script>
+</head>
+<body>
+
+<h1>Vote</h1>
+
+<form id="vote_form" action="/api/vote/" method="post" enctype="multipart/form-data">
+
+    <fieldset>
+        <legend>Vote:</legend>
+
+        <input type="radio" id="strongly_disagree" name="vote" value="1">
+        <label for="strongly_disagree">Strongly Disagree</label>
+        <input type="radio" id="disagree" name="vote" value="2">
+        <label for="disagree">Disagree</label>
+        <input type="radio" id="neutral" name="vote" value="3">
+        <label for="neutral">Neutral</label>
+        <input type="radio" id="agree" name="vote" value="4">
+        <label for="agree">Agree</label>
+        <input type="radio" id="strongly_agree" name="vote" value="5">
+        <label for="strongly_agree">Strongly Agree</label>
+    </fieldset>
+
+    <fieldset>
+        <legend>ActiveLink:</legend>
+
+        <input type="text" id="unique_id" name="unique_id" value=""/>
+        <label for="unique_id">Unique Link</label>
+    </fieldset>
+
+    <input type="submit" name="Submit" value="Vote" />
+    {% csrf_token %}
+</form>
+
+<hr />
+<code>
+<span id="result"></span>
+</code>
+
+<script type="text/javascript">
+    const API_ROUTE_URI = "/api/vote/";
+    const FORM_ELEMENT = "vote_form";
+</script>
+
+
+<br /><hr />
+<div style="text-align: right">
+    <a href="/test/links/">&lsaquo;&lsaquo; Download Links</a>
+    ||
+    <a href="/test/close/">Close Survey &rsaquo;&rsaquo;</a>
+</div>

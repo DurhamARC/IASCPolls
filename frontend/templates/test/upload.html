@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+
+<h1>Upload Participants</h1>
+
+<form action="/api/participants/upload/" method="post" enctype="multipart/form-data">
+
+    <fieldset>
+        <legend>Upload an Excel File</legend>
+        <label for="file">Select file:</label>
+
+        <input type="file" filename="upload.xlsx"
+               id="file" name="file"
+               accept=".xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, .xls, application/vnd.ms-excel" />
+    </fieldset>
+
+    <fieldset>
+        <legend>Institution:</legend>
+        <label for="institution">Name:</label>
+        <input type="text" id="institution" name="institution"/>
+    </fieldset>
+
+    <fieldset>
+        <legend>Create Institution:</legend>
+
+        <div>
+          <input type="radio" id="true" name="create_institutions" value="True">
+          <label for="true">True</label>
+        </div>
+
+        <div>
+          <input type="radio" id="false" name="create_institutions" value="False" checked>
+          <label for="false">False</label>
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <legend>Create Disciplines from Sheet:</legend>
+
+        <div>
+          <input type="radio" id="true" name="create_disciplines" value="True">
+          <label for="true">True</label>
+        </div>
+
+        <div>
+          <input type="radio" id="false" name="create_disciplines" value="False" checked>
+          <label for="false">False</label>
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <legend>Ignore Conflicts:</legend>
+        <span>For the case where a participant appears more than once, causing a conflict.</span>
+
+        <div>
+          <input type="radio" id="true" name="ignore_conflicts" value="True">
+          <label for="true">True</label>
+        </div>
+
+        <div>
+          <input type="radio" id="false" name="ignore_conflicts" value="False" checked>
+          <label for="false">False</label>
+        </div>
+    </fieldset>
+
+    <input type="submit" value="Upload" />
+
+    {% csrf_token %}
+</form>
+
+<br /><hr />
+<div style="text-align: right">
+<a href="/test/survey/">Create Survey &rsaquo;&rsaquo;</a>
+</div>

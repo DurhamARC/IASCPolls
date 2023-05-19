@@ -3,12 +3,109 @@
     "model": "iasc.survey",
     "pk": 1,
     "fields": {
-        "question": "Is Covid-19 caused by a virus?",
-        "active": true,
-        "kind": "LI",
-        "expiry": "2023-05-27T11:29:48Z",
-        "participants": 1,
-        "voted": 0
+    "question": "Is Covid-19 caused by a virus?",
+    "active": true,
+    "kind": "LI",
+    "expiry": "2023-05-27T11:29:48Z",
+    "participants": 1,
+    "voted": 0
     }
+},
+{
+    "model": "iasc.survey",
+    "pk": 2,
+    "fields": {
+    "question": "Question 2",
+    "active": false,
+    "kind": "MC",
+    "expiry": "2023-05-28T11:29:48Z",
+    "participants": 10,
+    "voted": 5
+    }
+},
+{
+    "model": "iasc.survey",
+    "pk": 3,
+    "fields": {
+    "question": "Question 3",
+    "active": true,
+    "kind": "TF",
+    "expiry": "2023-05-29T11:29:48Z",
+    "participants": 3,
+    "voted": 2
+    }
+},
+{
+    "model": "iasc.survey",
+    "pk": 4,
+    "fields": {
+    "question": "Question 4",
+    "active": false,
+    "kind": "MC",
+    "expiry": "2023-05-30T11:29:48Z",
+    "participants": 7,
+    "voted": 3
+    }
+},
+{
+    "model": "iasc.survey",
+    "pk": 5,
+    "fields": {
+    "question": "Question 5",
+    "active": true,
+    "kind": "LI",
+    "expiry": "2023-05-31T11:29:48Z",
+    "participants": 2,
+    "voted": 1
+    }
+},
+{
+    "model": "iasc.survey",
+    "pk": 6,
+    "fields": {
+    "question": "Question 6",
+    "active": true,
+    "kind": "MC",
+    "expiry": "2023-06-01T11:29:48Z",
+    "participants": 15,
+    "voted": 10
+    }
+},
+{
+    "model": "iasc.survey",
+    "pk": 7,
+    "fields": {
+    "question": "Question 7",
+    "active": false,
+    "kind": "TF",
+    "expiry": "2023-06-02T11:29:48Z",
+    "participants": 5,
+    "voted": 1
+    }
+},
+{
+    "model": "iasc.survey",
+    "pk": 8,
+    "fields": {
+    "question": "Question 8",
+    "active": true,
+    "kind": "LI",
+    "expiry": "2023-06-03T11:29:48Z",
+    "participants": 8,
+    "voted": 6
+    }
+},
+{
+    "model": "iasc.survey",
+    "pk": 9,
+    "fields": {
+    "question": "Question 9",
+    "active": false,
+    "kind": "LI",
+    "expiry": "2023-06-03T11:29:48Z",
+    "participants": 8,
+    "voted": 6}
 }
 ]
+
+  
