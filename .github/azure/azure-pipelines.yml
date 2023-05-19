@@ -113,8 +113,15 @@ stages:
                 -DB_SSL_ENABLED "$(DB_SSL_ENABLED)"
               ScriptType: 'Inline Script'
               InlineScript: |
-                python3.8 -m venv venv
+                echo "Working directory is $(pwd)"
+                export WORKDIR=$(pwd)
+                echo "python is $(python --version) in $(which python)"
+                echo "\$PYTHONPATH is $PYTHONPATH"
+                echo "\$PATH is $PATH"
+                echo "Creating virtual environment:"
+                python -m venv venv
                 chmod +x ./venv/bin/activate
+                echo "Activating virtual environment:"
                 . ./venv/bin/activate
-                echo "python is $(which python)"
+                echo "Install requirements..."
                 python -m pip install -r requirements.txt
