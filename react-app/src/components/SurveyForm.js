@@ -25,7 +25,6 @@ export default function PollForm({ uniqueId, pollId }) {
     if (selectedOption !== "") {
       try {
         const data = {
-          survey_id: pollId,
           unique_id: uniqueId,
           vote: parseInt(selectedOption)
         };
@@ -44,6 +43,7 @@ export default function PollForm({ uniqueId, pollId }) {
     <div>
       <div className="poll--options-wrapper">
         <form onSubmit={handleSubmit}>
+
           <ul className="poll--options">
             {options.map((option) => (
               <li key={option.value}>
