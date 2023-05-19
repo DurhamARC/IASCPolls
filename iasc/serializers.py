@@ -86,13 +86,15 @@ class SurveyResultSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(source="survey.id")
     count = serializers.SerializerMethodField()
     question = serializers.CharField(source="survey.question")
+    kind = serializers.CharField(source="survey.kind")
+    active = serializers.CharField(source="survey.active")
 
     def get_count(self, obj):
         return models.Result.objects.filter(survey_id=obj.survey.id).count()
 
     class Meta:
         model = models.Result
-        fields = ["id", "question", "count"]
+        fields = ["id", "kind", "active", "question", "count"]
 
 
 class ActiveLinkSerializer(serializers.ModelSerializer):
