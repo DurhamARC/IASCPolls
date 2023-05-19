@@ -52,7 +52,7 @@ export default function Poll() {
           <div className="poll--question">
             {pollQuestion}
           </div>
-          <PollForm uniqueId={uniqueId} />
+          <PollForm uniqueId={uniqueId} pollId={pollId}/>
         </div>
       </div>
       <Footer />

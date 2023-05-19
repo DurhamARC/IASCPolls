@@ -817,8 +817,8 @@ p, ol, ul {
 
 .login--content {
   width: 50%;
-  height: auto;
-  padding: 4rem;
+  height: 90%;
+  padding: 2rem;
   border-radius: 5px;
   display: flex;
   flex-direction: column;
@@ -867,8 +867,8 @@ p, ol, ul {
 }
 
 .login--pic {
-  background-size: 10rem;
-  height: 10rem;
+  background-size: 5rem;
+  height: 5rem;
   margin-top: 1rem;
 }
 

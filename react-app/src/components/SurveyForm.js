@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
-export default function PollForm({ uniqueId }) {
+export default function PollForm({ uniqueId, pollId }) {
   const navigate = useNavigate();
   const [selectedOption, setSelectedOption] = useState("");
   const [optionSelected, setOptionSelected] = useState(false);
@@ -24,14 +24,16 @@ export default function PollForm({ uniqueId }) {
     event.preventDefault();
     if (selectedOption !== "") {
       try {
-        // REPLACE WITH ACTUAL DB
-        await axios.post('/api/answers', {
-          uniqueId: uniqueId,
-          answer: selectedOption
-        }).then((res) => {navigate("/thankyou")});
+        const data = {
+          survey_id: pollId,
+          unique_id: uniqueId,
+          vote: parseInt(selectedOption)
+        };
+
+        await axios.post('/api/vote', data); // this is not working :(
+        navigate("/thankyou");
       } catch (error) {
         console.error('Error submitting answer:', error);
-
       }
     } else {
       alert("Please select an option.");
