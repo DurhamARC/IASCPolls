@@ -34,7 +34,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserModel
-        fields = ("username",)
+        fields = ["username", "first_name"]
 
 
 disciplineSlug = serializers.SlugRelatedField(
