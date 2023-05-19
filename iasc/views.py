@@ -184,7 +184,10 @@ class SubmitVoteView(ViewSet):
             ActiveLink.DoesNotExist,
         ) as e:
             error_message = str(e)
-            return Response({"status": "error", "message": error_message})
+            return Response(
+                {"status": "error", "message": error_message},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
 
 #
@@ -224,9 +227,12 @@ class UploadParticipantsView(ViewSet):
                 status=status.HTTP_200_OK,
             )
 
-        except ValidationError as e:
+        except (KeyError, AttributeError, ValidationError) as e:
             error_message = str(e)
-            return Response({"status": "error", "message": error_message})
+            return Response(
+                {"status": "error", "message": error_message},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
 
 #
