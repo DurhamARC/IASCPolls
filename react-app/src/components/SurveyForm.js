@@ -30,7 +30,7 @@ export default function PollForm({ uniqueId, pollId }) {
           vote: parseInt(selectedOption)
         };
 
-        await axios.post('/api/vote', data); // this is not working :(
+        await axios.post('/api/vote/', data);
         navigate("/thankyou");
       } catch (error) {
         console.error('Error submitting answer:', error);
