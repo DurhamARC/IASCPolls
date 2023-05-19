@@ -81,6 +81,7 @@ class UserViewSet(viewsets.ModelViewSet):
     authentication_classes = (SessionAuthentication,)
     serializer_class = serializers.UserSerializer
     queryset = UserModel.objects.all()
+    pagination_class = None
 
 
 #
