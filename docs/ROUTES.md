@@ -8,17 +8,20 @@ The icon ⚠️ indicates that the routes in the given group require login to re
 
 ## Index:
 
+* [General](#general)
 * [Login](#login)
-  * [Logout](#logout) 
+  * [Logout](#logout)
+  * [User](#user)
 * [Participants](#participants)
-  * [Data Entry](#data-entry-)
-  * [Data Queries](#data-queries-)
-* [Surveys](#surveys-)
-  * [Create Survey](#create-survey-)
-  * [List Surveys](#list-surveys-)
-  * [Close Surveys](#close-surveys-)
+  * [Data Entry](#data-entry)
+  * [Data Queries](#data-queries)
+* [Surveys](#surveys)
+  * [List Surveys](#list-surveys)
+  * [Create Survey](#create-survey)
+  * [Close Surveys](#close-surveys)
 * [Voting](#voting) 
-* [Results](#results-)
+* [Links](#links)
+* [Results](#results)
 * [Pages](#pages)
 
 ---
@@ -55,6 +58,18 @@ On a successful login, the server will return `302 Found` and redirect to the ad
 `GET /logout/`  
 Log the user out of the application, invalidating the session cookie from the `/login` route. The server will return a `302 Found` redirect to the `/` index of the web application.
 
+## User
+`GET /api/user/`
+Return the current logged-in user's username and first name, if set.
+
+```javascript
+[
+  {
+    "username": "p123456",
+    "first_name": "Peter"
+  }
+]
+```
 
 ---
 # Participants
@@ -91,7 +106,7 @@ The expectation is that the sheet will be formatted as follows. Non-compliant sh
 | First Name | Email Address                  | Discipline       |
 |------------|--------------------------------|------------------|
 | Samantha   | samantha.finnigan@durham.ac.uk | Computer Science |
-| Joanne     | joanne.sheppard@durham.ac.uk   | Mathematics      |
+| Joanne     | joanne.sheppard@durham.ac.uk   | Physics          |
 | Peter      | peter.vickers@durham.ac.uk     | Philosophy       |
 
 Fuzzy logic is used to detect variations on the column names: for example, "_Name_" is accepted for the name column, and "_Emial Adres_", although misspelled, would be accepted for the Email Address column. 
@@ -121,6 +136,8 @@ Filtering is provided as an additional URL parameter, so `GET /api/institutions/
 
 ### List Disciplines
 `GET /api/disciplines/`
+
+List all disciplines. Not paginated.
 
 ```javascript
 [
@@ -153,34 +170,9 @@ discipline=2
 # Surveys
 Session-authorization protected route. ⚠️
 
-## Create Survey
-`POST /api/survey/create/`  
-Create a survey in the database.
-
-```javascript
-{
-  "question": "Science has proven beyond all reasonable doubt that...",
-  "active": "True",
-  "kind": 'LI',
-  "expiry": "2023-05-01T12:34:56"
-}
-```
-
-NB: Such a date can be generated in Javascript using `(new Date()).toISOString()`.
-
-There are further optional parameters which can be given to this route:
-
-```javascript
-{
-  "create_active_links": "True"
-}
-```
-
-This will allow you to create a survey without creating ActiveLinks in the database.
-
 
 ## List Surveys
-`GET /api/surveys/`
+`GET /api/survey/`
 
 Takes the optional `GET` parameter `?active=True`.
 
@@ -205,14 +197,14 @@ Returns a filtered list of active surveys, accessible under the key `results`, v
       "active": "True",
       "expiry": "2023-05-01T12:34:56.789Z",
       "participants": 10000,
-      "voted": 6700
+      "voted": 2043
     }
   ]
 }
 ```
 
 
-## List surveys with available results
+### List surveys with available results
 `GET /api/survey/results/`
 List surveys for which results are available; and count results for each survey.
 
@@ -221,18 +213,48 @@ List surveys for which results are available; and count results for each survey.
   "count": 2,
   "results": [
     {
-      "id": 2,
-      "question": "Question 2",
-      "count": 2
+      "id": 1,
+      "kind": "LI",
+      "active": "False",
+      "question": "Science has proven beyond all reasonable doubt that...",
+      "count": 6700
     },
     {
-      "id": 10,
-      "question": "Test me again!",
-      "count": 2
+      "id": 2,
+      "kind": "LI",
+      "active": "True",
+      "question": "Another example question, asking about something nice?",
+      "count": 2043
     },
   ]
 }
 ```
+
+
+## Create Survey
+`POST /api/survey/create/`  
+Create a survey in the database.
+
+```javascript
+{
+  "question": "Science has proven beyond all reasonable doubt that...",
+  "active": "True",
+  "kind": 'LI',
+  "expiry": "2023-05-01T12:34:56"
+}
+```
+
+NB: Such a date can be generated in Javascript using `(new Date()).toISOString()`.
+
+There are further optional parameters which can be given to this route:
+
+```javascript
+{
+  "create_active_links": "True"
+}
+```
+
+This will allow you to create a survey without creating ActiveLinks in the database.
 
 ## Close surveys
 `POST /api/survey/close/`  
@@ -314,7 +336,7 @@ Session-authorization protected route. ⚠️
 Retrieve survey results incrementally and following the close of a survey.
 
 ## Download Results
-`GET /api/results/`
+`GET /api/result/`
 
 Provide the following parameters for survey ID, and OPTIONAL pagination:
 ```javascript
@@ -324,12 +346,12 @@ size=10 *optional
 ```
 
 ### Download results as Microsoft Excel XLS
-`GET /api/results/xls/`
+`GET /api/result/xls/`
 
 As above, but get results as Microsoft Excel XLS files.
 
 ### Download results as Zip File of Excel Sheets
-`GET /api/results/zip/`
+`GET /api/result/zip/`
 
 Download results for surveys as Excel Spreadsheets in a zip file. To get all surveys, do not provide survey parameter
 
