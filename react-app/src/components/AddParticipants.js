@@ -1,5 +1,4 @@
 import React, { useState, useRef } from 'react';
-import axios from 'axios';
 
 const AddParticipants = ({ onClose }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -10,32 +9,29 @@ const AddParticipants = ({ onClose }) => {
     fileInputRef.current.click();
   };
 
-  const handleSelectedFile = async (event) => {
+  const handleSelectedFile = (event) => {
     const file = event.target.files[0];
 
     setIsLoading(true);
     setIsUploaded(false);
 
-    try {
-      const formData = new FormData();
-      formData.append('file', file);
-
-      await axios.post('/participants/upload', formData);
-
-      setIsUploaded(true);
-    } catch (error) {
-      console.error('Error uploading file:', error);
-    } finally {
+    // Simulating file upload progress
+    setTimeout(() => {
       setIsLoading(false);
-    }
+
+      // Simulating success message
+      setTimeout(() => {
+        setIsUploaded(true);
+      }, 1000);
+    }, 2000);
   };
 
   const Progress = () => {
     return (
-      <div>
-        <h4>Uploading new participants...</h4>
-        <div className="loading-bar" />
-      </div>
+    <div>
+      <h4>Uploading new participants...</h4>
+      <div className="loading-bar" />
+    </div>
     );
   };
 
@@ -69,9 +65,7 @@ const AddParticipants = ({ onClose }) => {
         ) : (
           <SuccessMessage />
         )}
-        <button onClick={onClose} className="add-participants-close-button">
-          Close
-        </button>
+        <button onClick={onClose} className="add-participants-close-button">Close</button>
       </div>
     </div>
   );
