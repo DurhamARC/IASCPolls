@@ -167,7 +167,7 @@ class SubmitVoteView(ViewSet):
 
     def create(self, request):
         try:
-            uid = request.data["unique_link"].strip()
+            uid = request.data["unique_id"].strip()
             link = ActiveLink.objects.filter(unique_link=uid).get()
             vote = request.data["vote"].strip()
             link.vote(vote)
