@@ -1052,7 +1052,7 @@ p, ol, ul {
   background-color: #fff;
   border: 2px solid rgb(221, 210, 210);
   width: 50vw;
-  height: 50vh;
+  height: 60vh;
   padding: 2rem;
   display: flex;
   flex-direction: column;
@@ -1146,6 +1146,14 @@ p, ol, ul {
   filter: blur(4px); /* Apply blur effect to the content */
 }
 
+
+.checkbox{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+}
 
 
 

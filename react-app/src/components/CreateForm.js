@@ -1,37 +1,42 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const CreateForm = ({ onSubmit }) => {
-  const [title, setTitle] = useState('');
   const [statement, setStatement] = useState('');
+  const [active, setActive] = useState('');
   const [endDate, setEndDate] = useState('');
-
-  const handleTitleChange = (event) => {
-    setTitle(event.target.value);
-  };
 
   const handleStatementChange = (event) => {
     setStatement(event.target.value);
+  };
+
+  const handleActiveChange = (event) => {
+    setActive(event.target.value);
   };
 
   const handleEndDateChange = (event) => {
     setEndDate(event.target.value);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    onSubmit();
+    try {
+      const data = {
+        question: statement,
+        active: active,
+        kind: 'LI',
+        expiry: endDate
+      };
+
+      await axios.post('/api/survey/create', data);
+      onSubmit();
+    } catch (error) {
+      console.error('Error creating survey:', error);
+    }
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <label htmlFor="title">Title:</label>
-      <input
-        id="title"
-        type="text"
-        value={title}
-        onChange={handleTitleChange}
-        placeholder="Enter your dashboard title"
-      />
       <label htmlFor="statement">Statement:</label>
       <textarea
         id="statement"
@@ -40,6 +45,10 @@ const CreateForm = ({ onSubmit }) => {
         className="create--statement"
         placeholder="Enter the statement the participants will see"
       />
+      <div className="checkbox">
+      <input type="checkbox" id="active" name="active" onChange={handleActiveChange} checked />
+      <label for="active">Active</label> 
+      </div>
       <label htmlFor="endDate">Select End Date:</label>
       <input
         id="endDate"
