@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, get_user_model
+from django.utils.text import slugify
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
@@ -122,7 +123,10 @@ class MultiLinkSerializer(ActiveLinkSerializer):
     filename = serializers.SerializerMethodField()
 
     def get_filename(self, obj):
-        return f"IASC-{obj.participant.institution.id}-{'_'.join(obj.participant.institution.name.strip().split(' '))}.xlsx"
+        filename = (
+            f"{obj.participant.institution.id}-{obj.participant.institution.name}"
+        )
+        return f"IASC-{slugify(filename, allow_unicode=True)}.xlsx"
 
     class Meta:
         model = models.ActiveLink
@@ -133,7 +137,8 @@ class MultiResultSerializer(ResultSerializer):
     filename = serializers.SerializerMethodField()
 
     def get_filename(self, obj):
-        return f"Results-{obj.survey.id}-{'_'.join(obj.survey.question.strip().split(' '))}.xlsx"
+        filename = f"{obj.survey.id}-{obj.survey.question}"
+        return f"Results-{slugify(filename, allow_unicode=True)}.xlsx"
 
     class Meta:
         model = models.ActiveLink
