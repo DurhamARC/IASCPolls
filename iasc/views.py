@@ -207,8 +207,11 @@ class UploadParticipantsView(ViewSet):
         """
         try:
             fields = {"institution", "file"}
-            if not fields <= set(request.data.keys()):
-                raise ValidationError(f"Upload form missing required fields: {fields}")
+            keys = set(request.data.keys())
+            if not fields <= keys:
+                raise ValidationError(
+                    f"Upload form missing required fields: {fields.difference(keys)}"
+                )
 
             # Read file into variable
             file_obj = request.data["file"]
