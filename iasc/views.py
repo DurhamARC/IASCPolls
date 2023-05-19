@@ -22,7 +22,7 @@ from iasc.filters import (
 )
 
 from iasc.logic import parse_excel_sheet_to_db, create_survey_in_db
-from iasc.models import ActiveLink, Result, Participant, Survey
+from iasc.models import ActiveLink, Result, Participant, Survey, Discipline, Institution
 
 
 #
@@ -252,6 +252,20 @@ class ParticipantViewSet(viewsets.ReadOnlyModelViewSet):
     )
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = ParticipantInstitutionFilter
+
+
+class DisciplineViewSet(viewsets.ReadOnlyModelViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = serializers.DisciplineSerializer
+    queryset = Discipline.objects.order_by("id")
+    pagination_class = None
+
+
+class InstitutionViewSet(viewsets.ReadOnlyModelViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = serializers.InstitutionSerializer
+    queryset = Institution.objects.order_by("name")
+    pagination_class = None
 
 
 class SurveyViewSet(viewsets.ReadOnlyModelViewSet):

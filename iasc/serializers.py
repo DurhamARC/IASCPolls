@@ -54,6 +54,18 @@ class ParticipantSerializer(serializers.ModelSerializer):
         fields = ["name", "email", "institution", "discipline"]
 
 
+class DisciplineSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Discipline
+        fields = "__all__"
+
+
+class InstitutionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Institution
+        fields = "__all__"
+
+
 class SurveySerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Survey
