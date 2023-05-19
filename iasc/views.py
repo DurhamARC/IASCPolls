@@ -169,7 +169,7 @@ class SubmitVoteView(ViewSet):
         try:
             uid = request.data["unique_id"].strip()
             link = ActiveLink.objects.filter(unique_link=uid).get()
-            vote = request.data["vote"].strip()
+            vote = int(request.data["vote"])
             link.vote(vote)
 
             return Response(
@@ -177,7 +177,12 @@ class SubmitVoteView(ViewSet):
                 status=status.HTTP_200_OK,
             )
 
-        except (ValidationError, ActiveLink.DoesNotExist) as e:
+        except (
+            KeyError,
+            AttributeError,
+            ValidationError,
+            ActiveLink.DoesNotExist,
+        ) as e:
             error_message = str(e)
             return Response({"status": "error", "message": error_message})
 
