@@ -2,38 +2,41 @@ import React, { useState, useRef } from 'react';
 import axios from 'axios';
 
 const AddParticipants = ({ onClose }) => {
+  const [institution, setInstitution] = useState('');
+  const [file, setFile] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const fileInputRef = useRef(null);
+
+  const handleInstitutionChange = (event) => {
+    setInstitution(event.target.value);
+  };
+
+  const handleFileChange = (event) => {
+    setFile(event.target.value);
+  };
+
 
   const handleFileUpload = () => {
     fileInputRef.current.click();
   };
 
   const handleSubmit = async (event) => {
+    console.log(event)
     event.preventDefault();
-
-    const file = event.target.files[0];
-
-    setIsLoading(true);
-    setIsSuccess(false);
 
     try {
       const formData = new FormData();
       formData.append('file', file);
-      formData.append('institution', document.getElementById('institution').value);
+      formData.append('institution', institution);
 
       await axios.post('/api/participants/upload/', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
-
-      setIsSuccess(true);
     } catch (error) {
       console.error('Error uploading file:', error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -61,12 +64,13 @@ const AddParticipants = ({ onClose }) => {
         ) : (
           <form onSubmit={handleSubmit}>
             <label htmlFor="institution">Institution:</label>
-            <input type="text" id="institution" name="institution" /><br />
+            <input type="text" id="institution" name="institution" onChange={handleInstitutionChange}/><br />
             <input
               type="file"
               accept=".xlsx, .xls"
               style={{ display: 'none' }}
               ref={fileInputRef}
+              onChange={handleFileChange}
             />
             {isLoading ? (
               <LoadingBar />
