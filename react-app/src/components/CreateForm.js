@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const CreateForm = ({ onSubmit }) => {
   const [statement, setStatement] = useState('');
-  const [active, setActive] = useState('');
+  const [active, setActive] = useState(false);
   const [endDate, setEndDate] = useState('');
 
   const handleStatementChange = (event) => {
@@ -11,7 +11,7 @@ const CreateForm = ({ onSubmit }) => {
   };
 
   const handleActiveChange = (event) => {
-    setActive(event.target.value);
+    setActive(event.target.checked);
   };
 
   const handleEndDateChange = (event) => {
@@ -46,8 +46,8 @@ const CreateForm = ({ onSubmit }) => {
         placeholder="Enter the statement the participants will see"
       />
       <div className="checkbox">
-      <input type="checkbox" id="active" name="active" onChange={handleActiveChange} checked />
-      <label for="active">Active</label> 
+        <input type="checkbox" id="active" name="active" checked={active} onChange={handleActiveChange} />
+        <label htmlFor="active">Active</label> 
       </div>
       <label htmlFor="endDate">Select End Date:</label>
       <input
