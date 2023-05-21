@@ -4,89 +4,82 @@ import Footer from '../components/Footer';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-export default function DownloadParticipants() {
+const DownloadParticipants = () => {
   const location = useLocation();
   const history = useNavigate();
   const searchParams = new URLSearchParams(location.search);
   const pollId = searchParams.get("pollId");
 
-  const fakeInstitutions = [
-    'Durham University',
-    'NYU Taiwan',
-    'Leeds',
-    'Oxford Institute of Technology',
-    'Cambridge School of Business',
-    'Harvard College',
-    'Stanford Institute of Technology',
-    'Yale School of Medicine',
-    'Princeton Academy',
-    'MIT School of Engineering',
-    'Columbia Law School',
-    'Brown University',
-    'Cornell College',
-    'University of Chicago',
-    'Georgetown Business School',
-    'Northwestern School of Journalism',
-    'University of Pennsylvania',
-    'Dartmouth College',
-    'UC Berkeley School of Arts',
-    'UCLA College of Engineering',
-    'University of Michigan',
-    'University of Texas at Austin',
-    'University of Washington',
-    'Johns Hopkins School of Public Health',
-    'Vanderbilt School of Music',
-    'Rice University',
-    'Carnegie Mellon Institute',
-    'University of Southern California',
-    'Emory School of Law',
-    'Boston University',
-  ];
-
-  const [selectedPollId, setSelectedPollId] = useState(pollId);
-  const [pollQuestions, setPollQuestions] = useState([]);
   const [pollQuestion, setPollQuestion] = useState('');
+  const [institutions, setInstitutions] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Make the API call to get the survey data
-        const response = await axios.get('/api/survey/');
-        const surveyData = response.data.results;
+        const [institutionsResponse, surveyResponse] = await Promise.all([
+          //axios.get(`/api/survey/${pollId}/institutions`), this route not working and cannot see on api
+          axios.get('/api/institutions'),
+          axios.get(`/api/survey/${pollId}`)
+        ]);
 
-        if (surveyData) {
-          // Set the available poll questions from the survey data
-          const availablePollQuestions = surveyData.map((survey) => survey.question);
-          setPollQuestions(availablePollQuestions);
+        const institutionData = institutionsResponse.data;
+        const pollData = surveyResponse.data;
 
-          // Find the survey with the matching question
-          const matchingSurvey = surveyData.find((survey) => survey.question === selectedPollId);
+        if (institutionData) {
+          setInstitutions(institutionData);
+        }
 
-          if (matchingSurvey) {
-            // Survey with the specified question exists, set the poll question
-            setPollQuestion(matchingSurvey.question);
-          } else {
-            // Survey does not exist, redirect to the error page
-            console.log("survey does not exist");
-          }
+        if (pollData) {
+          setPollQuestion(pollData.question);
         }
       } catch (error) {
-        console.error('Error fetching survey data:', error);
+        console.error('Error fetching data:', error);
       }
     };
 
     fetchData();
-  }, [selectedPollId, history]);
+  }, [pollId]);
 
-  const handleDownloadAll = () => {
-    // Logic to download all participants
-    console.log('Downloading all participants...');
+  const handleDownloadAll = async () => {
+    try {
+      const response = await axios.get(`/api/links/zip/?survey=${pollId}`, {   // THIS IS NOT WORKING WILL NEED TO BE
+        responseType: 'blob',
+      });
+  
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `poll_${pollId}.xlsx`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error downloading file:', error);
+    }
   };
 
-  const handlePollSelect = (e) => {
-    const selectedPoll = e.target.value;
-    setSelectedPollId(selectedPoll);
-    history(`/download?pollId=${selectedPoll}`);
+  const handleDownload = async (institutionId) => {
+    try {
+      const response = await axios.get('/api/links/', {
+        responseType: 'blob',
+        params: {
+          survey: pollId,
+          institution: institutionId,
+        },
+      });
+  
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `institution_${institutionId}_poll_${pollId}.xlsx`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error downloading file:', error);
+    }
   };
 
   return (
@@ -94,27 +87,19 @@ export default function DownloadParticipants() {
       <NavBar />
       <div className="container">
         <div className="download--container">
-          <div>
-            <select value={selectedPollId} onChange={handlePollSelect}>
-              <option value="">Select a poll</option>
-              {pollQuestions.map((pollQuestion, index) => (
-                <option key={index} value={pollQuestion}>
-                  {pollQuestion}
-                </option>
-              ))}
-            </select>
-          </div>
-          <button onClick={handleDownloadAll}>Download All</button>
+          <h>Download Participants for...</h>
+          <h3>{pollQuestion}</h3>
+          <button className="button download--button" onClick={handleDownloadAll}>Download All</button>
           <div className="download--content">
             <div>
-              <div>Institution</div>
-              <div>Download</div>
+              <div><h4>Institution</h4></div>
+              <div><h4>Download</h4></div>
             </div>
-            {fakeInstitutions.map((institution, index) => (
+            {institutions.map((institution, index) => (
               <div key={index}>
-                <div>{institution}</div>
+                <div>{institution.name}</div>
                 <div>
-                  <button>Download</button>
+                  <button className="button download--button" onClick={() => handleDownload(institution.id)}>Download</button>
                 </div>
               </div>
             ))}
@@ -124,4 +109,6 @@ export default function DownloadParticipants() {
       <Footer />
     </div>
   );
-}
+};
+
+export default DownloadParticipants;

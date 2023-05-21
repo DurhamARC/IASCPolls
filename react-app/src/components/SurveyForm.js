@@ -20,7 +20,7 @@ export default function PollForm({ uniqueId, pollId }) {
     setOptionSelected(true);
   }
 
-  async function handleSubmit(event) {
+  function handleSubmit(event) {
     event.preventDefault();
     if (selectedOption !== "") {
       try {
@@ -29,7 +29,7 @@ export default function PollForm({ uniqueId, pollId }) {
           vote: parseInt(selectedOption)
         };
 
-        await axios.post('/api/vote/', data);
+        axios.post('/api/vote/', data);
         navigate("/thankyou");
       } catch (error) {
         console.error('Error submitting answer:', error);
