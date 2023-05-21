@@ -28,7 +28,7 @@ const CreateForm = ({ onSubmit }) => {
         expiry: endDate
       };
 
-      await axios.post('/api/survey/create', data);
+      await axios.post('/api/survey/create/', data);
       onSubmit();
     } catch (error) {
       console.error('Error creating survey:', error);
@@ -37,7 +37,8 @@ const CreateForm = ({ onSubmit }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <label htmlFor="statement">Statement:</label>
+      <h1>Create a Survey</h1>
+      <label htmlFor="statement"><h3>Statement</h3></label>
       <textarea
         id="statement"
         value={statement}
@@ -46,10 +47,27 @@ const CreateForm = ({ onSubmit }) => {
         placeholder="Enter the statement the participants will see"
       />
       <div className="checkbox">
-        <input type="checkbox" id="active" name="active" checked={active} onChange={handleActiveChange} />
-        <label htmlFor="active">Active</label> 
+        <label htmlFor="active"><h3>Active</h3></label>
+        <div className="create--checkbox">
+          <label>
+            <input
+              type="checkbox"
+              checked={active}
+              onChange={handleActiveChange}
+            />
+            Yes
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              checked={!active}
+              onChange={handleActiveChange}
+            />
+            No
+          </label>
+        </div>
       </div>
-      <label htmlFor="endDate">Select End Date:</label>
+      <label htmlFor="endDate"><h3>End Date</h3></label>
       <input
         id="endDate"
         type="date"

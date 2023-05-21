@@ -6,13 +6,15 @@ export default function Thanks() {
   return (
     <div className="thankyou--container">
       <NavBar />
+      <div className="container centered">
       <div className="thankyou">
-        <div className="thankyou--title">Thank you for your participation!</div>
+        <h1>Thank you for your participation!</h1>
         <div>
-          <h2 className="thankyou--para">Thank you for participating in our beta test. Your input and feedback have been invaluable 
+          <p>Thank you for participating in our beta test. Your input and feedback have been invaluable 
             in helping us shape and improve our product. We greatly appreciate your time and effort. If you'd like to learn more 
-            about the research and development behind our product, <a href="/ethics"> please follow this link. </a> </h2>
-          <h2 className="thankyou--para">Once again, thank you for your support.</h2>
+            about the research and development behind our product, <a href="/ethics"> please follow this link. </a> </p>
+          <p>Once again, thank you for your support.</p>
+        </div>
         </div>
       </div>
       <Footer />
