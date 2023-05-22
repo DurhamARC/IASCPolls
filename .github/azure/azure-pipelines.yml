@@ -118,6 +118,7 @@ stages:
                 export WORKDIR=$(pwd)
                 echo "python is $(python --version) in $(which python)"
                 echo "python3.8 is $(python3.8 --version) in $(which python3.8)"
+                ls /opt/python/latest/bin
                 echo "\$PYTHONPATH is $PYTHONPATH"
                 echo "\$PATH is $PATH"
                 echo "Creating virtual environment:"
