@@ -113,6 +113,7 @@ stages:
                 -DB_SSL_ENABLED "$(DB_SSL_ENABLED)"
               ScriptType: 'Inline Script'
               InlineScript: |
+                export PATH=$PATH:/opt/python/latest/bin/:/usr/local/.rbenv/bin:/opt/nodejs/lts/bin:/opt/dotnet/lts:/opt/python/latest/bin:/opt/php/lts/bin:/opt/php-composer:/opt/nodejs/9/bin
                 echo "Working directory is $(pwd)"
                 export WORKDIR=$(pwd)
                 echo "python is $(python --version) in $(which python)"
