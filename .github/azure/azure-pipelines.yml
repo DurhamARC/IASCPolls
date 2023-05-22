@@ -116,12 +116,14 @@ stages:
                 echo "Working directory is $(pwd)"
                 export WORKDIR=$(pwd)
                 echo "python is $(python --version) in $(which python)"
+                echo "python3.8 is $(python3.8 --version) in $(which python3.8)"
                 echo "\$PYTHONPATH is $PYTHONPATH"
                 echo "\$PATH is $PATH"
                 echo "Creating virtual environment:"
-                python -m venv venv
+                python3.8 -m venv venv
                 chmod +x ./venv/bin/activate
                 echo "Activating virtual environment:"
                 . ./venv/bin/activate
+                echo "python is now $(python --version) in $(which python)"
                 echo "Install requirements..."
                 python -m pip install -r requirements.txt
