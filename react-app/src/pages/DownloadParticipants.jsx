@@ -17,12 +17,11 @@ function DownloadParticipants() {
     const fetchData = async () => {
       try {
         const [institutionsResponse, surveyResponse] = await Promise.all([
-          // axios.get(`/api/survey/${pollId}/institutions`), this route not working and cannot see on api
-          axios.get("/api/institutions"),
+          axios.get(`/api/survey/${pollId}/institutions`),
           axios.get(`/api/survey/${pollId}`),
         ]);
 
-        const institutionData = institutionsResponse.data;
+        const institutionData = institutionsResponse.data.results;
         const pollData = surveyResponse.data;
 
         if (institutionData) {
@@ -91,7 +90,7 @@ function DownloadParticipants() {
       <NavBar />
       <div className="container">
         <div className="download--container">
-          <h>Download Participants for...</h>
+          <h2>Download Participants for...</h2>
           <h3>{pollQuestion}</h3>
           <button
             type="button"
