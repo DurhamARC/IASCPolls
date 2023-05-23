@@ -1,28 +1,51 @@
-import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
 
-const AddParticipants = ({ onClose }) => {
+
+function LoadingBar() {
+  return (
+    <div>
+      <h4>Uploading new participants...</h4>
+      <div className="loading-bar" />
+    </div>
+  );
+}
+
+function SuccessMessage() {
+  return (
+    <div className="add-participants-success">
+      <div className="success-icon">✓</div>
+      <div className="success-text">New participants successfully added!</div>
+      <button type="button">View Participants</button>
+    </div>
+  );
+}
+
+function AddParticipants({ onClose }) {
   const containerRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (containerRef.current && !containerRef.current.contains(event.target)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target)
+      ) {
         onClose();
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [onClose]);
 
-  const [institution, setInstitution] = useState('');
+  const [institution, setInstitution] = useState("");
   const [file, setFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [filename, setFilename] = useState('');
+  const [filename, setFilename] = useState("");
   const [isDragOver, setIsDragOver] = useState(false);
   const fileInputRef = useRef(null);
 
@@ -62,7 +85,7 @@ const AddParticipants = ({ onClose }) => {
     event.preventDefault();
 
     if (!institution || !file) {
-      alert('Please enter an institution and select a file.');
+      alert("Please enter an institution and select a file.");
       return;
     }
 
@@ -70,43 +93,30 @@ const AddParticipants = ({ onClose }) => {
 
     try {
       const formData = new FormData();
-      formData.append('file', file);
-      formData.append('institution', institution);
+      formData.append("file", file);
+      formData.append("institution", institution);
 
-      await axios.post('/api/participants/upload/', formData, {
+      await axios.post("/api/participants/upload/", formData, {
         headers: {
-          'Content-Type': 'multipart/form-data'
-        }
+          "Content-Type": "multipart/form-data",
+        },
       });
 
       setIsSuccess(true);
     } catch (error) {
-      console.error('Error uploading file:', error);
-      alert('Failed to upload participants. Please try again.');
+      console.error("Error uploading file:", error);
+      alert("Failed to upload participants. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const LoadingBar = () => (
-    <div>
-      <h4>Uploading new participants...</h4>
-      <div className="loading-bar" />
-    </div>
-  );
-
-  const SuccessMessage = () => (
-    <div className="add-participants-success">
-      <div className="success-icon">✓</div>
-      <div className="success-text">New participants successfully added!</div>
-      <button>View Participants</button>
-    </div>
-  );
-
   return (
     <div className="overlay">
       <div
-        className={`add-participants-container ${isDragOver ? 'drag-over' : ''}`}
+        className={`add-participants-container ${
+          isDragOver ? "drag-over" : ""
+        }`}
         ref={containerRef}
         onDragEnter={handleDragEnter}
         onDragLeave={handleDragLeave}
@@ -119,19 +129,24 @@ const AddParticipants = ({ onClose }) => {
         ) : (
           <form onSubmit={handleSubmit} className="add-participants-form">
             <div className="add-participants-inst">
-              <label htmlFor="institution">Institution Name</label>
-              <input
-                type="text"
-                id="institution"
-                name="institution"
-                value={institution}
-                onChange={handleInstitutionChange}
-                className="add-participants-input"
-              />
+              <label htmlFor="institution">
+                <input
+                  type="text"
+                  id="institution"
+                  name="institution"
+                  value={institution}
+                  onChange={handleInstitutionChange}
+                  className="add-participants-input"
+                />
+                Institution Name
+              </label>
             </div>
             <div
-              className={`file-drop-area ${filename ? 'file-selected' : ''}`}
+              className={`file-drop-area ${filename ? "file-selected" : ""}`}
+              role="button"
+              tabIndex={0}
               onClick={handleFileUpload}
+              onKeyUp={handleFileUpload}
             >
               <div className="file-drop-text">
                 {filename ? (
@@ -142,14 +157,16 @@ const AddParticipants = ({ onClose }) => {
                 ) : (
                   <>
                     <div className="file-drop-icon">+</div>
-                    <div className="file-drop-description">Drag and drop file here or click to select</div>
+                    <div className="file-drop-description">
+                      Drag and drop file here or click to select
+                    </div>
                   </>
                 )}
               </div>
               <input
                 type="file"
                 accept=".xlsx, .xls"
-                style={{ display: 'none' }}
+                style={{ display: "none" }}
                 ref={fileInputRef}
                 onChange={handleFileChange}
               />
@@ -157,8 +174,11 @@ const AddParticipants = ({ onClose }) => {
             {isLoading ? (
               <LoadingBar />
             ) : (
-              <button type="submit" className={`button ${filename ? 'upload-active' : ''}`}>
-                {filename ? 'Upload Participants File' : 'Submit'}
+              <button
+                type="submit"
+                className={`button ${filename ? "upload-active" : ""}`}
+              >
+                {filename ? "Upload Participants File" : "Submit"}
               </button>
             )}
           </form>
@@ -166,6 +186,6 @@ const AddParticipants = ({ onClose }) => {
       </div>
     </div>
   );
-};
+}
 
 export default AddParticipants;
