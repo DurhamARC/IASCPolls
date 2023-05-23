@@ -1,4 +1,5 @@
 import React from "react";
+import axios from "axios";
 
 export default function Symbol({
   isActive,
@@ -9,23 +10,24 @@ export default function Symbol({
   const setActive = () => {
     // post this to a database
     console.log(surveyId);
+    axios.post("/api/survey/close/", {
+      survey: surveyId
+    }).then(() => {
+      alert("Survey closed, all active links deleted.")
+    });
   };
 
   const handleClick = () => {
-    console.log(isActive);
-    if (!isActive) {
-      if (window.confirm("Are you sure you want to stop the survey?")) {
+    if (isActive) {
+      if (window.confirm("Are you sure you want to close the survey? All links will be deleted.")) {
         setActive(!isActive);
       }
-    } else if (
-      window.confirm("Are you sure you want to open the survey again?")
-    ) {
-      setActive(!isActive);
     }
   };
 
   const style = {
-    color: isActive ? "green" : "red",
+    color: isActive ? "blue" : "red",
+    cursor: isActive ? "pointer" : "default"
   };
 
   return (
