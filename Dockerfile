@@ -19,6 +19,7 @@
 #
 # See: https://docs.docker.com/build/building/multi-stage/ for more info.
 #
+ARG PYTHON_VER 3.8
 #
 # ----------------------------------------------------------------------------
 # Build node / Frontend assets
@@ -46,15 +47,22 @@ RUN npm run webpack
 # Create conda environment
 FROM continuumio/miniconda3:4.12.0 as build_python
 
+# This is how I used to do this: it's slower than using conda-lock
 # https://pythonspeed.com/articles/conda-docker-image-size/
 # Create the environment:
-COPY conf/iasc.base.yml .
-RUN --mount=type=cache,target=/opt/conda/pkgs \
-    conda env create -f iasc.base.yml
+#COPY conf/iasc.base.yml .
+#RUN --mount=type=cache,target=/opt/conda/pkgs \
+#    conda env create -f iasc.base.yml
 
-# Install conda-pack:
+RUN conda create --name IASCPolls python=$PYTHON_VER
 RUN --mount=type=cache,target=/opt/conda/pkgs \
-    conda install -c conda-forge conda-pack
+    conda install -c conda-forge conda-lock conda-pack
+
+# Install environment from conda-lock file
+# Generate using:
+# conda-lock -f conf/iasc.base.yml -p osx-64 -p linux-64 -p linux-aarch64 --lockfile conf/conda-lock.yml
+COPY conf/conda-lock.yml .
+RUN conda-lock install -n IASCPolls
 
 # Use conda-pack to create a standalone enviornment
 # in /venv:
