@@ -40,7 +40,8 @@ export default function Login() {
           navigate("/dashboard");
         })
         .catch((err) => {
-          setPasswordError(err.message);
+          console.log(err.response.data[0]);
+          setPasswordError(err.response.data[0]);
         });
     } else {
       setPasswordError("Invalid username or password");
