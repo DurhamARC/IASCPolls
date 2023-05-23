@@ -738,7 +738,9 @@ ul {
   align-items: center;
 }
 
-.ethics--content p, ol, ul {
+.ethics--content p,
+ol,
+ul {
   margin-top: 1rem;
 }
 

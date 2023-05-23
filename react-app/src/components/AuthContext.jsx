@@ -22,8 +22,8 @@ class AuthProvider extends React.Component {
   };
 
   render() {
-    const {isAuth, currentUser} = this.state;
-    const {children} = this.props;
+    const { isAuth, currentUser } = this.state;
+    const { children } = this.props;
 
     return (
       <AuthContext.Provider
