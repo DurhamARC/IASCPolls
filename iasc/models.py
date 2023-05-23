@@ -2,7 +2,7 @@ import secrets
 
 from django.db import models, transaction
 from django.utils.translation import gettext_lazy
-import datetime
+from datetime import datetime
 
 from iasc import settings
 
@@ -98,9 +98,7 @@ class Survey(models.Model):
     kind = models.CharField(
         max_length=2, choices=SurveyKind.choices, default=SurveyKind.LIKERT
     )
-    expiry = models.DateTimeField(
-        null=False, default=datetime.datetime(2000, 1, 1, 0, 0)
-    )
+    expiry = models.DateTimeField(null=False, default=datetime(2000, 1, 1, 0, 0))
     participants = models.IntegerField(null=False, default=0)
     voted = models.IntegerField(null=False, default=0)
 
@@ -186,6 +184,7 @@ class Result(models.Model):
     vote = models.JSONField(null=False, blank=False)
     institution = models.ForeignKey("Institution", null=True, on_delete=models.SET_NULL)
     discipline = models.ForeignKey("Discipline", null=True, on_delete=models.SET_NULL)
+    added = models.DateTimeField(null=False, blank=False, default=datetime.now)
 
     def save(self, *args, **kwargs):
         if not self.unique_link:
