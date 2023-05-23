@@ -17,12 +17,11 @@ function DownloadParticipants() {
     const fetchData = async () => {
       try {
         const [institutionsResponse, surveyResponse] = await Promise.all([
-          // axios.get(`/api/survey/${pollId}/institutions`), this route not working and cannot see on api
-          axios.get("/api/institutions"),
-          axios.get(`/api/survey/${pollId}`),
+          axios.get(`/api/survey/${pollId}/institutions/`),
+          axios.get(`/api/survey/${pollId}/`),
         ]);
 
-        const institutionData = institutionsResponse.data;
+        const institutionData = institutionsResponse.data.results;
         const pollData = surveyResponse.data;
 
         if (institutionData) {
@@ -50,7 +49,7 @@ function DownloadParticipants() {
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `poll_${pollId}.xlsx`);
+      link.setAttribute("download", `IASC-${pollId}.zip`);
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -60,13 +59,13 @@ function DownloadParticipants() {
     }
   };
 
-  const handleDownload = async (institutionId) => {
+  const handleDownload = async (institution) => {
     try {
-      const response = await axios.get("/api/links/", {
+      const response = await axios.get("/api/links/xls/", {
         responseType: "blob",
         params: {
           survey: pollId,
-          institution: institutionId,
+          institution: institution.id,
         },
       });
 
@@ -75,7 +74,7 @@ function DownloadParticipants() {
       link.href = url;
       link.setAttribute(
         "download",
-        `institution_${institutionId}_poll_${pollId}.xlsx`
+        `IASC-${pollId}-${institution.name}.xlsx`
       );
       document.body.appendChild(link);
       link.click();
@@ -91,7 +90,7 @@ function DownloadParticipants() {
       <NavBar />
       <div className="container">
         <div className="download--container">
-          <h>Download Participants for...</h>
+          <h2>Download Participants for...</h2>
           <h3>{pollQuestion}</h3>
           <button
             type="button"
@@ -116,7 +115,7 @@ function DownloadParticipants() {
                   <button
                     type="button"
                     className="button download--button"
-                    onClick={() => handleDownload(institution.id)}
+                    onClick={() => handleDownload(institution)}
                   >
                     Download
                   </button>

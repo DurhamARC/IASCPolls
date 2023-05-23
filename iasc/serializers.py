@@ -74,12 +74,12 @@ class SurveySerializer(serializers.ModelSerializer):
 
 
 class SurveyInstitutionSerializer(serializers.ModelSerializer):
-    institution = serializers.ReadOnlyField(source="participant.institution.name")
+    name = serializers.ReadOnlyField(source="participant.institution.name")
     id = serializers.ReadOnlyField(source="participant.institution.id")
 
     class Meta:
         model = models.ActiveLink
-        fields = ["id", "institution"]
+        fields = ["id", "name"]
 
 
 class SurveyResultSerializer(serializers.ModelSerializer):

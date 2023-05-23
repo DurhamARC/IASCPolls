@@ -20,7 +20,7 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("/api/survey");
+        const response = await axios.get("/api/survey/");
         const questionData = response.data.results;
         setQuestionDatabase(questionData);
       } catch (error) {
