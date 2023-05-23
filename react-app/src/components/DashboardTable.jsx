@@ -58,7 +58,9 @@ function Table({ data }) {
                 />
               </td>
               <td>
-                <span className="material-symbols-outlined">download</span>
+                <a href={`/api/result/xls/?survey=${row.id}`}>
+                  <span className="material-symbols-outlined">download</span>
+                </a>
               </td>
             </tr>
           ))}
