@@ -137,7 +137,7 @@ class ActiveLink(models.Model):
 
     @property
     def hyperlink(self):
-        return f"{settings.CSRF_TRUSTED_ORIGINS[0]}/vote?survey={self.survey.id}&unique_id={self.unique_link}"
+        return f"{settings.CSRF_TRUSTED_ORIGINS[0]}/poll?survey={self.survey.id}&unique_id={self.unique_link}"
 
     class Meta:
         constraints = [

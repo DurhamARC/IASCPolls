@@ -10,8 +10,8 @@ export default function Poll() {
   const history = useNavigate();
 
   const searchParams = new URLSearchParams(location.search);
-  const pollId = searchParams.get("pollId");
-  const uniqueId = searchParams.get("uniqueId");
+  const surveyId = searchParams.get("survey");
+  const uniqueId = searchParams.get("unique_id");
 
   const [pollQuestion, setPollQuestion] = useState("");
 
@@ -19,7 +19,7 @@ export default function Poll() {
     const fetchData = async () => {
       try {
         // Make the API call to check if the survey exists
-        const response = await axios.get(`/api/survey/${pollId}/`);
+        const response = await axios.get(`/api/survey/${surveyId}/`);
         const surveyData = response.data;
 
         if (surveyData) {
@@ -37,7 +37,7 @@ export default function Poll() {
     };
 
     fetchData();
-  }, [pollId, history]);
+  }, [surveyId, history]);
 
   return (
     <div className="poll--total">
@@ -51,7 +51,7 @@ export default function Poll() {
             response that aligns with your perspective on the given topic.
           </div>
           <div className="poll--question">{pollQuestion}</div>
-          <PollForm uniqueId={uniqueId} pollId={pollId} />
+          <PollForm uniqueId={uniqueId} />
         </div>
       </div>
       <Footer />
