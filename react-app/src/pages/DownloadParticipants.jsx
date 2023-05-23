@@ -17,8 +17,8 @@ function DownloadParticipants() {
     const fetchData = async () => {
       try {
         const [institutionsResponse, surveyResponse] = await Promise.all([
-          axios.get(`/api/survey/${pollId}/institutions`),
-          axios.get(`/api/survey/${pollId}`),
+          axios.get(`/api/survey/${pollId}/institutions/`),
+          axios.get(`/api/survey/${pollId}/`),
         ]);
 
         const institutionData = institutionsResponse.data.results;
