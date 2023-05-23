@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import Symbol from './isActive';
+import React, { useState } from "react";
+import Symbol from "./Symbol";
 
-const Table = ({ data }) => {
+function Table({ data }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
 
@@ -38,41 +38,36 @@ const Table = ({ data }) => {
           </tr>
         </thead>
         <tbody>
-          {currentItems.map((row, index) => (
-            <tr key={index}>
+          {currentItems.map((row) => (
+            <tr key={row.id}>
               <td>{row.question}</td>
               <td>{row.id}</td>
-              <td>{Math.round(row.voted * 100 / row.participants)}%</td>
+              <td>{Math.round((row.voted * 100) / row.participants)}%</td>
               <td>
-              <a href={`/download?pollId=${row.id}`}>
-                <span className="material-symbols-outlined">
-                  groups
-                </span>
+                <a href={`/download?pollId=${row.id}`}>
+                  <span className="material-symbols-outlined">groups</span>
                 </a>
               </td>
-              <td>
-                {row.expiry.slice(0, 10)}
-              </td>
+              <td>{row.expiry.slice(0, 10)}</td>
               <td>
                 <Symbol
                   isActive={row.active}
+                  surveyId={row.id}
                   activeSymbol="play_circle"
                   inactiveSymbol="stop_circle"
                 />
               </td>
               <td>
-               <span className="material-symbols-outlined">
-                  download
-                </span>
+                <span className="material-symbols-outlined">download</span>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
 
-
       <div className="dashboard--next--page">
         <button
+          type="button"
           onClick={handlePrevPage}
           disabled={currentPage === 1}
           className="button dashboard--button--next"
@@ -81,6 +76,7 @@ const Table = ({ data }) => {
         </button>
         <span>{`Page ${currentPage} of ${totalPages}`}</span>
         <button
+          type="button"
           onClick={handleNextPage}
           disabled={currentPage === totalPages}
           className="button dashboard--button--next"
@@ -90,6 +86,6 @@ const Table = ({ data }) => {
       </div>
     </div>
   );
-};
+}
 
 export default Table;

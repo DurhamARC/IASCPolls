@@ -1,21 +1,31 @@
 {
-    "env": {
-        "browser": true,
-        "es2021": true
-    },
-    "extends": [
-        "plugin:react/recommended",
-        "airbnb"
-    ],
-    "overrides": [
-    ],
-    "parserOptions": {
-        "ecmaVersion": "latest",
-        "sourceType": "module"
-    },
-    "plugins": [
-        "react"
-    ],
-    "rules": {
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": ["plugin:react/recommended", "airbnb", "prettier"],
+  "overrides": [
+    {
+      "files": ["*.jsx", "*.js"]
     }
+  ],
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "plugins": ["react"],
+  "rules": {
+    "no-console": "off",
+    "no-alert": "off",
+    // Project is written in Javascript, not TypeScript, so ESLint warns about prop-types
+    // Adding PropTypes adds a LOT of boilerplate code
+    "react/prop-types": "off",
+    // We are using { useDropzone } from "react-dropzone"; which uses prop spreading.
+    "react/jsx-props-no-spreading": "off",
+    // The AuthContext example uses constructed context values. Removing this is a TODO
+    "react/jsx-no-constructed-context-values": "off"
+  }
 }

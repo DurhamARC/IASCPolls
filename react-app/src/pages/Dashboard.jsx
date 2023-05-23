@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
-import { Navigate } from 'react-router-dom';
-import NavBar from '../components/NavBar';
-import Footer from '../components/Footer';
-import Table from '../components/DashboardTable';
-import CreateContainer from '../components/CreateContainer';
-import AddParticipants from '../components/AddParticipants';
-import axios from 'axios';
+import React, { useState, useEffect, useRef, useContext } from "react";
+import { Navigate } from "react-router-dom";
+import axios from "axios";
+import NavBar from "../components/NavBar";
+import Footer from "../components/Footer";
+import Table from "../components/DashboardTable";
+import CreateContainer from "../components/CreateContainer";
+import AddParticipants from "../components/AddParticipants";
 import { AuthContext } from "../components/AuthContext";
 
 export default function Dashboard() {
@@ -14,18 +14,17 @@ export default function Dashboard() {
   const [questionDatabase, setQuestionDatabase] = useState([]);
   const dashboardRef = useRef(null);
 
-  const { isAuth, setAuth, currentUser, setCurrentUser } = useContext(AuthContext);
-  const isLocal = process.env.NODE_ENV === 'development';
+  const { isAuth } = useContext(AuthContext);
+  const isLocal = process.env.NODE_ENV === "development";
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('/api/survey');
+        const response = await axios.get("/api/survey");
         const questionData = response.data.results;
         setQuestionDatabase(questionData);
-        console.log(questionData);
       } catch (error) {
-        console.error('Error fetching survey data:', error);
+        console.error("Error fetching survey data:", error);
       }
     };
 
@@ -56,9 +55,9 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -72,7 +71,11 @@ export default function Dashboard() {
       <div className="dashboard" ref={dashboardRef}>
         <div className="dashboard--overview">
           <div>
-            <button onClick={createNew} className="button dashboard--button">
+            <button
+              type="button"
+              onClick={createNew}
+              className="button dashboard--button"
+            >
               <div>
                 <span className="material-symbols-outlined">edit_square</span>
               </div>
@@ -80,7 +83,11 @@ export default function Dashboard() {
             </button>
           </div>
           <div>
-            <button onClick={openAddParticipants} className="button dashboard--button">
+            <button
+              type="button"
+              onClick={openAddParticipants}
+              className="button dashboard--button"
+            >
               <div>
                 <span className="material-symbols-outlined">contact_page</span>
               </div>
@@ -89,8 +96,12 @@ export default function Dashboard() {
           </div>
         </div>
         <div className="dashboard--projects">
-          {showCreateContainer && <CreateContainer onClose={closeCreateContainer} />}
-          {showAddParticipants && <AddParticipants onClose={closeAddParticipants} />}
+          {showCreateContainer && (
+            <CreateContainer onClose={closeCreateContainer} />
+          )}
+          {showAddParticipants && (
+            <AddParticipants onClose={closeAddParticipants} />
+          )}
           <Table data={questionDatabase} />
         </div>
       </div>
