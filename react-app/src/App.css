@@ -1025,6 +1025,8 @@ ul {
 .create-container label {
   margin-top: 1rem;
   font-size: 1.5rem;
+  width: 100%;
+  min-width: 100%;
 }
 
 .create-container input[type="text"],
