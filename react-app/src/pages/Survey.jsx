@@ -19,7 +19,7 @@ export default function Poll() {
     const fetchData = async () => {
       try {
         // Make the API call to check if the survey exists
-        const response = await axios.get(`/api/survey/${pollId}`);
+        const response = await axios.get(`/api/survey/${pollId}/`);
         const surveyData = response.data;
 
         if (surveyData) {
