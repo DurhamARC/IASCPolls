@@ -128,6 +128,13 @@ class CreateSurveyView(ViewSet):
                 status=status.HTTP_200_OK,
             )
 
+        except (KeyError, AttributeError) as e:
+            error_message = get_error_message(e)
+            return Response(
+                {"status": "error", "message": error_message},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
         except ValidationError as e:
             error_message = str(e)
             return Response(
@@ -147,8 +154,9 @@ class CloseSurveyView(ViewSet):
     def create(self, request):
         try:
             request_has_keys(request, {"survey"})
-
-            survey = int(request.data["survey"].strip())
+            survey = request.data["survey"]
+            if type(survey) is str:
+                survey = int(request.data["survey"].strip())
             survey = Survey.objects.filter(id=survey).get()
 
             if survey.active:
@@ -169,7 +177,14 @@ class CloseSurveyView(ViewSet):
 
             raise ValidationError(f"Survey {survey} not active or not found")
 
-        except (KeyError, AttributeError, ValidationError) as e:
+        except (KeyError, AttributeError) as e:
+            error_message = get_error_message(e)
+            return Response(
+                {"status": "error", "message": error_message},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+        except ValidationError as e:
             error_message = get_error_message(e)
             return Response(
                 {"status": "error", "message": error_message},
@@ -199,9 +214,14 @@ class SubmitVoteView(ViewSet):
                 status=status.HTTP_200_OK,
             )
 
+        except (KeyError, AttributeError) as e:
+            error_message = get_error_message(e)
+            return Response(
+                {"status": "error", "message": error_message},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
         except (
-            KeyError,
-            AttributeError,
             ValidationError,
             ActiveLink.DoesNotExist,
         ) as e:
@@ -261,13 +281,14 @@ class UploadParticipantsView(ViewSet):
                 status=status.HTTP_200_OK,
             )
 
-        except (
-            KeyError,
-            AttributeError,
-            IntegrityError,
-            ValidationError,
-            ObjectDoesNotExist,
-        ) as e:
+        except (KeyError, AttributeError) as e:
+            error_message = get_error_message(e)
+            return Response(
+                {"status": "error", "message": error_message},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+        except (IntegrityError, ValidationError, ObjectDoesNotExist) as e:
             error_message = get_error_message(e)
             return Response(
                 {"status": "error", "message": error_message},
