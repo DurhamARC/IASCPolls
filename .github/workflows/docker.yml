@@ -1,0 +1,61 @@
+# A Github Actions configuration for building Docker images for ManyFEWS
+name: Build Docker Images
+on:
+  workflow_run:
+    workflows: [Unit Tests]
+    types:
+      - completed
+
+env:
+  DOCKERHUB_REPO: durhamarc/iasc
+
+jobs:
+  docker:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+
+      -
+        name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      # https://github.com/docker/build-push-action/blob/master/docs/advanced/cache.md#github-cache
+      -
+        name: Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      # https://stackoverflow.com/questions/59810838/how-to-get-the-short-sha-for-the-github-workflow
+      -
+        name: Add SHORT_SHA env property with commit short sha
+        run: echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
+
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      -
+        name: Build and push docker image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          target: iasc
+          tags: ${{ env.DOCKERHUB_REPO }}:latest , ${{ env.DOCKERHUB_REPO }}:${{ env.SHORT_SHA }}
+          cache-from: type=gha,scope=${{ github.workflow }}
+          cache-to: type=gha,scope=${{ github.workflow }},mode=max

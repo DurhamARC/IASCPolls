@@ -6,25 +6,45 @@ Functional routes which take parameters can acquire these through the `GET` requ
 
 The icon ⚠️ indicates that the routes in the given group require login to request on. This involves the browser passing the correct session cookie. Unauthenticated route requests will return `HTTP 401 Unauthorized`.
 
-
 ## Index:
 
+* [General](#general)
 * [Login](#login)
-* [Voting](#voting)
-* [Surveys](#surveys-)
-  * [Create Survey](#create-survey-)
-  * [List Surveys](#list-surveys-)
-  * [Close Surveys](#close-surveys-)
-* [Participant Data](#participant-data-)
-  * [Data Entry](#data-entry-)
-  * [Data Queries](#data-queries-)
-* [Results](#results-)
+  * [Logout](#logout)
+  * [User](#user)
+* [Participants](#participants)
+  * [Data Entry](#data-entry)
+  * [Data Queries](#data-queries)
+* [Surveys](#surveys)
+  * [List Surveys](#list-surveys)
+  * [Create Survey](#create-survey)
+  * [Close Surveys](#close-surveys)
+* [Voting](#voting) 
+* [Links](#links)
+* [Results](#results)
 * [Pages](#pages)
+
+---
+# General
+## CSRF Protection
+
+__Important!__: All `POST` requests to protected routes should include the CSRF token which is set as a cookie by the `/login` route. This can be via setting the Request header `X-CSRFToken` or including `csrfmiddlewaretoken` in the `POST` body.
+
+## Paging
+
+`GET` API methods which can list data generally take the following optional arguments as `GET` parameters:
+
+```javascript
+page=1
+size=10
+```
+
+The paging arguments are `page` and `size`. Defaults to page size of 10, if these parameters are not provided.
 
 
 ---
 # Login
-`POST /login`  
+`POST /login/`  
 Get a session ID that an administrator will send as a cookie in subsequent requests to access the back-end. The `POST` body should contain the following:
 
 ```javascript
@@ -34,17 +54,241 @@ password="mypassword"
 
 On a successful login, the server will return `302 Found` and redirect to the admin page.
 
+## Logout
+`GET /logout/`  
+Log the user out of the application, invalidating the session cookie from the `/login` route. The server will return a `302 Found` redirect to the `/` index of the web application.
+
+## User
+`GET /api/user/`
+Return the current logged-in user's username and first name, if set.
+
+```javascript
+[
+  {
+    "username": "p123456",
+    "first_name": "Peter"
+  }
+]
+```
+
+---
+# Participants
+Session-authorization protected route. ⚠️
+
+## Data Entry
+### Upload
+`POST /api/participants/upload/`  
+Takes a CSV or Excel spreadsheet which will be processed to populate the database. `POST` multipart form data to this route with the file attached. The form encoding type must be `multipart/form-data`.
+
+Required multipart form fields:
+
+ * `file` - A binary blob of the uploaded file
+ * `institution` - The University name to attach participants to.
+
+Optional multipart fields (and defaults):
+
+ * `create_institutions` - False - Create the institution if it does not exist
+ * `create_disciplines` - False - Create the disciplines (Excel Workbook sheets) if they do not exist
+ * `ignore_conflicts` - False - Ignore participant uploads with conflicting Primary Key (email)
+
+
+Returns a Javascript object indicating the operation's success, or an error:
+
+```javascript
+{
+  "status": "success",
+  "message": "File uploaded"
+}
+```
+
+The expectation is that the sheet will be formatted as follows. Non-compliant sheets will be rejected with `Failure` status and an error message.
+
+| First Name | Email Address                  | Discipline       |
+|------------|--------------------------------|------------------|
+| Samantha   | samantha.finnigan@durham.ac.uk | Computer Science |
+| Joanne     | joanne.sheppard@durham.ac.uk   | Physics          |
+| Peter      | peter.vickers@durham.ac.uk     | Philosophy       |
+
+Fuzzy logic is used to detect variations on the column names: for example, "_Name_" is accepted for the name column, and "_Emial Adres_", although misspelled, would be accepted for the Email Address column. 
+
+
+## Data Queries ⚠️
+### List Institutions
+`GET /api/institutions/`
+
+List all institutions. Not paginated. 
+
+Filtering is provided as an additional URL parameter, so `GET /api/institutions/1/` will specifically list details for the institution with id `1`.
+
+```javascript
+[
+  {
+    "id": 1,
+    "name": "Durham University",
+    "country": "United Kingdom"
+  },{
+    "id": 2,
+    "name": "NYCU Taiwan",
+    "country": "Taiwan"
+  }
+]
+```
+
+### List Disciplines
+`GET /api/disciplines/`
+
+List all disciplines. Not paginated.
+
+```javascript
+[
+  {
+    "id": 1,
+    "name": "Physics"
+  },
+  {
+    "id": 2,
+    "name": "Chemistry"
+  }
+]
+```
+
+List all disciplines. Not paginated.
+
+### Retrieve
+`GET /api/participants/`   
+Return a page of participants. Arguments are provided for pagination and filtering by institution or discipline id:
+
+```javascript
+page=1
+size=10
+institution=1
+discipline=2
+```
+
+
+---
+# Surveys
+Session-authorization protected route. ⚠️
+
+
+## List Surveys
+`GET /api/survey/`
+
+Takes the optional `GET` parameter `?active=True`.
+
+Returns a filtered list of active surveys, accessible under the key `results`, values are data.
+
+```javascript
+{
+  "results": [
+    {
+      "id": 1,
+      "question": "Science has proven beyond all reasonable doubt that...",
+      "kind": "LI",
+      "active": "True",
+      "expiry": "2023-05-01T12:34:56.789Z",
+      "participants": 10000,
+      "voted": 6700
+    },
+    {
+      "id": 2,
+      "question": "Another example question, asking about something nice?",
+      "kind": "LI",
+      "active": "True",
+      "expiry": "2023-05-01T12:34:56.789Z",
+      "participants": 10000,
+      "voted": 2043
+    }
+  ]
+}
+```
+
+
+### List surveys with available results
+`GET /api/survey/results/`
+List surveys for which results are available; and count results for each survey.
+
+```javascript
+{
+  "count": 2,
+  "results": [
+    {
+      "id": 1,
+      "kind": "LI",
+      "active": "False",
+      "question": "Science has proven beyond all reasonable doubt that...",
+      "count": 6700
+    },
+    {
+      "id": 2,
+      "kind": "LI",
+      "active": "True",
+      "question": "Another example question, asking about something nice?",
+      "count": 2043
+    },
+  ]
+}
+```
+
+
+## Create Survey
+`POST /api/survey/create/`  
+Create a survey in the database.
+
+```javascript
+{
+  "question": "Science has proven beyond all reasonable doubt that...",
+  "active": "True",
+  "kind": 'LI',
+  "expiry": "2023-05-01T12:34:56"
+}
+```
+
+NB: Such a date can be generated in Javascript using `(new Date()).toISOString()`.
+
+There are further optional parameters which can be given to this route:
+
+```javascript
+{
+  "create_active_links": "True"
+}
+```
+
+This will allow you to create a survey without creating ActiveLinks in the database.
+
+## Close surveys
+`POST /api/survey/close/`  
+The `survey` field accepts an integer for the survey id.
+
+```javascript
+{
+  "survey": 2
+}
+```
+
+🛑 This is a destructive action! All data for the survey in the `active_links` table will be destroyed.
+
+Returns a JSON object to verify success, and how many ActiveLinks were deleted:
+```javascript
+{
+  "status": "success",
+  "message": "Closed survey 20",
+  "deleted": 1650
+}
+```
+
+
 ---
 # Voting
+Unprotected public route.
 
 ## Submit Vote
-`POST /api/vote`  
+`POST /api/vote/`  
 Post a participant's vote to the server. Takes a JSON object:
 
 ```javascript
 {
-  "survey_id": "1234",
-  "unique_id": "VGVzdGluZzEyMzQK",
+  "unique_id": "zz6jz-GYzud9FApJ2cBLK4vHiP7E8t7tJELs6Wq75Zc",
   "vote": 0
 }
 ```
@@ -58,159 +302,58 @@ HTTP Status 200 OK            - Vote succeeded
 HTTP Status 403 Forbidden     - Vote failed
 ```
 
-TBC: We could alternately return `302 Found` on success if a redirect is required.
-
 
 ---
-# Surveys ⚠️
+# Links
+Session-authorization protected route. ⚠️
 
-## Create Survey ⚠️
-`POST /api/surveys`  
-Create a survey in the database.
-
-```javascript
-{
-    "question": "Science has proven beyond all reasonable doubt that...",
-    "active": "True",
-    "kind": 'LI',
-    "expiry": "2023-05-01T12:34:56.789Z"
-}
-```
-
-NB: Such a date can be generated in Javascript using `(new Date()).toISOString()`.
-
-## List Surveys ⚠️
-
-The following methods takes the following optional arguments as `GET` parameters:
-
-```javascript
-page=1  *optional
-size=10 *optional
-```
-
-Optional paging arguments are `page` and `size`. Defaults to not paging, if these parameters are not provided.
-
-### List Surveys
-`GET /api/surveys`  
-
-Returns an unfiltered list of active surveys. Keys are `survey_id`, values are data.
-
-```javascript
-{
-    "1": {
-        "question": "Science has proven beyond all reasonable doubt that...",
-        "kind": "LI",
-        "active": "True",
-        "expiry": "2023-05-01T12:34:56.789Z",
-        "participants": 10000,
-        "voted": 6700
-    },
-    "2": {
-        "question": "Another example question, asking about something nice?",
-        "kind": "LI",
-        "active": "True",
-        "expiry": "2023-05-01T12:34:56.789Z",
-        "participants": 10000,
-        "voted": 6700
-    }
-}
-```
-
-
-## Close surveys ⚠️
-`POST /api/surveys/deactivate`  
-The `survey_id` field accepts an integer for survey_id, OR a list.
-
-```javascript
-{
-    "survey_id": [1, 2, 4]
-}
-```
-
-NB: 🛑 This is a destructive action! All data for the survey in the `active_links` table will be destroyed.
-
-
-## Download unique voting links ⚠️
-`GET /api/links`
+## Download unique voting links
+`GET /api/links/`
 
 Retrieve unique voting links. Takes the following arguments as GET parameters:
 ```javascript
-survey_id=1234
-institution="Durham%20University"
+survey=14
+institution=1
 ```
-Returns a CSV file download with voting links, sorted or filtered by institution. 
+Returns a JSON object with voting links, sorted or filtered by institution. 
 
-If no data is available for the requested institution, returns `404 Not Found`.
+If no data is available for the requested institution ID, returns `404 Not Found`.
+
+### Download links as XLS Excel Sheet
+`GET /api/links/xls/`
+
+As above, but returns file download in XLS Microsoft Excel format.
+
+### Download links as Zip File of Excel Sheets
+`GET /api/links/zip/`
+
+As above, but supports multiple Excel XLS files, separated by Institution. Can be used to download all active links for a survey without multiple requests to the server.
 
 ---
-# Participant Data ⚠️
+# Results
+Session-authorization protected route. ⚠️
 
-## Data Entry ⚠️
-### Upload
-`POST /api/participants/upload`  
-Takes a CSV or Excel spreadsheet which will be processed to populate the database.
-
-### Status
-`GET /api/participants/status`  
-Processing a CSV or Excel sheet runs as a background job. The status of that job (i.e. % to completion) must be requested on this route. 
-
-```javascript
-{
-  "status": "PROCESSING" | "ACCEPTED" | "FAILURE" | "SUCCESS"
-}
-```
-The following conditions can be returned:
-
-| Status       | Reason                                                                            |
-|--------------|-----------------------------------------------------------------------------------|
-| Success      | The job succeeded. The uploaded data will be available in the participant view.   |
-| Failure      | The job failed. An error code will be returned                                    |
-| Accepted     | The job has been scheduled to run, but has not yet started                        |
-| Processing   | The job is running, data is being processed                                       |
-
-The expectation is that the sheet will be formatted as follows, with example data provided. 
-Non-compliant sheets will be rejected with `Failure` status and an error message.
-
-| Name              | Email                          | Institution       | Discipline                 |
-|-------------------|--------------------------------|-------------------|----------------------------|
-| Samantha Finnigan | samantha.finnigan@durham.ac.uk | Durham University | Research Software Engineer |
-
-
-## Data Queries ⚠️
-### Retrieve
-`GET /api/participants`   
-Return a page of participants. Arguments are provided for pagination and filtering by institution or discipline:
-
-```javascript
-page=1
-size=10
-institution=["Durham University"]
-discipline=["Biologist","Chemist"]
-```
-
-### Download CSV
-`GET /api/participants/csv`  
-Download a list of participants. Arguments are provide to allow filtering by institution and discipline:
-
-```javascript
-institution=["Durham University"]
-discipline=["Health Scientist"]
-```
-
-
----
-# Results ⚠️
-Retrieve survey results incrementally and following the close of a survey
+Retrieve survey results incrementally and following the close of a survey.
 
 ## Download Results
-`GET /api/results`
+`GET /api/result/`
 
 Provide the following parameters for survey ID, and OPTIONAL pagination:
 ```javascript
-survey_id=1234
+survey=12
 page=1  *optional
 size=10 *optional
 ```
+
+### Download results as Microsoft Excel XLS
+`GET /api/result/xls/`
+
+As above, but get results as Microsoft Excel XLS files.
+
+### Download results as Zip File of Excel Sheets
+`GET /api/result/zip/`
+
+Download results for surveys as Excel Spreadsheets in a zip file. To get all surveys, do not provide survey parameter
 
 
 ---

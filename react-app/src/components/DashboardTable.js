@@ -3,7 +3,7 @@ import Symbol from './isActive';
 
 const Table = ({ data }) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(8);
+  const [itemsPerPage] = useState(5);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -29,8 +29,10 @@ const Table = ({ data }) => {
         <thead>
           <tr>
             <th>Statement</th>
+            <th> ID </th>
             <th>Completed</th>
             <th>Participants</th>
+            <th>Expiry</th>
             <th>Active</th>
             <th>Results</th>
           </tr>
@@ -39,11 +41,17 @@ const Table = ({ data }) => {
           {currentItems.map((row, index) => (
             <tr key={index}>
               <td>{row.question}</td>
+              <td>{row.id}</td>
               <td>{Math.round(row.voted * 100 / row.participants)}%</td>
               <td>
+              <a href={`/download?pollId=${row.id}`}>
                 <span className="material-symbols-outlined">
                   groups
                 </span>
+                </a>
+              </td>
+              <td>
+                {row.expiry.slice(0, 10)}
               </td>
               <td>
                 <Symbol
@@ -67,6 +75,7 @@ const Table = ({ data }) => {
         <button
           onClick={handlePrevPage}
           disabled={currentPage === 1}
+          className="button dashboard--button--next"
         >
           Previous
         </button>
@@ -74,6 +83,7 @@ const Table = ({ data }) => {
         <button
           onClick={handleNextPage}
           disabled={currentPage === totalPages}
+          className="button dashboard--button--next"
         >
           Next
         </button>

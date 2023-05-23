@@ -1,71 +1,168 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
 
 const AddParticipants = ({ onClose }) => {
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (containerRef.current && !containerRef.current.contains(event.target)) {
+        onClose();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [onClose]);
+
+  const [institution, setInstitution] = useState('');
+  const [file, setFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isUploaded, setIsUploaded] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [filename, setFilename] = useState('');
+  const [isDragOver, setIsDragOver] = useState(false);
   const fileInputRef = useRef(null);
+
+  const handleInstitutionChange = (event) => {
+    setInstitution(event.target.value);
+  };
+
+  const handleFileChange = (event) => {
+    const selectedFile = event.target.files[0];
+    setFile(selectedFile);
+    setFilename(selectedFile.name);
+  };
 
   const handleFileUpload = () => {
     fileInputRef.current.click();
   };
 
-  const handleSelectedFile = (event) => {
-    const file = event.target.files[0];
-
-    setIsLoading(true);
-    setIsUploaded(false);
-
-    // Simulating file upload progress
-    setTimeout(() => {
-      setIsLoading(false);
-
-      // Simulating success message
-      setTimeout(() => {
-        setIsUploaded(true);
-      }, 1000);
-    }, 2000);
+  const handleDragEnter = (event) => {
+    event.preventDefault();
+    setIsDragOver(true);
   };
 
-  const Progress = () => {
-    return (
+  const handleDragLeave = (event) => {
+    event.preventDefault();
+    setIsDragOver(false);
+  };
+
+  const handleDrop = (event) => {
+    event.preventDefault();
+    setIsDragOver(false);
+    const selectedFile = event.dataTransfer.files[0];
+    setFile(selectedFile);
+    setFilename(selectedFile.name);
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    if (!institution || !file) {
+      alert('Please enter an institution and select a file.');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('institution', institution);
+
+      await axios.post('/api/participants/upload/', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+
+      setIsSuccess(true);
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      alert('Failed to upload participants. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const LoadingBar = () => (
     <div>
       <h4>Uploading new participants...</h4>
       <div className="loading-bar" />
     </div>
-    );
-  };
+  );
 
-  const SuccessMessage = () => {
-    return (
-      <div className="add-participants-success">
-        <div className="success-icon">✓</div>
-        <div className="success-text">New participants successfully added!</div>
-        <button>View Participants</button>
-      </div>
-    );
-  };
+  const SuccessMessage = () => (
+    <div className="add-participants-success">
+      <div className="success-icon">✓</div>
+      <div className="success-text">New participants successfully added!</div>
+      <button>View Participants</button>
+    </div>
+  );
 
   return (
     <div className="overlay">
-      <div className="add-participants-container">
-        {!isUploaded ? (
-          <>
-            <input
-              type="file"
-              accept=".xlsx, .xls"
-              style={{ display: 'none' }}
-              ref={fileInputRef}
-              onChange={handleSelectedFile}
-            />
-            <button onClick={handleFileUpload} className="add-participants-upload-button">
-              {isLoading ? <div className="loading-bar" /> : 'Upload Participants File'}
-            </button>
-            {isLoading && <Progress />}
-          </>
-        ) : (
+      <div
+        className={`add-participants-container ${isDragOver ? 'drag-over' : ''}`}
+        ref={containerRef}
+        onDragEnter={handleDragEnter}
+        onDragLeave={handleDragLeave}
+        onDragOver={handleDragEnter}
+        onDrop={handleDrop}
+      >
+        <h1>Add Participants</h1>
+        {isSuccess ? (
           <SuccessMessage />
+        ) : (
+          <form onSubmit={handleSubmit} className="add-participants-form">
+            <div className="add-participants-inst">
+              <label htmlFor="institution">Institution Name</label>
+              <input
+                type="text"
+                id="institution"
+                name="institution"
+                value={institution}
+                onChange={handleInstitutionChange}
+                className="add-participants-input"
+              />
+            </div>
+            <div
+              className={`file-drop-area ${filename ? 'file-selected' : ''}`}
+              onClick={handleFileUpload}
+            >
+              <div className="file-drop-text">
+                {filename ? (
+                  <>
+                    <div className="file-drop-icon">✓</div>
+                    <div className="file-drop-description">{filename}</div>
+                  </>
+                ) : (
+                  <>
+                    <div className="file-drop-icon">+</div>
+                    <div className="file-drop-description">Drag and drop file here or click to select</div>
+                  </>
+                )}
+              </div>
+              <input
+                type="file"
+                accept=".xlsx, .xls"
+                style={{ display: 'none' }}
+                ref={fileInputRef}
+                onChange={handleFileChange}
+              />
+            </div>
+            {isLoading ? (
+              <LoadingBar />
+            ) : (
+              <button type="submit" className={`button ${filename ? 'upload-active' : ''}`}>
+                {filename ? 'Upload Participants File' : 'Submit'}
+              </button>
+            )}
+          </form>
         )}
-        <button onClick={onClose} className="add-participants-close-button">Close</button>
       </div>
     </div>
   );

@@ -9,6 +9,7 @@ import Ethics from './pages/Ethics';
 import Error from './pages/Error';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import DownloadParticipants from './pages/DownloadParticipants';
 
 import axios from "axios";
 import {AuthProvider} from "./components/AuthContext";
@@ -34,6 +35,7 @@ function App() {
           <Route path="/error" element={<Error />} />
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/download" element={<DownloadParticipants />} />
         </Routes>
       </BrowserRouter>
       </AuthProvider>

@@ -28,6 +28,8 @@ api_views = [
         views.SurveyInstitutionViewSet,
         "survey/survey_id/institutions",
     ),
+    (r"institutions", views.InstitutionViewSet, "institutions"),
+    (r"disciplines", views.DisciplineViewSet, "disciplines"),
     (r"survey/create", views.CreateSurveyView, "survey/create"),
     (r"survey/close", views.CloseSurveyView, "survey/close"),
     (r"survey/results", views.SurveyResultsViewSet, "survey/results"),

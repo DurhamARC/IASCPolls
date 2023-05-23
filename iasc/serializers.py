@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, get_user_model
+from django.utils.text import slugify
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
@@ -33,7 +34,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserModel
-        fields = ("username",)
+        fields = ["username", "first_name"]
 
 
 disciplineSlug = serializers.SlugRelatedField(
@@ -52,6 +53,18 @@ class ParticipantSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Participant
         fields = ["name", "email", "institution", "discipline"]
+
+
+class DisciplineSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Discipline
+        fields = "__all__"
+
+
+class InstitutionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Institution
+        fields = "__all__"
 
 
 class SurveySerializer(serializers.ModelSerializer):
@@ -73,13 +86,15 @@ class SurveyResultSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(source="survey.id")
     count = serializers.SerializerMethodField()
     question = serializers.CharField(source="survey.question")
+    kind = serializers.CharField(source="survey.kind")
+    active = serializers.CharField(source="survey.active")
 
     def get_count(self, obj):
         return models.Result.objects.filter(survey_id=obj.survey.id).count()
 
     class Meta:
         model = models.Result
-        fields = ["id", "question", "count"]
+        fields = ["id", "kind", "active", "question", "count"]
 
 
 class ActiveLinkSerializer(serializers.ModelSerializer):
@@ -110,7 +125,10 @@ class MultiLinkSerializer(ActiveLinkSerializer):
     filename = serializers.SerializerMethodField()
 
     def get_filename(self, obj):
-        return f"IASC-{obj.participant.institution.id}-{'_'.join(obj.participant.institution.name.strip().split(' '))}.xlsx"
+        filename = (
+            f"{obj.participant.institution.id}-{obj.participant.institution.name}"
+        )
+        return f"IASC-{slugify(filename, allow_unicode=True)}.xlsx"
 
     class Meta:
         model = models.ActiveLink
@@ -121,7 +139,8 @@ class MultiResultSerializer(ResultSerializer):
     filename = serializers.SerializerMethodField()
 
     def get_filename(self, obj):
-        return f"Results-{obj.survey.id}-{'_'.join(obj.survey.question.strip().split(' '))}.xlsx"
+        filename = f"{obj.survey.id}-{obj.survey.question}"
+        return f"Results-{slugify(filename, allow_unicode=True)}.xlsx"
 
     class Meta:
         model = models.ActiveLink

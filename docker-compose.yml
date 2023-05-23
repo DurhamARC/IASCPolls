@@ -1,0 +1,42 @@
+version: '3.6'
+
+services:
+  iasc:
+    build:
+      context: .
+      target: iasc
+    restart: on-failure
+    ports:
+      - "127.0.0.1:5000:5000/tcp"
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+    networks:
+      - backend
+      - default
+
+  postgres:
+    image: postgres:15.2-alpine
+    container_name: postgres
+    restart: on-failure
+    ports:
+      - "127.0.0.1:5432:5432/tcp"
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_USER: ${DB_USER}
+      PGUSER: ${DB_USER}
+    # Needed because the postgres container does not provide a healthcheck
+    healthcheck:
+      test: pg_isready
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - backend
+      - default
+
+# Define networks
+networks:
+  backend:
+  default:

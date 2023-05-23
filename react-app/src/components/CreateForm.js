@@ -1,38 +1,44 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const CreateForm = ({ onSubmit }) => {
-  const [title, setTitle] = useState('');
   const [statement, setStatement] = useState('');
+  const [active, setActive] = useState(false);
   const [endDate, setEndDate] = useState('');
-
-  const handleTitleChange = (event) => {
-    setTitle(event.target.value);
-  };
 
   const handleStatementChange = (event) => {
     setStatement(event.target.value);
+  };
+
+  const handleActiveChange = (event) => {
+    setActive(event.target.checked);
   };
 
   const handleEndDateChange = (event) => {
     setEndDate(event.target.value);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    onSubmit();
+    try {
+      const data = {
+        question: statement,
+        active: active,
+        kind: 'LI',
+        expiry: endDate
+      };
+
+      await axios.post('/api/survey/create/', data);
+      onSubmit();
+    } catch (error) {
+      console.error('Error creating survey:', error);
+    }
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <label htmlFor="title">Title:</label>
-      <input
-        id="title"
-        type="text"
-        value={title}
-        onChange={handleTitleChange}
-        placeholder="Enter your dashboard title"
-      />
-      <label htmlFor="statement">Statement:</label>
+      <h1>Create a Survey</h1>
+      <label htmlFor="statement"><h3>Statement</h3></label>
       <textarea
         id="statement"
         value={statement}
@@ -40,7 +46,28 @@ const CreateForm = ({ onSubmit }) => {
         className="create--statement"
         placeholder="Enter the statement the participants will see"
       />
-      <label htmlFor="endDate">Select End Date:</label>
+      <div className="checkbox">
+        <label htmlFor="active"><h3>Active</h3></label>
+        <div className="create--checkbox">
+          <label>
+            <input
+              type="checkbox"
+              checked={active}
+              onChange={handleActiveChange}
+            />
+            Yes
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              checked={!active}
+              onChange={handleActiveChange}
+            />
+            No
+          </label>
+        </div>
+      </div>
+      <label htmlFor="endDate"><h3>End Date</h3></label>
       <input
         id="endDate"
         type="date"
