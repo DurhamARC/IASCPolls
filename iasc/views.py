@@ -1,7 +1,7 @@
 import copy
 
 from django.contrib.auth import login, logout, get_user_model
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import transaction, IntegrityError
 from django.http import HttpResponseRedirect
@@ -261,7 +261,13 @@ class UploadParticipantsView(ViewSet):
                 status=status.HTTP_200_OK,
             )
 
-        except (KeyError, AttributeError, IntegrityError, ValidationError) as e:
+        except (
+            KeyError,
+            AttributeError,
+            IntegrityError,
+            ValidationError,
+            ObjectDoesNotExist,
+        ) as e:
             error_message = get_error_message(e)
             return Response(
                 {"status": "error", "message": error_message},

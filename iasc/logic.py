@@ -121,6 +121,7 @@ def parse_excel_sheet_to_db(sheet, **kwargs):
         Participant.objects.bulk_create(participants, ignore_conflicts=ignore_conflicts)
 
     except Institution.DoesNotExist as e:
+        institution = kwargs["institution"]
         raise Institution.DoesNotExist(
             f"Institution {institution} does not exist"
         ) from e
