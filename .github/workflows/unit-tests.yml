@@ -50,6 +50,9 @@ jobs:
       - uses: conda-incubator/setup-miniconda@v2
         name: Set Up Miniconda
         with:
+          miniforge-variant: Mambaforge
+          miniforge-version: latest
+          use-mamba: true
           activate-environment: anaconda-client-env
           environment-file: conf/iasc.base.yml
           python-version: 3.8
@@ -61,7 +64,6 @@ jobs:
       # https://github.com/conda-incubator/setup-miniconda/issues/105#issuecomment-730243912
       -
         name: Install dev dependencies and list packages
-        shell: bash -l {0}
         run: |
           conda env update -n anaconda-client-env -f conf/iasc.dev.yml
           echo $CONDA_PREFIX
@@ -76,9 +78,7 @@ jobs:
         run: coverage run --source='.' manage.py test
 
       - name: Create coverage.py XML report
-        run: |
-          coverage xml
-        working-directory: manyfews
+        run: coverage xml
 
       - name: Upload coverage reports to Codecov with GitHub Action
         uses: codecov/codecov-action@v3
