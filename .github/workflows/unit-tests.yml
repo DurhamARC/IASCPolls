@@ -57,6 +57,15 @@ jobs:
           # IMPORTANT! This needs to be set for caching to work properly:
           use-only-tar-bz2: true
           auto-activate-base: false
+
+      # https://github.com/conda-incubator/setup-miniconda/issues/105#issuecomment-730243912
+      -
+        name: Install dev dependencies and list packages
+        shell: bash -l {0}
+        run: |
+          conda env update -n anaconda-client-env -f conf/iasc.dev.yml
+          conda info
+          conda list
         
       - run: echo $CONDA_PREFIX
       

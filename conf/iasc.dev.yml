@@ -6,4 +6,5 @@ dependencies:
   - black
   - pre-commit
   - conda-lock
+  - coverage>=6.5.0
 prefix: /home/sam/miniconda3/envs/IASCPolls
