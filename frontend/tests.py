@@ -1,3 +1,5 @@
+import json
+
 from django.test import TestCase
 from django.test import Client
 
@@ -26,22 +28,43 @@ class HTTPTestCase(TestCase):
         """
         response = self.client.get(url)
         self.assertEquals(response.status_code, status)
-        self.failUnless(response.headers["Content-Type"].startswith(mimetype))
 
+        if mimetype:
+            self.failUnless(response.headers["Content-Type"].startswith(mimetype))
         if startswith:
             self.assertTrue(response.content.startswith(startswith))
         if contains:
             self.assertContains(response, contains)
+
+        if response.headers["Content-Type"].startswith("application/json"):
+            return json.loads(response.content)
+
+        return response
 
     def POST(self, url, params, status=200, mimetype="text/html", contains=None):
         """
         Make POST request and test response
         """
         response = self.client.post(url, params)
-        self.assertEquals(response.status_code, status)
-        self.failUnless(response.headers["Content-Type"].startswith(mimetype))
-        if contains:
-            self.assertContains(response, contains)
+
+        try:
+            self.assertEquals(response.status_code, status)
+            self.failUnless(response.headers["Content-Type"].startswith(mimetype))
+            if contains:
+                self.assertContains(response, contains)
+
+            if response.headers["Content-Type"].startswith("application/json"):
+                return json.loads(response.content)
+        except Exception as e:
+            try:
+                # Handle API exceptions and report reason
+                ret = json.loads(response.content)
+                if "message" in ret:
+                    raise e.__class__(ret["message"]) from e
+                raise e.__class__(ret[:100]) from e
+            finally:
+                raise e
+
         return response
 
 
