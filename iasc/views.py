@@ -118,7 +118,7 @@ class CreateSurveyView(ViewSet):
             create_survey_in_db(
                 question,
                 expiry,
-                kind=request.data.get("kind", True),
+                kind=request.data.get("kind", "LI"),
                 active=request.data.get("active", True),
                 create_active_links=request.data.get("create_active_links", True),
             )
