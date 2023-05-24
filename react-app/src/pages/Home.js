@@ -12,23 +12,29 @@ function Home() {
             <h1 className="home--title">Institute for Ascertaining Scientific Consensus</h1>
           </div>
         </div>
-        <div className="home-pic">
-        </div> 
+        <div className="home">
+            <div className="home-pic">
+            </div> 
+        </div>
       </div>
 
       <div className="container home--eyecatching">
-        <div className="home-pic-2">
+        <div className="home">
+            <div className="home-pic-2">
+            </div>
         </div>
-        <div className="home--eyecatching--content">
-          <h1>
-            Ethics and Anonymisation
-          </h1>
-          <h2> We are committed to guaranteeing the anonymity of all survey participants to ensure their safety in expressing their opinions.</h2>
-          <a href="./ethics">
-            <button className="button home--button">
-              Explore the ethics
-            </button>
-          </a>
+        <div className="home">
+            <div className="home--eyecatching--content">
+            <h1>
+                Ethics and Anonymisation
+            </h1>
+            <h2> We are committed to guaranteeing the anonymity of all survey participants to ensure their safety in expressing their opinions.</h2>
+            <a href="./ethics">
+                <button className="button home--button">
+                Explore the ethics
+                </button>
+            </a>
+            </div>
         </div>
       </div>
 
