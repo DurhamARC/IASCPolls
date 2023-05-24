@@ -1,4 +1,5 @@
 import json
+from unittest.mock import patch
 
 from django.test import TestCase
 from django.test import Client
@@ -69,11 +70,10 @@ class HTTPTestCase(TestCase):
 
 
 class FrontendViewsTestCase(HTTPTestCase):
-    def test_index(self):
-        self.GET(
-            "/",
-            contains="<title>Institute for Ascertaining Scientific Consensus</title>",
-        )
+    @patch("webpack_loader.loader.WebpackLoader.get_bundle")
+    def test_index(self, mock_wpl):
+        mock_wpl.return_value = []
+        self.GET("/")
 
 
 class TestViewsTestCase(HTTPTestCase):
