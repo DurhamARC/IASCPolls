@@ -75,9 +75,6 @@ jobs:
           # NB: Do not use secrets here; PRs do not allow them for security reasons.
         run: coverage run --source='.' manage.py test
 
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v3
-
       - name: Create coverage.py XML report
         run: |
           coverage xml
