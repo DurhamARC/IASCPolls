@@ -64,13 +64,7 @@ jobs:
         shell: bash -l {0}
         run: |
           conda env update -n anaconda-client-env -f conf/iasc.dev.yml
-          conda info
-          conda list
-        
-      - run: echo $CONDA_PREFIX
-      
-      - name: Test Conda environment is active
-        run: |
+          echo $CONDA_PREFIX
           conda info
           conda list
 
