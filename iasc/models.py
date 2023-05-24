@@ -1,5 +1,6 @@
 import secrets
 
+from django.utils import timezone
 from django.db import models, transaction
 from django.utils.translation import gettext_lazy
 from datetime import datetime
@@ -98,7 +99,9 @@ class Survey(models.Model):
     kind = models.CharField(
         max_length=2, choices=SurveyKind.choices, default=SurveyKind.LIKERT
     )
-    expiry = models.DateTimeField(null=False, default=datetime(2000, 1, 1, 0, 0))
+    expiry = models.DateTimeField(
+        null=False, default=datetime(2000, 1, 1, 0, 0, tzinfo=timezone.utc)
+    )
     participants = models.IntegerField(null=False, default=0)
     voted = models.IntegerField(null=False, default=0)
 
@@ -184,7 +187,7 @@ class Result(models.Model):
     vote = models.JSONField(null=False, blank=False)
     institution = models.ForeignKey("Institution", null=True, on_delete=models.SET_NULL)
     discipline = models.ForeignKey("Discipline", null=True, on_delete=models.SET_NULL)
-    added = models.DateTimeField(null=False, blank=False, default=datetime.now)
+    added = models.DateTimeField(null=False, blank=False, default=timezone.now)
 
     def save(self, *args, **kwargs):
         if not self.unique_link:

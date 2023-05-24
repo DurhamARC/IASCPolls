@@ -1,6 +1,9 @@
+from datetime import datetime
+
 import pandas as pd
 import logging
 from django.db import transaction
+from django.utils.timezone import make_aware
 from thefuzz import process
 
 from iasc.models import Participant, Discipline, Institution, ActiveLink, Survey
@@ -15,6 +18,7 @@ def create_survey_in_db(question, expiry, **kwargs):
     kind = kwargs.get("kind", "LI")
     active = kwargs.get("active", True)
     create_active_links = kwargs.get("create_active_links", True)
+    expiry = make_aware(datetime.strptime(expiry, "%Y-%m-%dT%H:%M"))
 
     survey = Survey.objects.create(
         question=question, active=active, kind=kind, expiry=expiry
