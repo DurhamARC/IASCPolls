@@ -1,6 +1,7 @@
 # IASCPolls
 
 [![Unit Tests](https://github.com/DurhamARC/IASCPolls/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/DurhamARC/IASCPolls/actions/workflows/unit-tests.yml)
+[![codecov.io](https://codecov.io/gh/DurhamARC/IASCPolls/branch/main/graphs/badge.svg)](https://codecov.io/gh/DurhamARC/IASCPolls/branch/main)
 [![License: MIT](https://img.shields.io/github/license/DurhamARC/IASCPolls)](https://github.com/DurhamARC/IASCPolls/blob/main/LICENSE)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
