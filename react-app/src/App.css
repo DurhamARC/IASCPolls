@@ -261,64 +261,69 @@ p, ol, ul {
 }
 
 .home {
-  padding: 2rem;
   width: 100%;
+  height: 100%;
   display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .home--title {
-  padding: 2rem;
-  width: 100%;
+  padding: 4rem 4rem 4rem 10rem;
+  width: 80%;
 }
 
 .home-pic{
   width: 100%;
-  height: 100%;
-  background-position: center;
+  height: 80%;
+  background-position: top left;
   background-image: url('./front-page-img.png');
   background-repeat: no-repeat;
   background-size: 30rem;
 }
 
+@media (max-width: 1000px) {
+  .home-pic {
+    display: none;
+  }
+}
 
-.home--eyecatching{
+
+
+
+.home--eyecatching {
+  display: flex;
   flex-direction: row;
-  background-color: #DFAB77;
+  background-color: #FFA500;
   margin-bottom: 2rem;
-  justify-content: flex-start;
-  height: fit-content;
-  padding:2rem;
+  align-items: center;
+  padding: 2rem;
 }
 
 .home--eyecatching div {
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  align-items: left;
+  justify-content: center;
+  align-items: flex-start;
+  margin-left: 2rem;
 }
 
-
-.home--eyecatching h2{
-  font-size: 1.2rem;
+.home--eyecatching h2 {
+  font-size: 1.4rem;
   font-weight: 500;
-  color: #f5f2ee;
-  padding-right: 4rem;
-  padding-top: 2rem;
-  padding-bottom: 2rem;
+  color: #FFFFFF;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
 }
 
-.home--eyecatching h1{
-  color: #f5f2ee;
-  font-size: 6rem;
-  padding-right: 4rem;
+.home--eyecatching h1 {
+  color: #FFFFFF;
+  font-size: 4rem;
+  margin-bottom: 2rem;
 }
 
-
-.home-pic-2{
-  width: 50%;
+.home-pic-2 {
+  width: 100%;
   height: 30rem;
   background-position: center;
   background-image: url('./front-page-comp.png');
@@ -328,45 +333,69 @@ p, ol, ul {
 
 
 
-.home--about{
-  background-color: #D9D1D3;
-  padding: 4rem;
-  height: auto;
-  flex-direction: column;
+
+
+
+.container.home--about {
+  position: relative;
+  margin-bottom: 2rem;
+  background-color: (255, 192, 86, 0.5);
 }
 
-.home--about h2, .home--about h3{
-  padding: 2rem;
-}
-
-.home--about h3{
-  font-size: 1.2rem;
-  font-weight: 500;
-  width: 50%;
-}
-
-.home--about h2{
-  letter-spacing: -0.05em;
-}
-
-
-.home--button {
-  border: 2px solid #df8c59;
-  background-color:#e89866;
-  color: #FFFFFF;
-  font-size: 1.2rem;
-}
-
-
-.home-pic-3{
-  width: 50%;
-  height: 15rem;
+.home-pic-3 {
+  position: relative;
+  width: 100%;
+  height: 100%;
   background-position: center;
   background-image: url('./front-page-scientists.png');
   background-repeat: no-repeat;
-  background-size: 15rem;
-  filter: opacity(0.8);
+  background-size: 50rem;
 }
+
+.home--about--overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(233, 233, 233, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.home--about--text {
+  text-align: center;
+  padding: 2rem;
+  width: 80%;
+}
+
+.home--about--text h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.home--about--text h3 {
+  font-size: 1.4rem;
+  margin-bottom: 2rem;
+}
+
+.home--button {
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  font-weight: 500;
+  text-align: center;
+  background-color: #007bff;
+  color: #FFFFFF;
+  border: 2px solid #007bff;
+}
+
+
+
+
 
 
 
@@ -858,6 +887,7 @@ p, ol, ul {
   background-size: 5rem;
   height: 5rem;
   margin-top: 1rem;
+  width: 5rem%;
 }
 
 .login--form h1 {
