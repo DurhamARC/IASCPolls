@@ -155,7 +155,6 @@ class ActiveLink(models.Model):
     def vote(self, vote: models.JSONField):
         participant = Participant.objects.get(email=self.participant.email)
         result = Result.objects.create(
-            unique_link=self,
             survey=self.survey,
             vote=vote,
             institution=participant.institution,
@@ -177,19 +176,8 @@ class Result(models.Model):
     the demographic data into the Results table at the time when that link is broken (i.e., when a vote is cast).
     """
 
-    unique_link = models.ForeignKey(
-        "ActiveLink",
-        null=True,
-        on_delete=models.SET_NULL,
-        to_field="unique_link",
-    )
     survey = models.ForeignKey("Survey", null=True, on_delete=models.SET_NULL)
     vote = models.JSONField(null=False, blank=False)
     institution = models.ForeignKey("Institution", null=True, on_delete=models.SET_NULL)
     discipline = models.ForeignKey("Discipline", null=True, on_delete=models.SET_NULL)
     added = models.DateTimeField(null=False, blank=False, default=timezone.now)
-
-    def save(self, *args, **kwargs):
-        if not self.unique_link:
-            self.unique_link = None
-        super(Result, self).save(*args, **kwargs)
