@@ -6,9 +6,9 @@ export default function NavBar() {
     <AuthConsumer>
       {({ isAuth }) => (
         <nav className="nav">
-          <div>
-            <a className="site-title" href="/">
-              Institute for Ascertaining Scientific Consensus
+          <div className="site-title">
+            <a href="/">
+              <div className="nav-logo" />
             </a>
           </div>
           <li>

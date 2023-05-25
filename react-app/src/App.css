@@ -13,7 +13,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: "Inter", sans-serif;
-  background-color: #e5e5e5;
+  background-color: #f5f5f5;
   color: #14213d;
   letter-spacing: -0.05em;
 }
@@ -120,27 +120,20 @@ ul {
 /* NAV BAR */
 
 .nav {
-  background-color: #e5e5e5;
-  box-shadow: 0 0 5px 10px #e5e5e5;
-  color: #14213d;
+  color: #14213D;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 95%;
+  width: 100%;
   text-align: center; /* center the navigation bar */
-  z-index: 998;
+  position: relative; /* Add position: relative */
+  z-index: 999; /* Increase z-index value */
   top: 0;
   left: 0;
-  padding: 30px;
+  border-bottom: 2px solid #b8bcc5;
 }
 
-.site-title {
-  font-size: 1.5rem;
-  font-family: "Inter";
-  font-style: normal;
-  font-weight: 700;
-  letter-spacing: -0.05em;
-}
+
 
 .nav ul {
   padding: 0;
@@ -154,7 +147,7 @@ ul {
 }
 
 .nav a {
-  color: inherit;
+  color: #14213d;
   padding: 1rem;
   text-decoration: none;
   border-bottom: none;
@@ -162,7 +155,7 @@ ul {
 }
 
 .nav a:hover {
-  color: rgba(51, 51, 51, 0.7);
+  color: #FFA500;
   transition: 0.2s ease-in;
 }
 
@@ -174,6 +167,18 @@ ul {
   font-size: 1.3rem;
   font-weight: 700;
   letter-spacing: -0.05em;
+}
+
+.nav-logo{
+  height: 7vh;
+  width: 10vw;
+  background-image: url('./imgs/logo.png');
+  background-size: 14vh;
+  background-repeat: no-repeat;
+}
+
+.site-title{
+  padding-left: 6vw;
 }
 
 @media screen and (max-width: 450px) {
@@ -254,163 +259,216 @@ ul {
 
 /* HOME */
 
+.home-all .nav a {
+  color: #f5f5f5;
+}
+
+
 .home--container {
   flex-direction: row;
+  height: 100vh;
 }
 
 .home {
-  padding: 2rem;
-  width: 100%;
+  width: 50%;
+  height: 100%;
   display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 6rem 4rem 4rem 4rem;
 }
 
 .home--title {
-  padding: 2rem;
-  width: 100%;
+  padding: 4rem 0rem 0rem 6vw;
+  width: 80%;
+  font-size: 4.5vw;
 }
 
 .home-pic {
+  position: absolute;
+  top: 0px;
+  right: 0px;
   width: 100%;
   height: 100%;
-  background-position: center;
-  background-image: url("./front-page-img.png");
+  background-position: top right;
+  background-image: url('./imgs/magnifying-glass-scientists-background.png');
   background-repeat: no-repeat;
-  background-size: 30rem;
+  background-size: 120vh;
+  padding: 0;
+  z-index: 0;
 }
 
+@media (max-width: 1000px) {
+  .home-pic {
+    display: none;
+  }
+}
+
+
+
+
 .home--eyecatching {
+  display: flex;
   flex-direction: row;
-  background-color: #dfab77;
-  margin-bottom: 2rem;
-  justify-content: flex-start;
-  height: fit-content;
+  background-color: #FFA500;
+  align-items: center;
   padding: 2rem;
+  height: 100vh;
 }
 
 .home--eyecatching div {
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  align-items: left;
+  justify-content: center;
+  align-items: flex-start;
+  margin-left: 2rem;
 }
 
 .home--eyecatching h2 {
-  font-size: 1.2rem;
+  font-size: 1.6vw;
   font-weight: 500;
-  color: #f5f2ee;
-  padding-right: 4rem;
-  padding-top: 2rem;
-  padding-bottom: 2rem;
+  color: #FFFFFF;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
 }
 
 .home--eyecatching h1 {
-  color: #f5f2ee;
-  font-size: 6rem;
-  padding-right: 4rem;
+  color: #FFFFFF;
+  font-size: 4vw;
+  margin-bottom: 2rem;
 }
 
 .home-pic-2 {
-  width: 50%;
-  height: 30rem;
+  width: 100%;
+  height: 30vw;
   background-position: center;
-  background-image: url("./front-page-comp.png");
+  background-image: url('./front-page-comp.png');
   background-repeat: no-repeat;
-  background-size: 20rem;
+  background-size: 30vw;
 }
 
-.home--about {
-  background-color: #d9d1d3;
-  padding: 4rem;
-  height: auto;
-  flex-direction: column;
-}
 
-.home--about h2,
-.home--about h3 {
-  padding: 2rem;
-}
 
-.home--about h3 {
-  font-size: 1.2rem;
-  font-weight: 500;
-  width: 50%;
-}
 
-.home--about h2 {
-  letter-spacing: -0.05em;
-}
 
-.home--button {
-  border: 2px solid #df8c59;
-  background-color: #e89866;
-  color: #ffffff;
-  font-size: 1.2rem;
+
+.container.home--about {
+  position: relative;
+  margin-bottom: 2rem;
+  background-color: (255, 192, 86, 0.5);
+  height: 100vh;
 }
 
 .home-pic-3 {
-  width: 50%;
-  height: 15rem;
+  position: relative;
+  width: 100%;
+  height: 100%;
   background-position: center;
-  background-image: url("./front-page-scientists.png");
+  background-image: url('./front-page-scientists.png');
   background-repeat: no-repeat;
-  background-size: 15rem;
-  filter: opacity(0.8);
+  background-size: 50rem;
 }
 
+.home--about--overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(233, 233, 233, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.home--about--text {
+  text-align: center;
+  padding: 2rem;
+  width: 80%;
+}
+
+.home--about--text h2 {
+  font-size: 2.5vw;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.home--about--text h3 {
+  font-size: 1.4vw;
+  margin-bottom: 2rem;
+}
+
+.home--button {
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  font-weight: 500;
+  text-align: center;
+  background-color: #007bff;
+  color: #FFFFFF;
+  border: 2px solid #007bff;
+}
+
+
+
+
+
+
+
 @media (max-width: 450px) {
-  .home--container {
+  .home--container{
     flex-direction: column;
     justify-content: flex-start;
     height: none;
     padding: 0rem;
+
   }
   .home--title {
     padding: 1rem;
   }
 
-  .home-pic {
+  .home-pic{
     width: 100%;
     height: 50%;
   }
 
-  .home--eyecatching {
+  .home--eyecatching{
     height: none;
     padding: 2rem;
   }
-  .home--eyecatching h1 {
+  .home--eyecatching h1{
     height: auto;
     font-size: 2rem;
     padding: 0rem;
   }
 
-  .home--eyecatching h2 {
+  .home--eyecatching h2{
     padding-left: 0rem;
     font-size: 1rem;
+    
   }
 
-  .home-pic-2 {
+  .home-pic-2{
     background-size: none;
   }
 
-  .home-pic-3 {
+  .home-pic-3{
     background-size: 10rem;
     padding: 5rem;
   }
 
-  .home--about {
+  .home--about{
     height: auto;
     flex-direction: column;
     padding: 1rem;
-    padding-top: 4rem;
+    padding-top:4rem;
   }
-  .home-pic {
+  .home-pic{
     background-size: 20rem;
   }
 
-  .home--about h3 {
+  .home--about h3{
     font-size: 1rem;
   }
 
@@ -419,6 +477,8 @@ ul {
     padding-bottom: 1rem;
   }
 }
+
+
 
 .about--container {
   display: flex;
