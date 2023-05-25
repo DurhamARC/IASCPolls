@@ -1,43 +1,25 @@
-import React from "react";
+import React, {useMemo, useState} from "react";
 
 export const AuthContext = React.createContext(null);
 
-class AuthProvider extends React.Component {
-  constructor(props) {
-    // Required step: always call the parent class' constructor
-    super(props);
+function AuthProvider({children}) {
+  const [currentUser, setCurrentUser] = useState(null);
+  const [isAuth, setAuth] = useState(null);
 
-    this.state = {
-      isAuth: false,
-      currentUser: null,
-    };
-  }
+  const contextValue = useMemo(() => ({
+    isAuth,
+    setAuth,
+    currentUser,
+    setCurrentUser,
+  }), [isAuth, setAuth, currentUser, setCurrentUser])
 
-  setCurrentUser = (e) => {
-    this.setState({ currentUser: e });
-  };
-
-  setAuth = (e) => {
-    this.setState({ isAuth: e });
-  };
-
-  render() {
-    const { isAuth, currentUser } = this.state;
-    const { children } = this.props;
-
-    return (
-      <AuthContext.Provider
-        value={{
-          isAuth,
-          setAuth: this.setAuth,
-          currentUser,
-          setCurrentUser: this.setCurrentUser,
-        }}
-      >
-        {children}
-      </AuthContext.Provider>
-    );
-  }
+  return (
+    <AuthContext.Provider
+      value={contextValue}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
 const AuthConsumer = AuthContext.Consumer;

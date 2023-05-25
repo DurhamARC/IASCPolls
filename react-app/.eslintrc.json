@@ -24,8 +24,6 @@
     // Adding PropTypes adds a LOT of boilerplate code
     "react/prop-types": "off",
     // We are using { useDropzone } from "react-dropzone"; which uses prop spreading.
-    "react/jsx-props-no-spreading": "off",
-    // The AuthContext example uses constructed context values. Removing this is a TODO
-    "react/jsx-no-constructed-context-values": "off"
+    "react/jsx-props-no-spreading": "off"
   }
 }
