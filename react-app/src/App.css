@@ -1391,3 +1391,58 @@ input[type="file"][value]:not([value=""]) {
   background-color: #007bff;
   border-color: #0062cc;
 }
+
+/* Alerts */
+
+.alert {
+  border: 1px solid #000;
+  border-radius: 4px;
+  display: block;
+  float: left;
+  width: 50%;
+  padding: 8px;
+  margin: 8px 8px 8px 25%;
+}
+@media only screen and (max-width: 600px) {
+  .alert {
+    margin: 8px;
+    width: 97%;
+  }
+}
+
+.alert.alert--error {
+  border: 1px solid #a22;
+  background: #faa;
+}
+
+.alert.alert--warning {
+  border: 1px solid #ffa500;
+  background: #fd5;
+}
+
+.alert.alert--info {
+  border: 1px solid #007bff;
+  background: #6bbcff;
+}
+
+.alert > .alert--symbol {
+  max-width: 10px;
+  float: left;
+  padding: 8px;
+}
+
+.alert > .alert--dismiss {
+  float: right;
+  margin-right: 16px;
+}
+
+.alert > .alert--body {
+  margin-left: 50px;
+  margin-right: 50px;
+}
+
+.alert > span.alert--title {
+}
+
+.alert > span.alert--message {
+}

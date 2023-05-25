@@ -15,9 +15,14 @@ import DownloadParticipants from "./pages/DownloadParticipants";
 
 import { AuthProvider } from "./components/AuthContext";
 import Alert from "./components/Alert";
+import ErrorHandler from "./components/ErrorHandler";
 
 function fallbackRender({ error }) {
-  return <Alert title="Something went wrong">{error.message}</Alert>;
+  return (
+    <Alert title="Something went wrong" severity="error">
+      {error.message}
+    </Alert>
+  );
 }
 
 function App() {
@@ -25,6 +30,7 @@ function App() {
     <div className="App">
       <ErrorBoundary fallbackRender={fallbackRender}>
         <AuthProvider>
+          <ErrorHandler />
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Home />} />
