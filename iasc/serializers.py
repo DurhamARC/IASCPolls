@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, get_user_model
+from django.core.exceptions import ValidationError
 from django.utils.text import slugify
 from rest_framework import serializers
-from rest_framework.exceptions import ValidationError
 
 from iasc import models
 
