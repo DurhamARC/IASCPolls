@@ -2,6 +2,7 @@
 import React from "react";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ErrorBoundary } from "react-error-boundary";
 import Home from "./pages/Home";
 import Poll from "./pages/Survey";
 import About from "./pages/About";
@@ -13,25 +14,32 @@ import Dashboard from "./pages/Dashboard";
 import DownloadParticipants from "./pages/DownloadParticipants";
 
 import { AuthProvider } from "./components/AuthContext";
+import Alert from "./components/Alert";
+
+function fallbackRender({ error }) {
+  return <Alert title="Something went wrong">{error.message}</Alert>;
+}
 
 function App() {
   return (
     <div className="App">
-      <AuthProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/poll" element={<Poll />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/thankyou" element={<Thanks />} />
-            <Route path="/ethics" element={<Ethics />} />
-            <Route path="/error" element={<Error />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/download" element={<DownloadParticipants />} />
-          </Routes>
-        </BrowserRouter>
-      </AuthProvider>
+      <ErrorBoundary fallbackRender={fallbackRender}>
+        <AuthProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/poll" element={<Poll />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/thankyou" element={<Thanks />} />
+              <Route path="/ethics" element={<Ethics />} />
+              <Route path="/error" element={<Error />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/download" element={<DownloadParticipants />} />
+            </Routes>
+          </BrowserRouter>
+        </AuthProvider>
+      </ErrorBoundary>
     </div>
   );
 }
