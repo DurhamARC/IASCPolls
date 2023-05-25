@@ -3,10 +3,10 @@ import axios from "axios";
 
 function getDatePlusMonth() {
   const date = new Date();
-  date.setHours(0, 0, 0, 0);
+  const tzoffset = new Date().getTimezoneOffset() * 60000; // make timezone aware
+  date.setHours(23, 59, 0, 0);
   date.setMonth(date.getMonth() + 1);
-  console.log(date.toISOString().substring(0, 10));
-  return date.toISOString().substring(0, 10);
+  return new Date(date - tzoffset).toISOString().slice(0, -1);
 }
 
 function CreateForm({
@@ -99,7 +99,7 @@ function CreateForm({
         <h3>End Date</h3>
         <input
           id="endDate"
-          type="date"
+          type="datetime-local"
           value={endDate}
           onChange={handleEndDateChange}
         />
