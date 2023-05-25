@@ -120,7 +120,7 @@ ul {
 /* NAV BAR */
 
 .nav {
-  color: #14213D;
+  color: #14213d;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -132,8 +132,6 @@ ul {
   left: 0;
   border-bottom: 2px solid #b8bcc5;
 }
-
-
 
 .nav ul {
   padding: 0;
@@ -155,7 +153,7 @@ ul {
 }
 
 .nav a:hover {
-  color: #FFA500;
+  color: #ffa500;
   transition: 0.2s ease-in;
 }
 
@@ -169,15 +167,15 @@ ul {
   letter-spacing: -0.05em;
 }
 
-.nav-logo{
+.nav-logo {
   height: 7vh;
   width: 10vw;
-  background-image: url('./imgs/logo.png');
+  background-image: url("./imgs/logo.png");
   background-size: 14vh;
   background-repeat: no-repeat;
 }
 
-.site-title{
+.site-title {
   padding-left: 6vw;
 }
 
@@ -263,7 +261,6 @@ ul {
   color: #f5f5f5;
 }
 
-
 .home--container {
   flex-direction: row;
   height: 100vh;
@@ -291,7 +288,7 @@ ul {
   width: 100%;
   height: 100%;
   background-position: top right;
-  background-image: url('./imgs/magnifying-glass-scientists-background.png');
+  background-image: url("./imgs/magnifying-glass-scientists-background.png");
   background-repeat: no-repeat;
   background-size: 120vh;
   padding: 0;
@@ -304,13 +301,10 @@ ul {
   }
 }
 
-
-
-
 .home--eyecatching {
   display: flex;
   flex-direction: row;
-  background-color: #FFA500;
+  background-color: #ffa500;
   align-items: center;
   padding: 2rem;
   height: 100vh;
@@ -327,13 +321,13 @@ ul {
 .home--eyecatching h2 {
   font-size: 1.6vw;
   font-weight: 500;
-  color: #FFFFFF;
+  color: #ffffff;
   margin-top: 1rem;
   margin-bottom: 2rem;
 }
 
 .home--eyecatching h1 {
-  color: #FFFFFF;
+  color: #ffffff;
   font-size: 4vw;
   margin-bottom: 2rem;
 }
@@ -342,15 +336,10 @@ ul {
   width: 100%;
   height: 30vw;
   background-position: center;
-  background-image: url('./front-page-comp.png');
+  background-image: url("./front-page-comp.png");
   background-repeat: no-repeat;
   background-size: 30vw;
 }
-
-
-
-
-
 
 .container.home--about {
   position: relative;
@@ -364,7 +353,7 @@ ul {
   width: 100%;
   height: 100%;
   background-position: center;
-  background-image: url('./front-page-scientists.png');
+  background-image: url("./front-page-scientists.png");
   background-repeat: no-repeat;
   background-size: 50rem;
 }
@@ -406,69 +395,61 @@ ul {
   font-weight: 500;
   text-align: center;
   background-color: #007bff;
-  color: #FFFFFF;
+  color: #ffffff;
   border: 2px solid #007bff;
 }
 
-
-
-
-
-
-
 @media (max-width: 450px) {
-  .home--container{
+  .home--container {
     flex-direction: column;
     justify-content: flex-start;
     height: none;
     padding: 0rem;
-
   }
   .home--title {
     padding: 1rem;
   }
 
-  .home-pic{
+  .home-pic {
     width: 100%;
     height: 50%;
   }
 
-  .home--eyecatching{
+  .home--eyecatching {
     height: none;
     padding: 2rem;
   }
-  .home--eyecatching h1{
+  .home--eyecatching h1 {
     height: auto;
     font-size: 2rem;
     padding: 0rem;
   }
 
-  .home--eyecatching h2{
+  .home--eyecatching h2 {
     padding-left: 0rem;
     font-size: 1rem;
-    
   }
 
-  .home-pic-2{
+  .home-pic-2 {
     background-size: none;
   }
 
-  .home-pic-3{
+  .home-pic-3 {
     background-size: 10rem;
     padding: 5rem;
   }
 
-  .home--about{
+  .home--about {
     height: auto;
     flex-direction: column;
     padding: 1rem;
-    padding-top:4rem;
+    padding-top: 4rem;
   }
-  .home-pic{
+  .home-pic {
     background-size: 20rem;
   }
 
-  .home--about h3{
+  .home--about h3 {
     font-size: 1rem;
   }
 
@@ -477,8 +458,6 @@ ul {
     padding-bottom: 1rem;
   }
 }
-
-
 
 .about--container {
   display: flex;
