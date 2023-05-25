@@ -128,7 +128,7 @@ class CreateSurveyView(ViewSet):
                 status=status.HTTP_200_OK,
             )
 
-        except (KeyError, AttributeError) as e:
+        except (KeyError, AttributeError, ValueError) as e:
             error_message = get_error_message(e)
             return Response(
                 {"status": "error", "message": error_message},
