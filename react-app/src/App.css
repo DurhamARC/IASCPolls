@@ -1397,17 +1397,26 @@ input[type="file"][value]:not([value=""]) {
 .alert {
   border: 1px solid #000;
   border-radius: 4px;
+  background: #eee;
   display: block;
   float: left;
   width: 50%;
   padding: 8px;
   margin: 8px 8px 8px 25%;
+  position: relative;
+  z-index: 9999;
 }
+
 @media only screen and (max-width: 600px) {
   .alert {
     margin: 8px;
     width: 97%;
   }
+}
+
+.alert--float {
+  position: absolute;
+  width: 100%;
 }
 
 .alert.alert--error {
@@ -1434,6 +1443,7 @@ input[type="file"][value]:not([value=""]) {
 .alert > .alert--dismiss {
   float: right;
   margin-right: 16px;
+  cursor: pointer;
 }
 
 .alert > .alert--body {

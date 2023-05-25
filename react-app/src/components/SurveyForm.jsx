@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+
+import { ErrorContext } from "./ErrorHandler";
 
 export default function PollForm({ uniqueId }) {
   const navigate = useNavigate();
   const [selectedOption, setSelectedOption] = useState("");
   const [optionSelected, setOptionSelected] = useState(false);
+  const { pushError } = useContext(ErrorContext);
 
   const options = [
     { value: "1", label: "Strongly Agree" },
@@ -29,10 +32,12 @@ export default function PollForm({ uniqueId }) {
           vote: parseInt(selectedOption, 10),
         };
 
-        axios.post("/api/vote/", data);
-        navigate("/thankyou");
+        axios.post("/api/vote/", data).then(() => {
+          navigate("/thankyou");
+        });
       } catch (error) {
         console.error("Error submitting answer:", error);
+        pushError(error);
       }
     } else {
       alert("Please select an option.");
