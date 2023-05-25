@@ -24,8 +24,5 @@ jobs:
         run: eslint --ext .js,.jsx .
 
       - name: Check against prettier rules
-        uses: creyD/prettier_action@v4.3
         working-directory: ./react-app
-        with:
-          prettier_version: 2.7.1
-          prettier_options: --check '**/*.{js,jsx,css}'
+        run: prettier --check '**/*.{js,jsx,css}' .
