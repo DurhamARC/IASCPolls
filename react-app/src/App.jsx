@@ -14,8 +14,8 @@ import Dashboard from "./pages/Dashboard";
 import DownloadParticipants from "./pages/DownloadParticipants";
 
 import { AuthProvider } from "./components/AuthContext";
+import { ErrorProvider } from "./components/ErrorHandler";
 import Alert from "./components/Alert";
-import ErrorHandler from "./components/ErrorHandler";
 
 function fallbackRender({ error }) {
   return (
@@ -29,22 +29,23 @@ function App() {
   return (
     <div className="App">
       <ErrorBoundary fallbackRender={fallbackRender}>
-        <AuthProvider>
-          <ErrorHandler />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/poll" element={<Poll />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/thankyou" element={<Thanks />} />
-              <Route path="/ethics" element={<Ethics />} />
-              <Route path="/error" element={<Error />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/download" element={<DownloadParticipants />} />
-            </Routes>
-          </BrowserRouter>
-        </AuthProvider>
+        <ErrorProvider>
+          <AuthProvider>
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/poll" element={<Poll />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/thankyou" element={<Thanks />} />
+                <Route path="/ethics" element={<Ethics />} />
+                <Route path="/error" element={<Error />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/download" element={<DownloadParticipants />} />
+              </Routes>
+            </BrowserRouter>
+          </AuthProvider>
+        </ErrorProvider>
       </ErrorBoundary>
     </div>
   );

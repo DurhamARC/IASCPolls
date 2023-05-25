@@ -1,13 +1,14 @@
 import copy
 
 from django.contrib.auth import login, logout, get_user_model
-from django.core.exceptions import ValidationError, ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import transaction, IntegrityError
 from django.http import HttpResponseRedirect
 from django_filters import rest_framework as filters
 from rest_framework import viewsets, permissions, status
 from rest_framework.authentication import SessionAuthentication
+from rest_framework.exceptions import ValidationError
 from rest_framework.renderers import TemplateHTMLRenderer, JSONRenderer
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -136,7 +137,7 @@ class CreateSurveyView(ViewSet):
             )
 
         except ValidationError as e:
-            error_message = str(e)
+            error_message = get_error_message(e)
             return Response(
                 {"status": "error", "message": error_message},
                 status=status.HTTP_400_BAD_REQUEST,

@@ -1,10 +1,20 @@
 import React from "react";
 
-export default function Alert({ title, severity, children }) {
+export default function Alert({ id, title, severity, callback, children }) {
+  const myCallback = () => {
+    callback(id);
+  };
+
   // Possible values for severity: error, warning, info
   return (
     <div className={`alert alert--${severity}`}>
-      <div className="alert--symbol alert--dismiss">
+      <div
+        className="alert--symbol alert--dismiss"
+        role="button"
+        tabIndex={0}
+        onClick={myCallback}
+        onKeyUp={myCallback}
+      >
         <span className="material-symbols-outlined">close</span>
       </div>
       <div className="alert--symbol">
