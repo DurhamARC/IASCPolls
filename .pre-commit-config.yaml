@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/psf/black
-    rev: 23.1.0
+    rev: 23.3.0
     hooks:
       - id: black
         # It is recommended to specify the latest version of Python
@@ -8,3 +8,16 @@ repos:
         # pre-commit's default_language_version, see
         # https://pre-commit.com/#top_level-default_language_version
         language_version: python3.9
+
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: 'v8.41.0'
+    hooks:
+      - id: eslint
+        additional_dependencies:
+          - eslint@8.22.0
+          - prettier@2.8.8
+          - eslint-config-airbnb@19.0.4
+          - eslint-config-prettier@8.8.0
+          - eslint-plugin-react@7.32.2
+        files: \.[jt]sx?$  # *.js, *.jsx, *.ts and *.tsx
+        types: [file]
