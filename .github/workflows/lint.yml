@@ -21,8 +21,8 @@ jobs:
 
       - name: Run ESLint on React App
         working-directory: ./react-app
-        run: eslint --ext .js,.jsx .
+        run: npx eslint --ext .js,.jsx .
 
       - name: Check against prettier rules
         working-directory: ./react-app
-        run: prettier --check '**/*.{js,jsx,css}' .
+        run: npx prettier --check '**/*.{js,jsx,css}' .
