@@ -60,7 +60,7 @@ function Institution({ onChangeInstitution }) {
         setInstitutionDatabase(options);
       })
       .catch(pushError);
-  }, [institution]); // Only run if institution changes
+  }, []); // Empty [] arg = do not re-run on re-render
 
   const handleCreate = (event) => {
     API.postNewInstitution(event)
@@ -87,7 +87,7 @@ function Institution({ onChangeInstitution }) {
         value={institution}
         onChange={(newValue) => {
           setInstitution(newValue);
-          onChangeInstitution(newValue.label);
+          onChangeInstitution(newValue !== null ? newValue.label : null);
         }}
         onCreateOption={handleCreate}
         options={institutionDatabase}
