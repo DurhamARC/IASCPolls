@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import axios from "axios";
+import { MessageContext } from "./MessageHandler";
 
 function LoadingBar() {
   return (
@@ -22,6 +23,7 @@ function SuccessMessage() {
 
 function AddParticipants({ onClose }) {
   const containerRef = useRef(null);
+  const { pushError } = useContext(MessageContext);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -84,7 +86,7 @@ function AddParticipants({ onClose }) {
     event.preventDefault();
 
     if (!institution || !file) {
-      alert("Please enter an institution and select a file.");
+      pushError("Please enter an institution and select a file.");
       return;
     }
 
@@ -104,7 +106,7 @@ function AddParticipants({ onClose }) {
       setIsSuccess(true);
     } catch (error) {
       console.error("Error uploading file:", error);
-      alert("Failed to upload participants. Please try again.");
+      pushError(error, "Failed to upload participants. Please try again.");
     } finally {
       setIsLoading(false);
     }

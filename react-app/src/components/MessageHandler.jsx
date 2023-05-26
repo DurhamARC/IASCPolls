@@ -3,7 +3,14 @@ import Alert from "./Alert";
 
 export const MessageContext = React.createContext([]);
 
-function MessageHandler({ errors: messages = [], removeError }) {
+/**
+ * MessageHandler controls display of messages to the visitor
+ * @param messages - an array of messages
+ * @param removeMessage
+ * @returns {JSX.Element}
+ * @constructor
+ */
+function MessageHandler({ messages = [], removeMessage }) {
   if (messages.length === 0) return <> </>;
 
   return (
@@ -14,7 +21,7 @@ function MessageHandler({ errors: messages = [], removeError }) {
             id={row.id}
             title={row.title}
             severity={row.severity}
-            callback={removeError}
+            callback={removeMessage}
           >
             {row.message}
           </Alert>
@@ -25,7 +32,10 @@ function MessageHandler({ errors: messages = [], removeError }) {
 }
 
 /** *
- * Error Provider allows state transfer using React Context
+ * MessageProvider allows state transfer using React Context,
+ * to allow messages to be passed from anywhere in the React
+ * Component tree under the provider (which we put in App.jsx).
+ *
  * See: https://react.dev/learn/passing-data-deeply-with-context
  * @param children
  * @returns {JSX.Element}
@@ -35,25 +45,64 @@ function MessageProvider({ children }) {
   const [messages, setMessages] = useState([]);
 
   /**
-   * Add error to error array
+   * The structure used for the message object
+   * @type {{severity: string, id: null, title: string, message: string}}
+   */
+  const message = {
+    title: "",
+    message: "",
+    severity: "error",
+    id: null,
+  };
+
+  /**
+   * Possible levels of severity for a message
+   */
+  const levels = ["error", "warning", "info"];
+
+  /**
+   * Generate a random key to identify a message, with low conflict probability
+   * @returns {number}
+   */
+  function getRandomID() {
+    return (
+      new Date(Date.now()).valueOf() * 1000 + Math.floor(Math.random() * 1000)
+    );
+  }
+
+  /**
+   * Put a message on the messages stack
+   * @type {(function(*, *))|*}
+   */
+  const pushMessage = useCallback((body, title, severity) => {
+    const err = { ...message };
+
+    err.title = title;
+    err.message = body;
+    err.id = getRandomID();
+
+    if (typeof title === "undefined") err.title = "A problem occurred:";
+    if (levels.includes(severity)) err.severity = severity;
+
+    setMessages([...messages, err]);
+  });
+
+  /**
+   * Add an error to the messages stack
+   * Intelligently handle objects passed: an error with a request in it
+   * will use the value of that message. We also support messages returned
+   * from the server in the JSON {message: ""} field.
    * @type {(function(*): void)|*}
    */
   const pushError = useCallback((e, title) => {
-    let messageTitle = title;
-    if (typeof title === "undefined") {
-      messageTitle = "A problem occurred:";
-    }
-    const err = {
-      messageTitle,
-      message: "",
-      severity: "error",
-      // Generate a random key with low conflict probability:
-      id:
-        new Date(Date.now()).valueOf() * 1000 +
-        Math.floor(Math.random() * 1000),
-    };
+    const err = { ...message };
+    err.title = title;
+    if (typeof title === "undefined") err.title = "A problem occurred:";
 
-    // Handle various types of object which might be passed:
+    err.severity = "error";
+    err.id = getRandomID();
+
+    // Handle various types of object which might be used as err.message:
     if (
       typeof e === "object" &&
       "request" in e &&
@@ -74,7 +123,7 @@ function MessageProvider({ children }) {
   });
 
   /**
-   * Remove error from error array by key
+   * Remove message from messages array by key
    * @type {(function(*): void)|*}
    */
   const removeMessage = useCallback((key) => {
@@ -92,7 +141,6 @@ function MessageProvider({ children }) {
       newerrors.splice(index, 1);
       setMessages(newerrors);
     }
-    // console.log(messages.length, index, messages);
   });
 
   /**
@@ -101,18 +149,19 @@ function MessageProvider({ children }) {
    */
   const contextValue = useMemo(
     () => ({
+      pushMessage,
       pushError,
       removeMessage,
     }),
-    [pushError, removeMessage]
+    [pushMessage, pushError, removeMessage]
   );
 
   /**
-   * Return the element
+   * Return the MessageProvider as React component
    */
   return (
     <MessageContext.Provider value={contextValue}>
-      <MessageHandler errors={messages} removeMessage={removeMessage} />
+      <MessageHandler messages={messages} removeMessage={removeMessage} />
       {children}
     </MessageContext.Provider>
   );
