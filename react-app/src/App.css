@@ -1345,11 +1345,8 @@ input[type="file"][value]:not([value=""]) {
 }
 
 .add-participants-input {
-  height: 30px;
   width: 350px;
-  padding: 1rem;
-  border: 2px solid rgb(221, 210, 210);
-  border-radius: 5px;
+  margin: 10px;
 }
 
 .download--container {
