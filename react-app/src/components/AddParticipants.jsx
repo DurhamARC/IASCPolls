@@ -1,7 +1,14 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
+import CreateableSelect from "react-select/creatable";
 import axios from "axios";
 import { MessageContext } from "./MessageHandler";
+import { API } from "../Api";
 
+/**
+ * Display loading bar while participants file uploading
+ * @returns {JSX.Element}
+ * @constructor
+ */
 function LoadingBar() {
   return (
     <div>
@@ -11,6 +18,11 @@ function LoadingBar() {
   );
 }
 
+/**
+ * Display success message
+ * @returns {JSX.Element}
+ * @constructor
+ */
 function SuccessMessage() {
   return (
     <div className="add-participants-success">
@@ -21,10 +33,93 @@ function SuccessMessage() {
   );
 }
 
+/**
+ * Institution Select Box
+ * @returns {JSX.Element}
+ * @constructor
+ */
+function Institution({ onChangeInstitution }) {
+  const { pushError } = useContext(MessageContext);
+  const [institution, setInstitution] = useState();
+  const [institutionDatabase, setInstitutionDatabase] = useState(null);
+
+  const institutionToOption = (ins) => ({
+    value: ins.id,
+    label: ins.name,
+  });
+
+  useEffect(() => {
+    // Load institution options into Select component
+    API.getInstitutionList()
+      .then((response) => {
+        const { data } = response;
+        const options = [];
+        for (let i = 0; i < data.length; i += 1) {
+          options.push(institutionToOption(data[i]));
+        }
+        setInstitutionDatabase(options);
+      })
+      .catch(pushError);
+  }, [institution]); // Only run if institution changes
+
+  const handleCreate = (event) => {
+    API.postNewInstitution(event)
+      .then((response) => {
+        const opt = institutionToOption(response.data);
+        setInstitutionDatabase([opt, ...institutionDatabase]);
+        setInstitution(opt);
+        onChangeInstitution(opt.label);
+      })
+      .catch(pushError);
+  };
+
+  /**
+   * Render function for Institution picker component
+   */
+  return (
+    <div className="add-participants-inst">
+      <p>Institution Name</p>
+      <CreateableSelect
+        name="institution"
+        id="institution"
+        className="add-participants-input"
+        defaultValue={institution}
+        value={institution}
+        onChange={(newValue) => {
+          setInstitution(newValue);
+          onChangeInstitution(newValue.label);
+        }}
+        onCreateOption={handleCreate}
+        options={institutionDatabase}
+        isClearable
+        isLoading={institutionDatabase === null}
+      />
+    </div>
+  );
+}
+
+/**
+ * AddParticipants component renders the form to upload
+ * participant Excel files to the server
+ * @param onClose
+ * @returns {JSX.Element}
+ * @constructor
+ */
 function AddParticipants({ onClose }) {
-  const containerRef = useRef(null);
   const { pushError } = useContext(MessageContext);
 
+  const containerRef = useRef(null);
+  const fileInputRef = useRef(null);
+  const [file, setFile] = useState(null);
+  const [institution, setInstitution] = useState();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [filename, setFilename] = useState("");
+  const [isDragOver, setIsDragOver] = useState(false);
+
+  /**
+   * On container load, useEffect React handler runs
+   */
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -41,18 +136,6 @@ function AddParticipants({ onClose }) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [onClose]);
-
-  const [institution, setInstitution] = useState("");
-  const [file, setFile] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [filename, setFilename] = useState("");
-  const [isDragOver, setIsDragOver] = useState(false);
-  const fileInputRef = useRef(null);
-
-  const handleInstitutionChange = (event) => {
-    setInstitution(event.target.value);
-  };
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -129,19 +212,11 @@ function AddParticipants({ onClose }) {
           <SuccessMessage />
         ) : (
           <form onSubmit={handleSubmit} className="add-participants-form">
-            <div className="add-participants-inst">
-              <label htmlFor="institution">
-                <input
-                  type="text"
-                  id="institution"
-                  name="institution"
-                  value={institution}
-                  onChange={handleInstitutionChange}
-                  className="add-participants-input"
-                />
-                Institution Name
-              </label>
-            </div>
+            <Institution
+              onChangeInstitution={(i) => {
+                setInstitution(i);
+              }}
+            />
             <div
               className={`file-drop-area ${filename ? "file-selected" : ""}`}
               role="button"
@@ -166,7 +241,7 @@ function AddParticipants({ onClose }) {
               </div>
               <input
                 type="file"
-                accept=".xlsx, .xls"
+                accept=".xlsx"
                 style={{ display: "none" }}
                 ref={fileInputRef}
                 onChange={handleFileChange}
