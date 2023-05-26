@@ -1,7 +1,7 @@
 import datetime
 import io
 from random import randrange
-from tempfile import NamedTemporaryFile
+from zipfile import ZipFile
 
 from django.utils import timezone
 from django.contrib.auth.models import User
@@ -9,6 +9,8 @@ from django.test import TestCase
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.uploadedfile import SimpleUploadedFile
 from urllib import parse
+
+from django.utils.text import slugify
 
 from iasc.models import Institution, Discipline, Participant, ActiveLink, Survey, Result
 from frontend.tests import HTTPTestCase
@@ -49,9 +51,11 @@ class ViewsTestCase(HTTPTestCase):
 
         self.flat_test_data = [item for sublist in self.test_data for item in sublist]
 
-        self.xls_mimetype = (
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        )
+        self.mimetypes = {
+            "json": "application/json",
+            "zip": "application/zip",
+            "xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        }
 
         self.test_question = "Were the dish and the spoon complicit in the cow's crime?"
         self.test_institution = "Test University"
@@ -88,53 +92,80 @@ class ViewsTestCase(HTTPTestCase):
                 sheet[f"A{row}"] = name
                 sheet[f"B{row}"] = email
 
-        with NamedTemporaryFile() as tmp:
-            wb.save(tmp.name)
-            tmp.seek(0)
-            stream = tmp.read()
-
-            return tmp.name, stream
+        with io.BytesIO() as buffer:
+            wb.save(buffer)
+            buffer.seek(0)
+            return buffer.read()
 
     @staticmethod
-    def helper_get_xls_data(resp):
-        with NamedTemporaryFile() as tmp:
-            tmp.write(resp.content)
-            tmp.seek(0)
-            stream = tmp.read()
+    def helper_get_xls_data(data):
+        read = io.BytesIO(data)
+        wb = load_workbook(read)
+        ws = wb.active
 
-            read = io.BytesIO(stream)
-            wb = load_workbook(read)
-            ws = wb.active
+        # Return table as list of lists, where each sub-list is a row:
+        return [[cell.value for cell in row] for row in ws.rows]
 
-            # Return table as list of lists, where each sub-list is a row:
-            return [[cell.value for cell in row] for row in ws.rows]
+    @staticmethod
+    def helper_zip_get_files(data):
+        read = io.BytesIO(data)
+        input_zip = ZipFile(read)
+        return input_zip.namelist(), input_zip
+
+    def helper_test_zipped_sheets(
+        self, route: str, slug: str, prefix: str, headers: []
+    ):
+        resp = self.GET(
+            f"/api{route}",
+            mimetype=self.mimetypes["zip"],
+            status=200,
+            startswith=b"PK",
+        )
+
+        names, input_zip = self.helper_zip_get_files(resp.content)
+        filename = slugify(slug, allow_unicode=True)
+        expected_filename = f"{prefix}-{self.survey_id}-{filename}.xlsx"
+        self.assertEquals(names[0], expected_filename)
+
+        xls = input_zip.read(names[0])
+        # Excel files are zip files too:
+        self.assertTrue(xls.startswith(b"PK"))
+
+        # Look for xlsx-specific strings:
+        self.assertTrue(b"docProps/app.xml" in xls)
+        self.assertTrue(b"/_rels/workbook.xml.rels" in xls)
+
+        # Check XLS data:
+        data = self.helper_get_xls_data(xls)
+        self.assertEquals(data.pop(0), headers)
+        self.assertEquals(len(data), len(self.flat_test_data))
 
     def test_api_routes(self):
         """
         API routes Integration Test:
-          /participants/upload/             ✅
-          /participants/                    ✅
+          /participants/upload/
+          /participants/
 
-          /institutions/                    ⚠️
-          /disciplines/                     ⚠️
+          /institutions/
+          /disciplines/
 
-          /survey/create/                   ✅
-          /survey/survey_id/institutions/   ✅
-          /survey/close/                    ✅
-          /survey/results/                  ⚠️
-          /survey/                          ✅
+          /survey/create/
+          /survey/survey_id/institutions/
+          /survey/close/
+          /survey/results/
+          /survey/
 
-          /vote/                            ✅
+          /vote/
 
-          /links/xls/                       ✅
-          /links/zip/                       ⚠️
-          /links/                           ✅
+          /links/xls/
+          /links/zip/
+          /links/
 
-          /result/xls/                      ✅
-          /result/zip/                      ⚠️
-          /result/                          ⚠️
+          /result/xls/
+          /result/zip/
+          /result/                         ️
 
-          /user/                            ⚠️
+          /user/
 
 
         These are within a wrapper method as django rolls back the database state in-between
@@ -146,9 +177,9 @@ class ViewsTestCase(HTTPTestCase):
             Test the "Upload Participants" route by uploading an Excel file
             /participants/upload/
             /participants/
-            @return:
             """
-            name, stream = self.helper_create_workbook(self.test_data)
+
+            stream = self.helper_create_workbook(self.test_data)
 
             upload = SimpleUploadedFile(
                 "file.mp4", stream, content_type="application/vnd.ms-excel"
@@ -162,7 +193,7 @@ class ViewsTestCase(HTTPTestCase):
                     "create_disciplines": True,
                 },
                 status=200,
-                mimetype="application/json",
+                mimetype=self.mimetypes["json"],
                 contains="File uploaded",
             )
 
@@ -176,7 +207,7 @@ class ViewsTestCase(HTTPTestCase):
 
             # Test participant JSON retrieval
             resp = self.GET(
-                "/api/participants/", mimetype="application/json", startswith=b"{"
+                "/api/participants/", mimetype=self.mimetypes["json"], startswith=b"{"
             )
 
             self.assertEquals(resp["count"], len(self.flat_test_data))
@@ -186,6 +217,7 @@ class ViewsTestCase(HTTPTestCase):
             Create a survey in the database
             /survey/create/
             """
+
             resp = self.POST(
                 "/api/survey/create/",
                 {
@@ -194,7 +226,7 @@ class ViewsTestCase(HTTPTestCase):
                     "active": "True",
                     "create_active_links": "True",
                 },
-                mimetype="application/json",
+                mimetype=self.mimetypes["json"],
             )
 
             self.assertEquals(resp["status"], "success")
@@ -211,7 +243,9 @@ class ViewsTestCase(HTTPTestCase):
             """
 
             resp_surveys = self.GET(
-                "/api/survey/?active=true", mimetype="application/json", startswith=b"{"
+                "/api/survey/?active=true",
+                mimetype=self.mimetypes["json"],
+                startswith=b"{",
             )
 
             self.assertEquals(
@@ -221,7 +255,7 @@ class ViewsTestCase(HTTPTestCase):
             self.survey_id = resp_surveys["results"][0]["id"]
             resp_institutions = self.GET(
                 f"/api/survey/{self.survey_id}/institutions/",
-                mimetype="application/json",
+                mimetype=self.mimetypes["json"],
                 startswith=b"{",
             )
 
@@ -232,7 +266,7 @@ class ViewsTestCase(HTTPTestCase):
             # Test without ?survey=n, should raise 400
             resp = self.GET(
                 "/api/links/xls/",
-                mimetype="application/json",
+                mimetype=self.mimetypes["json"],
                 status=400,
                 startswith=None,
             )
@@ -241,13 +275,13 @@ class ViewsTestCase(HTTPTestCase):
 
             resp = self.GET(
                 f"/api/links/xls/?survey={self.survey_id}",
-                mimetype=self.xls_mimetype,
+                mimetype=self.mimetypes["xlsx"],
                 status=200,
                 # Look for Zip header at the beginning of the binary response
                 startswith=b"PK",
             )
 
-            data = self.helper_get_xls_data(resp)
+            data = self.helper_get_xls_data(resp.content)
 
             # Check that the Excel sheet returned contains the correct header
             self.assertEquals(data.pop(0), ["Name", "E-mail Address", "Unique Link"])
@@ -257,12 +291,26 @@ class ViewsTestCase(HTTPTestCase):
             # Store links in variable for later use
             self.links = data
 
-        def test_04_vote():
+        def test_04_zip_links():
+            """
+            Test Zip route for links download
+            /links/zip/
+            """
+
+            self.helper_test_zipped_sheets(
+                f"/links/zip/?survey={self.survey_id}",
+                self.test_institution,
+                "IASC",
+                ["Name", "E-mail Address", "Unique Link"],
+            )
+
+        def test_05_vote():
             """
             Test the ability to vote using the ActiveLinks returned by the API
             /vote/
             /links/
             """
+
             for _, _, link in self.links:
                 path = parse.urlparse(link)
                 params = parse.parse_qs(path.query)
@@ -271,7 +319,7 @@ class ViewsTestCase(HTTPTestCase):
                     "/api/vote/",
                     {"unique_id": params["unique_id"][0], "vote": randrange(5)},
                     status=200,
-                    mimetype="application/json",
+                    mimetype=self.mimetypes["json"],
                     contains="success",
                 )
 
@@ -281,7 +329,7 @@ class ViewsTestCase(HTTPTestCase):
             resp = self.GET(
                 "/api/links/",
                 status=200,
-                mimetype="application/json",
+                mimetype=self.mimetypes["json"],
                 startswith=b"{",
                 contains="results",
             )
@@ -289,40 +337,130 @@ class ViewsTestCase(HTTPTestCase):
             # Check that all voting links are used up
             self.assertEquals(resp["count"], 0)
 
-        def test_05_close():
+        def test_06_close():
             """
             Test survey closure
             /survey/close/
             """
+
             resp = self.POST(
                 "/api/survey/close/",
                 {"survey": self.survey_id},
                 status=200,
-                mimetype="application/json",
+                mimetype=self.mimetypes["json"],
                 contains="success",
             )
 
             self.assertTrue("Closed survey" in resp["message"])
 
-        def test_06_results():
+        def test_07_results():
             """
             Test results download
             /result/
             /result/xls/
+            /survey/results/
             """
+
+            resp = self.GET(
+                f"/api/result/",
+                status=200,
+                mimetype=self.mimetypes["json"],
+                startswith=b"{",
+            )
+
+            self.assertEquals(resp["count"], len(self.flat_test_data))
 
             resp = self.GET(
                 f"/api/result/xls/?survey={self.survey_id}",
                 status=200,
-                mimetype=self.xls_mimetype,
+                mimetype=self.mimetypes["xlsx"],
                 startswith=b"PK",
             )
 
-            data = self.helper_get_xls_data(resp)
+            data = self.helper_get_xls_data(resp.content)
 
             # Check that the Excel sheet returned contains the correct header and no. of rows
             self.assertEquals(data.pop(0), ["vote", "institution", "discipline"])
             self.assertEquals(len(data), len(self.flat_test_data))
+
+            resp = self.GET(
+                "/api/survey/results/",
+                status=200,
+                mimetype=self.mimetypes["json"],
+                startswith=b"{",
+            )
+
+            self.assertEquals(resp["count"], 1)
+            results = resp["results"][0]
+            self.assertEquals(results["question"], self.test_question)
+            self.assertEquals(results["count"], len(self.flat_test_data))
+            self.assertEquals(results["kind"], "LI")
+            self.assertEquals(results["active"], "False")
+
+        def test_08_zip_results():
+            """
+            Test route for zip results download
+            /result/zip/
+            """
+
+            self.helper_test_zipped_sheets(
+                f"/result/zip/?survey={self.survey_id}",
+                self.test_question,
+                "Results",
+                ["survey", "vote", "institution", "discipline"],
+            )
+
+            self.helper_test_zipped_sheets(
+                f"/result/zip/",
+                self.test_question,
+                "Results",
+                ["survey", "vote", "institution", "discipline"],
+            )
+
+        def test_09_institution_discipline():
+            """
+            Test these routes:
+            /institutions/
+            /disciplines/
+            @return:
+            """
+
+            self.GET(
+                "/api/institutions/",
+                status=200,
+                mimetype=self.mimetypes["json"],
+                startswith=b"[",
+                contains=self.test_institution,
+            )
+
+            resp = self.GET(
+                "/api/disciplines/",
+                status=200,
+                mimetype=self.mimetypes["json"],
+                startswith=b"[",
+                contains=None,
+            )
+
+            # Check for the three added disciplines
+            self.assertEquals(len(resp), 3)
+
+        def test_10_user():
+            """
+            Test logged in user detail route
+            /user/
+            """
+
+            resp = self.GET(
+                "/api/user/",
+                status=200,
+                mimetype=self.mimetypes["json"],
+                startswith=None,
+                contains=None,
+            )[0]
+
+            self.assertTrue("username" in resp.keys())
+            self.assertTrue("first_name" in resp.keys())
+            self.assertEquals(resp["username"], self.username)
 
         #
         # Run all the integration tests defined within this function:
