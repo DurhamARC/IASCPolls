@@ -1,34 +1,37 @@
-import React from "react";
+import React, { useContext } from "react";
 import axios from "axios";
+import { MessageContext } from "./MessageHandler";
 
 export default function Symbol({
   isActive,
   surveyId,
   activeSymbol,
   inactiveSymbol,
+  onChange,
 }) {
-  const setActive = () => {
-    // post this to a database
-    console.log(surveyId);
+  const { pushMessage } = useContext(MessageContext);
+  const setActive = (active) => {
     axios
       .post("/api/survey/close/", {
         survey: surveyId,
       })
-      .then(() => {
-        alert("Survey closed, all active links deleted.");
+      .then((result) => {
+        console.log(result.data.message);
+        pushMessage(
+          "All active links deleted.",
+          `Survey ${surveyId} closed`,
+          "info"
+        );
+        onChange(active);
       });
   };
 
   const handleClick = () => {
-    if (isActive) {
-      if (
-        window.confirm(
-          "Are you sure you want to close the survey? All links will be deleted."
-        )
-      ) {
-        setActive(!isActive);
-      }
-    }
+    if (!isActive) return;
+    const close = window.confirm(
+      "Are you sure you want to close the survey? All links will be deleted."
+    );
+    if (close) setActive(!isActive);
   };
 
   const style = {
