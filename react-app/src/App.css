@@ -1405,6 +1405,7 @@ input[type="file"][value]:not([value=""]) {
   margin: 8px 8px 8px 25%;
   position: relative;
   z-index: 9999;
+  filter: drop-shadow(2px 4px 4px rgba(0, 0, 0, 0.25));
 }
 
 @media only screen and (max-width: 600px) {
@@ -1417,6 +1418,7 @@ input[type="file"][value]:not([value=""]) {
 .alert--float {
   position: absolute;
   width: 100%;
+  margin-top: 10px;
 }
 
 .alert.alert--error {
@@ -1455,4 +1457,18 @@ input[type="file"][value]:not([value=""]) {
 }
 
 .alert > span.alert--message {
+}
+
+.animate-entry {
+  animation: animate-entry 0.5s both;
+}
+@keyframes animate-entry {
+  0% {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }

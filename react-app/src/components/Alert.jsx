@@ -7,7 +7,7 @@ export default function Alert({ id, title, severity, callback, children }) {
 
   // Possible values for severity: error, warning, info
   return (
-    <div className={`alert alert--${severity}`}>
+    <div className={`alert alert--${severity} animate-entry`}>
       <div
         className="alert--symbol alert--dismiss"
         role="button"
