@@ -14,7 +14,7 @@ import Dashboard from "./pages/Dashboard";
 import DownloadParticipants from "./pages/DownloadParticipants";
 
 import { AuthProvider } from "./components/AuthContext";
-import { ErrorProvider } from "./components/ErrorHandler";
+import { MessageProvider } from "./components/MessageHandler";
 import Alert from "./components/Alert";
 
 function fallbackRender({ error }) {
@@ -29,7 +29,7 @@ function App() {
   return (
     <div className="App">
       <ErrorBoundary fallbackRender={fallbackRender}>
-        <ErrorProvider>
+        <MessageProvider>
           <AuthProvider>
             <BrowserRouter>
               <Routes>
@@ -45,7 +45,7 @@ function App() {
               </Routes>
             </BrowserRouter>
           </AuthProvider>
-        </ErrorProvider>
+        </MessageProvider>
       </ErrorBoundary>
     </div>
   );

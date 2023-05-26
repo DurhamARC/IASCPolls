@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import axios from "axios";
 
-import { ErrorContext } from "./ErrorHandler";
+import { MessageContext } from "./MessageHandler";
 
 function getDatePlusMonth() {
   const date = new Date();
@@ -20,7 +20,7 @@ function CreateForm({
   const [statement, setStatement] = useState("");
   const [active, setActive] = useState(true);
   const [endDate, setEndDate] = useState(getDatePlusMonth());
-  const { pushError } = useContext(ErrorContext);
+  const { pushError } = useContext(MessageContext);
 
   const handleStatementChange = (event) => {
     setStatement(event.target.value);

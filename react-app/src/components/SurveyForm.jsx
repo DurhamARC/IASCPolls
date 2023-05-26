@@ -2,13 +2,13 @@ import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import { ErrorContext } from "./ErrorHandler";
+import { MessageContext } from "./MessageHandler";
 
 export default function PollForm({ uniqueId }) {
   const navigate = useNavigate();
   const [selectedOption, setSelectedOption] = useState("");
   const [optionSelected, setOptionSelected] = useState(false);
-  const { pushError } = useContext(ErrorContext);
+  const { pushError } = useContext(MessageContext);
 
   const options = [
     { value: "1", label: "Strongly Agree" },

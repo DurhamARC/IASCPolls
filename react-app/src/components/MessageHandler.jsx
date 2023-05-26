@@ -1,14 +1,14 @@
 import React, { useCallback, useMemo, useState } from "react";
 import Alert from "./Alert";
 
-export const ErrorContext = React.createContext([]);
+export const MessageContext = React.createContext([]);
 
-function ErrorHandler({ errors = [], removeError }) {
-  if (errors.length === 0) return <> </>;
+function MessageHandler({ errors: messages = [], removeError }) {
+  if (messages.length === 0) return <> </>;
 
   return (
     <div className="alert--float">
-      {errors.map((row) => (
+      {messages.map((row) => (
         <div key={row.id}>
           <Alert
             id={row.id}
@@ -31,16 +31,20 @@ function ErrorHandler({ errors = [], removeError }) {
  * @returns {JSX.Element}
  * @constructor
  */
-function ErrorProvider({ children }) {
-  const [errors, setErrors] = useState([]);
+function MessageProvider({ children }) {
+  const [messages, setMessages] = useState([]);
 
   /**
    * Add error to error array
    * @type {(function(*): void)|*}
    */
-  const pushError = useCallback((e) => {
+  const pushError = useCallback((e, title) => {
+    let messageTitle = title;
+    if (typeof title === "undefined") {
+      messageTitle = "A problem occurred:";
+    }
     const err = {
-      title: "A problem occurred:",
+      messageTitle,
       message: "",
       severity: "error",
       // Generate a random key with low conflict probability:
@@ -66,29 +70,29 @@ function ErrorProvider({ children }) {
       err.message = e;
     }
 
-    setErrors([...errors, err]);
+    setMessages([...messages, err]);
   });
 
   /**
    * Remove error from error array by key
    * @type {(function(*): void)|*}
    */
-  const removeError = useCallback((key) => {
+  const removeMessage = useCallback((key) => {
     const index = ((find) => {
-      for (let x = 0; x < errors.length; x += 1)
-        if (errors[x].id === find) return x;
+      for (let x = 0; x < messages.length; x += 1)
+        if (messages[x].id === find) return x;
       return -1; // not found
     })(key);
 
     if (index > -1) {
       // .splice() returns the element removed and modifies the array
       // This is no good because React state is immutable: we have to
-      // copy all the errors to a new array before resetting it:
-      const newerrors = [...errors];
+      // copy all the messages to a new array before resetting it:
+      const newerrors = [...messages];
       newerrors.splice(index, 1);
-      setErrors(newerrors);
+      setMessages(newerrors);
     }
-    // console.log(errors.length, index, errors);
+    // console.log(messages.length, index, messages);
   });
 
   /**
@@ -98,21 +102,21 @@ function ErrorProvider({ children }) {
   const contextValue = useMemo(
     () => ({
       pushError,
-      removeError,
+      removeMessage,
     }),
-    [pushError, removeError]
+    [pushError, removeMessage]
   );
 
   /**
    * Return the element
    */
   return (
-    <ErrorContext.Provider value={contextValue}>
-      <ErrorHandler errors={errors} removeError={removeError} />
+    <MessageContext.Provider value={contextValue}>
+      <MessageHandler errors={messages} removeMessage={removeMessage} />
       {children}
-    </ErrorContext.Provider>
+    </MessageContext.Provider>
   );
 }
 
-const ErrorConsumer = ErrorContext.Consumer;
-export { ErrorProvider, ErrorConsumer };
+const MessageConsumer = MessageContext.Consumer;
+export { MessageProvider, MessageConsumer };
