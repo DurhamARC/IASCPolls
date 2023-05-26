@@ -312,14 +312,14 @@ class ParticipantViewSet(viewsets.ReadOnlyModelViewSet):
     filterset_class = ParticipantInstitutionFilter
 
 
-class DisciplineViewSet(viewsets.ReadOnlyModelViewSet):
+class DisciplineViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = serializers.DisciplineSerializer
     queryset = Discipline.objects.order_by("id")
     pagination_class = None
 
 
-class InstitutionViewSet(viewsets.ReadOnlyModelViewSet):
+class InstitutionViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = serializers.InstitutionSerializer
     queryset = Institution.objects.order_by("name")

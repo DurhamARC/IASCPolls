@@ -11,7 +11,8 @@ from iasc import settings
 class Institution(models.Model):
     """
     Institutions by name and ID
-    Instead of storing strings on every participant, instead normalise the database and prevent redundant data
+    Instead of storing strings on every participant,
+    instead normalise the database and prevent redundant data
     """
 
     name = models.CharField(
@@ -20,7 +21,7 @@ class Institution(models.Model):
         help_text="Institution Name, e.g. Durham University",
     )
     # Could use `django-countries` https://github.com/SmileyChris/django-countries/ to normalise this further
-    country = models.CharField(max_length=255, help_text="Host Country")
+    country = models.CharField(max_length=255, help_text="Host Country", blank=True)
 
     def __str__(self):
         return f"{self.name} ({self.id})"
