@@ -4,7 +4,7 @@ import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 
 import { AuthContext } from "../components/AuthContext";
-import client from "../Api";
+import { client } from "../Api";
 
 export default function Login() {
   const { setAuth, setCurrentUser } = useContext(AuthContext);
