@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
+import { MessageContext } from "../components/MessageHandler";
 
 function DownloadParticipants() {
   const location = useLocation();
@@ -12,6 +13,7 @@ function DownloadParticipants() {
 
   const [pollQuestion, setPollQuestion] = useState("");
   const [institutions, setInstitutions] = useState([]);
+  const { pushError } = useContext(MessageContext);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -19,7 +21,9 @@ function DownloadParticipants() {
         const [institutionsResponse, surveyResponse] = await Promise.all([
           axios.get(`/api/survey/${pollId}/institutions/`),
           axios.get(`/api/survey/${pollId}/`),
-        ]);
+        ]).catch((e) => {
+          pushError(e);
+        });
 
         const institutionData = institutionsResponse.data.results;
         const pollData = surveyResponse.data;
@@ -41,10 +45,14 @@ function DownloadParticipants() {
 
   const handleDownloadAll = async () => {
     try {
-      const response = await axios.get(`/api/links/zip/?survey=${pollId}`, {
-        // THIS IS NOT WORKING WILL NEED TO BE
-        responseType: "blob",
-      });
+      const response = await axios
+        .get(`/api/links/zip/?survey=${pollId}`, {
+          // THIS IS NOT WORKING WILL NEED TO BE
+          responseType: "blob",
+        })
+        .catch((e) => {
+          pushError(e);
+        });
 
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
@@ -56,6 +64,7 @@ function DownloadParticipants() {
       window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error("Error downloading file:", error);
+      pushError(error, "Error downloading file:");
     }
   };
 
@@ -79,6 +88,7 @@ function DownloadParticipants() {
       window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error("Error downloading file:", error);
+      pushError(error, "Error downloading file:");
     }
   };
 
@@ -87,7 +97,7 @@ function DownloadParticipants() {
       <NavBar />
       <div className="container">
         <div className="download--container">
-          <h2>Download Participants for...</h2>
+          <h2>Download Voting Links for...</h2>
           <h3>{pollQuestion}</h3>
           <button
             type="button"

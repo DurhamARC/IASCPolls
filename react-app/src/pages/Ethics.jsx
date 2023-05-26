@@ -188,7 +188,10 @@ export default function Ethics() {
               <h3>Does this project have ethics approval?</h3>
               <p>
                 This project has full ethics approval from Durham University
-                (UK), equivalent to IRB in the US.
+                (UK), equivalent to IRB in the US. A full Data Protection Impact
+                Assessment has been undertaken: our basis for processing data
+                under GDPR is “Legitimate Interests“, and a Legitimate Interests
+                Assessment has been undertaken.
               </p>
 
               <h3>What will be done with the collected data?</h3>

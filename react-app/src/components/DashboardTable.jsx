@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Symbol from "./Symbol";
 
-function Table({ data }) {
+function Table({ data, updateData }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
 
@@ -29,9 +29,9 @@ function Table({ data }) {
         <thead>
           <tr>
             <th>Statement</th>
-            <th> ID </th>
+            <th>ID</th>
             <th>Completed</th>
-            <th>Participants</th>
+            <th>Links</th>
             <th>Expiry</th>
             <th>Active</th>
             <th>Results</th>
@@ -53,8 +53,11 @@ function Table({ data }) {
                 <Symbol
                   isActive={row.active}
                   surveyId={row.id}
-                  activeSymbol="play_circle"
-                  inactiveSymbol="stop_circle"
+                  activeSymbol="stop_circle"
+                  inactiveSymbol="close"
+                  onChange={(value) => {
+                    updateData(row.id, value);
+                  }}
                 />
               </td>
               <td>
