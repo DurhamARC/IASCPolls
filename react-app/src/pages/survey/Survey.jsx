@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import NavBar from "../components/NavBar";
-import PollForm from "../components/SurveyForm";
-import Footer from "../components/Footer";
+import NavBar from "../../components/nav/NavBar";
+import PollForm from "../../components/SurveyForm";
+import Footer from "../../components/footer/Footer";
+import "./survey.css";
 
 export default function Poll() {
   const location = useLocation();

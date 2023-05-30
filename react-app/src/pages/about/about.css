@@ -1,0 +1,25 @@
+.about--container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.about {
+  width: 80%;
+}
+
+@media (max-width: 450px) {
+  .about--container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+  }
+
+  .about {
+    margin-bottom: 5rem;
+    width: 80%;
+  }
+}
