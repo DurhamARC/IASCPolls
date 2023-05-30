@@ -32,6 +32,7 @@ SECRET_KEY = "django-insecure-wg#z-k0)cxbzl1h1wmw)as82$brq5(cf1m^2d=ph7ui15n_fr+
 # SECURITY WARNING: don't run with debug turned on in production!
 # False if not in os.environ because of casting above
 DEBUG = env("DEBUG")
+ENABLE_TEST_VIEWS = env("ENABLE_TEST_VIEWS", default=DEBUG)
 
 # Override these in production:
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["localhost", "127.0.0.1"])

@@ -1,5 +1,6 @@
 import secrets
 
+from django.utils import timezone
 from django.db import models, transaction
 from django.utils.translation import gettext_lazy
 from datetime import datetime
@@ -10,7 +11,8 @@ from iasc import settings
 class Institution(models.Model):
     """
     Institutions by name and ID
-    Instead of storing strings on every participant, instead normalise the database and prevent redundant data
+    Instead of storing strings on every participant,
+    instead normalise the database and prevent redundant data
     """
 
     name = models.CharField(
@@ -19,7 +21,7 @@ class Institution(models.Model):
         help_text="Institution Name, e.g. Durham University",
     )
     # Could use `django-countries` https://github.com/SmileyChris/django-countries/ to normalise this further
-    country = models.CharField(max_length=255, help_text="Host Country")
+    country = models.CharField(max_length=255, help_text="Host Country", blank=True)
 
     def __str__(self):
         return f"{self.name} ({self.id})"
@@ -98,7 +100,9 @@ class Survey(models.Model):
     kind = models.CharField(
         max_length=2, choices=SurveyKind.choices, default=SurveyKind.LIKERT
     )
-    expiry = models.DateTimeField(null=False, default=datetime(2000, 1, 1, 0, 0))
+    expiry = models.DateTimeField(
+        null=False, default=datetime(2000, 1, 1, 0, 0, tzinfo=timezone.utc)
+    )
     participants = models.IntegerField(null=False, default=0)
     voted = models.IntegerField(null=False, default=0)
 
@@ -137,7 +141,7 @@ class ActiveLink(models.Model):
 
     @property
     def hyperlink(self):
-        return f"{settings.CSRF_TRUSTED_ORIGINS[0]}/vote?survey={self.survey.id}&unique_id={self.unique_link}"
+        return f"{settings.CSRF_TRUSTED_ORIGINS[0]}/poll?survey={self.survey.id}&unique_id={self.unique_link}"
 
     class Meta:
         constraints = [
@@ -152,7 +156,6 @@ class ActiveLink(models.Model):
     def vote(self, vote: models.JSONField):
         participant = Participant.objects.get(email=self.participant.email)
         result = Result.objects.create(
-            unique_link=self,
             survey=self.survey,
             vote=vote,
             institution=participant.institution,
@@ -174,19 +177,8 @@ class Result(models.Model):
     the demographic data into the Results table at the time when that link is broken (i.e., when a vote is cast).
     """
 
-    unique_link = models.ForeignKey(
-        "ActiveLink",
-        null=True,
-        on_delete=models.SET_NULL,
-        to_field="unique_link",
-    )
     survey = models.ForeignKey("Survey", null=True, on_delete=models.SET_NULL)
     vote = models.JSONField(null=False, blank=False)
     institution = models.ForeignKey("Institution", null=True, on_delete=models.SET_NULL)
     discipline = models.ForeignKey("Discipline", null=True, on_delete=models.SET_NULL)
-    added = models.DateTimeField(null=False, blank=False, default=datetime.now)
-
-    def save(self, *args, **kwargs):
-        if not self.unique_link:
-            self.unique_link = None
-        super(Result, self).save(*args, **kwargs)
+    added = models.DateTimeField(null=False, blank=False, default=timezone.now)

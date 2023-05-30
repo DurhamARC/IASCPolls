@@ -1,0 +1,10 @@
+# Ignore Django app
+iasc
+frontend
+.github
+conf
+docs
+
+docker-compose.yml
+CITATION.cff
+README.md

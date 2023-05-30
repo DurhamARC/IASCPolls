@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import Symbol from './isActive';
+import React, { useState } from "react";
+import Symbol from "./Symbol";
 
-const Table = ({ data }) => {
+function Table({ data, updateData }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
 
@@ -29,50 +29,50 @@ const Table = ({ data }) => {
         <thead>
           <tr>
             <th>Statement</th>
-            <th> ID </th>
+            <th>ID</th>
             <th>Completed</th>
-            <th>Participants</th>
+            <th>Links</th>
             <th>Expiry</th>
             <th>Active</th>
             <th>Results</th>
           </tr>
         </thead>
         <tbody>
-          {currentItems.map((row, index) => (
-            <tr key={index}>
+          {currentItems.map((row) => (
+            <tr key={row.id}>
               <td>{row.question}</td>
               <td>{row.id}</td>
-              <td>{Math.round(row.voted * 100 / row.participants)}%</td>
+              <td>{Math.round((row.voted * 100) / row.participants)}%</td>
               <td>
-              <a href={`/download?pollId=${row.id}`}>
-                <span className="material-symbols-outlined">
-                  groups
-                </span>
+                <a href={`/download?pollId=${row.id}`}>
+                  <span className="material-symbols-outlined">groups</span>
                 </a>
               </td>
-              <td>
-                {row.expiry.slice(0, 10)}
-              </td>
+              <td>{row.expiry.slice(0, 10)}</td>
               <td>
                 <Symbol
                   isActive={row.active}
-                  activeSymbol="play_circle"
-                  inactiveSymbol="stop_circle"
+                  surveyId={row.id}
+                  activeSymbol="stop_circle"
+                  inactiveSymbol="close"
+                  onChange={(value) => {
+                    updateData(row.id, value);
+                  }}
                 />
               </td>
               <td>
-               <span className="material-symbols-outlined">
-                  download
-                </span>
+                <a href={`/api/result/xls/?survey=${row.id}`}>
+                  <span className="material-symbols-outlined">download</span>
+                </a>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
 
-
       <div className="dashboard--next--page">
         <button
+          type="button"
           onClick={handlePrevPage}
           disabled={currentPage === 1}
           className="button dashboard--button--next"
@@ -81,6 +81,7 @@ const Table = ({ data }) => {
         </button>
         <span>{`Page ${currentPage} of ${totalPages}`}</span>
         <button
+          type="button"
           onClick={handleNextPage}
           disabled={currentPage === totalPages}
           className="button dashboard--button--next"
@@ -90,6 +91,6 @@ const Table = ({ data }) => {
       </div>
     </div>
   );
-};
+}
 
 export default Table;

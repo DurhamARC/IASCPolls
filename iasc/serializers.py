@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, get_user_model
+from django.core.exceptions import ValidationError
 from django.utils.text import slugify
 from rest_framework import serializers
-from rest_framework.exceptions import ValidationError
 
 from iasc import models
 
@@ -74,12 +74,12 @@ class SurveySerializer(serializers.ModelSerializer):
 
 
 class SurveyInstitutionSerializer(serializers.ModelSerializer):
-    institution = serializers.ReadOnlyField(source="participant.institution.name")
+    name = serializers.ReadOnlyField(source="participant.institution.name")
     id = serializers.ReadOnlyField(source="participant.institution.id")
 
     class Meta:
         model = models.ActiveLink
-        fields = ["id", "institution"]
+        fields = ["id", "name"]
 
 
 class SurveyResultSerializer(serializers.ModelSerializer):

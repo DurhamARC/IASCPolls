@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
+import axios from "axios";
 
-export default function PollForm({ uniqueId, pollId }) {
+import { MessageContext } from "./MessageHandler";
+
+export default function PollForm({ uniqueId }) {
   const navigate = useNavigate();
   const [selectedOption, setSelectedOption] = useState("");
   const [optionSelected, setOptionSelected] = useState(false);
+  const { pushError } = useContext(MessageContext);
 
   const options = [
     { value: "1", label: "Strongly Agree" },
@@ -26,13 +29,15 @@ export default function PollForm({ uniqueId, pollId }) {
       try {
         const data = {
           unique_id: uniqueId,
-          vote: parseInt(selectedOption)
+          vote: parseInt(selectedOption, 10),
         };
 
-        axios.post('/api/vote/', data);
-        navigate("/thankyou");
+        axios.post("/api/vote/", data).then(() => {
+          navigate("/thankyou");
+        });
       } catch (error) {
-        console.error('Error submitting answer:', error);
+        console.error("Error submitting answer:", error);
+        pushError(error);
       }
     } else {
       alert("Please select an option.");
@@ -43,7 +48,6 @@ export default function PollForm({ uniqueId, pollId }) {
     <div>
       <div className="poll--options-wrapper">
         <form onSubmit={handleSubmit}>
-
           <ul className="poll--options">
             {options.map((option) => (
               <li key={option.value}>
@@ -62,10 +66,9 @@ export default function PollForm({ uniqueId, pollId }) {
           </ul>
           <button
             type="submit"
-            className={
-              "button poll--submit " +
-              (optionSelected ? "button poll--submit-active" : "")
-            }
+            className={`button poll--submit ${
+              optionSelected ? "button poll--submit-active" : ""
+            }`}
           >
             Submit
           </button>

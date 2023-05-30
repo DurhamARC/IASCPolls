@@ -11,7 +11,11 @@ env:
 
 jobs:
   docker:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: |
+      github.event.workflow_run.conclusion == 'success'
+      && contains('refs/heads/main refs/heads/release', github.ref)
+      && github.event_name != 'pull_request'
+
     runs-on: ubuntu-latest
     steps:
       -
