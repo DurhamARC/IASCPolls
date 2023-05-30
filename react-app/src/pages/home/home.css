@@ -141,7 +141,6 @@
   border: 2px solid #007bff;
 }
 
-/* Adjustments for smaller screens */
 @media (max-width: 450px) {
   .home--container {
     flex-direction: column;

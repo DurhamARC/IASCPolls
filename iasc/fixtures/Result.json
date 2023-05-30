@@ -16,8 +16,8 @@
     "fields": {
         "survey": 2,
         "vote": 1,
-        "institution": 3,
-        "discipline": 7,
+        "institution": 1,
+        "discipline": 1,
         "added": "2023-05-26T14:31:41.421Z"
     }
 },

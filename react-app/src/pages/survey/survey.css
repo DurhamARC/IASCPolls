@@ -202,22 +202,16 @@
 }
 
 .poll--option-spacer label {
-  /* padding-top: 1.5rem !important;
-      padding-bottom: 1.5rem !important; */
   font-size: 1rem;
   color: #888e9b;
 }
 .poll--option-spacer input {
-  /* padding-top: 1.5rem !important;
-      padding-bottom: 1.5rem !important;  */
   border-color: #888e9b !important;
   height: 1rem;
   width: 1rem;
 }
 
 .poll--option-spacer {
-  /* padding-top: 1.5rem !important;
-      padding-bottom: 1.5rem !important; */
   padding-left: 5rem !important;
 }
 
@@ -251,5 +245,11 @@
   }
   .poll--submit {
     font-size: 1.2rem;
+  }
+  .poll--options {
+    flex-direction: column;
+  }
+  .poll--options li {
+    flex-direction: row;
   }
 }
