@@ -50,6 +50,9 @@ jobs:
       - uses: conda-incubator/setup-miniconda@v2
         name: Set Up Miniconda
         with:
+          miniforge-variant: Mambaforge
+          miniforge-version: latest
+          use-mamba: true
           activate-environment: anaconda-client-env
           environment-file: conf/iasc.base.yml
           python-version: 3.8
@@ -57,11 +60,13 @@ jobs:
           # IMPORTANT! This needs to be set for caching to work properly:
           use-only-tar-bz2: true
           auto-activate-base: false
-        
-      - run: echo $CONDA_PREFIX
-      
-      - name: Test Conda environment is active
+
+      # https://github.com/conda-incubator/setup-miniconda/issues/105#issuecomment-730243912
+      -
+        name: Install dev dependencies and list packages
         run: |
+          conda env update -n anaconda-client-env -f conf/iasc.dev.yml
+          echo $CONDA_PREFIX
           conda info
           conda list
 
@@ -70,8 +75,15 @@ jobs:
           ALLOWED_HOSTS: localhost,127.0.0.1
           DB_PASS: arc_iasc_1234
           # NB: Do not use secrets here; PRs do not allow them for security reasons.
-        run: python manage.py test
+        run: coverage run --source='.' manage.py test
 
+      - name: Create coverage.py XML report
+        run: coverage xml
+
+      - name: Upload coverage reports to Codecov with GitHub Action
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   build:
     name: Call Azure Pipelines Build

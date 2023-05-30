@@ -1,0 +1,28 @@
+name: Lint
+on: [push, pull_request]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: psf/black@stable
+        with:
+          options: "--check --verbose"
+          src: "./iasc"
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - run: npm ci
+        working-directory: ./react-app
+
+      - name: Run ESLint on React App
+        working-directory: ./react-app
+        run: npx eslint --ext .js,.jsx .
+
+      - name: Check against prettier rules
+        working-directory: ./react-app
+        run: npx prettier --check '**/*.{js,jsx,css}' .

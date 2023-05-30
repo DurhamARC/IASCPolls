@@ -1,8 +1,9 @@
 import copy
 
 from django.contrib.auth import login, logout, get_user_model
-from django.core.exceptions import ValidationError
-from django.db import transaction
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.db import transaction, IntegrityError
 from django.http import HttpResponseRedirect
 from django_filters import rest_framework as filters
 from rest_framework import viewsets, permissions, status
@@ -23,6 +24,12 @@ from iasc.filters import (
 
 from iasc.logic import parse_excel_sheet_to_db, create_survey_in_db
 from iasc.models import ActiveLink, Result, Participant, Survey, Discipline, Institution
+from iasc.utils import (
+    get_error_message,
+    request_has_keys,
+    validate_string,
+    to_boolean,
+)
 
 
 #
@@ -100,14 +107,18 @@ class CreateSurveyView(ViewSet):
         Create survey in database and associate participants with ActiveLinks
         """
         try:
-            fields = {"question", "expiry"}
-            if not fields <= set(request.data.keys()):
-                raise ValidationError(f"Upload form missing required fields: {fields}")
+            request_has_keys(request, {"question", "expiry"})
+
+            question = request.data["question"]
+            expiry = request.data["expiry"]
+
+            validate_string(question, "Question")
+            validate_string(expiry, "Expiry")
 
             create_survey_in_db(
-                request.data["question"],
-                request.data["expiry"],
-                kind=request.data.get("kind", True),
+                question,
+                expiry,
+                kind=request.data.get("kind", "LI"),
                 active=request.data.get("active", True),
                 create_active_links=request.data.get("create_active_links", True),
             )
@@ -117,9 +128,19 @@ class CreateSurveyView(ViewSet):
                 status=status.HTTP_200_OK,
             )
 
+        except (KeyError, AttributeError, ValueError) as e:
+            error_message = get_error_message(e)
+            return Response(
+                {"status": "error", "message": error_message},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
         except ValidationError as e:
-            error_message = str(e)
-            return Response({"status": "error", "message": error_message})
+            error_message = get_error_message(e)
+            return Response(
+                {"status": "error", "message": error_message},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
 
 class CloseSurveyView(ViewSet):
@@ -131,32 +152,44 @@ class CloseSurveyView(ViewSet):
 
     @transaction.atomic
     def create(self, request):
-        survey = int(request.data["survey"].strip())
-        survey = Survey.objects.filter(id=survey).get()
+        try:
+            request_has_keys(request, {"survey"})
+            survey = request.data["survey"]
+            if type(survey) is str:
+                survey = int(request.data["survey"].strip())
+            survey = Survey.objects.filter(id=survey).get()
 
-        if survey.active:
-            survey.active = False
-            survey.save()
+            if survey.active:
+                survey.active = False
+                survey.save()
 
-            links = ActiveLink.objects.filter(survey=survey)
-            total = links.delete()
+                links = ActiveLink.objects.filter(survey=survey)
+                total = links.delete()
 
+                return Response(
+                    {
+                        "status": "success",
+                        "message": f"Closed survey {survey}: {survey.question}",
+                        "deleted": total[0],
+                    },
+                    status=status.HTTP_200_OK,
+                )
+
+            raise ValidationError(f"Survey {survey} not active or not found")
+
+        except (KeyError, AttributeError) as e:
+            error_message = get_error_message(e)
             return Response(
-                {
-                    "status": "success",
-                    "message": f"Closed survey {survey}: {survey.question}",
-                    "deleted": total[0],
-                },
-                status=status.HTTP_200_OK,
+                {"status": "error", "message": error_message},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
-        return Response(
-            {
-                "status": "failure",
-                "message": f"Survey {survey} not active or not found",
-            },
-            status=status.HTTP_400_BAD_REQUEST,
-        )
+        except ValidationError as e:
+            error_message = get_error_message(e)
+            return Response(
+                {"status": "error", "message": error_message},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
 
 class SubmitVoteView(ViewSet):
@@ -168,6 +201,9 @@ class SubmitVoteView(ViewSet):
 
     def create(self, request):
         try:
+            request_has_keys(request, {"unique_id", "vote"})
+            validate_string(request.data["unique_id"], "Unique_id")
+
             uid = request.data["unique_id"].strip()
             link = ActiveLink.objects.filter(unique_link=uid).get()
             vote = int(request.data["vote"])
@@ -178,13 +214,18 @@ class SubmitVoteView(ViewSet):
                 status=status.HTTP_200_OK,
             )
 
+        except (KeyError, AttributeError) as e:
+            error_message = get_error_message(e)
+            return Response(
+                {"status": "error", "message": error_message},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
         except (
-            KeyError,
-            AttributeError,
             ValidationError,
             ActiveLink.DoesNotExist,
         ) as e:
-            error_message = str(e)
+            error_message = get_error_message(e)
             return Response(
                 {"status": "error", "message": error_message},
                 status=status.HTTP_400_BAD_REQUEST,
@@ -207,23 +248,32 @@ class UploadParticipantsView(ViewSet):
         Upload Excel Spreadsheet with participant data
         """
         try:
-            fields = {"institution", "file"}
-            keys = set(request.data.keys())
-            if not fields <= keys:
-                raise ValidationError(
-                    f"Upload form missing required fields: {fields.difference(keys)}"
-                )
+            # Form validation
+            request_has_keys(request, {"institution", "file"})
 
-            # Read file into variable
+            # Read parameters into variables
+            institution = request.data["institution"]
             file_obj = request.data["file"]
+
+            validate_string(institution, "Institution")
+
+            if not type(file_obj) is InMemoryUploadedFile:
+                raise ValidationError("Request did not contain a valid file")
+
+            # Read file content
             file_content = file_obj.read()
+
+            # Parse additional optional settings to Booleans
+            create_disciplines = to_boolean(request, "create_disciplines")
+            create_institutions = to_boolean(request, "create_institutions")
+            ignore_conflicts = to_boolean(request, "ignore_conflicts")
 
             parse_excel_sheet_to_db(
                 file_content,
                 institution=request.data["institution"],
-                create_disciplines=request.data.get("create_disciplines", False),
-                create_institutions=request.data.get("create_institutions", False),
-                ignore_conflicts=request.data.get("ignore_conflicts", False),
+                create_disciplines=create_disciplines,
+                create_institutions=create_institutions,
+                ignore_conflicts=ignore_conflicts,
             )
 
             return Response(
@@ -231,8 +281,15 @@ class UploadParticipantsView(ViewSet):
                 status=status.HTTP_200_OK,
             )
 
-        except (KeyError, AttributeError, ValidationError) as e:
-            error_message = str(e)
+        except (KeyError, AttributeError) as e:
+            error_message = get_error_message(e)
+            return Response(
+                {"status": "error", "message": error_message},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+        except (IntegrityError, ValidationError, ObjectDoesNotExist) as e:
+            error_message = get_error_message(e)
             return Response(
                 {"status": "error", "message": error_message},
                 status=status.HTTP_400_BAD_REQUEST,
@@ -255,14 +312,14 @@ class ParticipantViewSet(viewsets.ReadOnlyModelViewSet):
     filterset_class = ParticipantInstitutionFilter
 
 
-class DisciplineViewSet(viewsets.ReadOnlyModelViewSet):
+class DisciplineViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = serializers.DisciplineSerializer
     queryset = Discipline.objects.order_by("id")
     pagination_class = None
 
 
-class InstitutionViewSet(viewsets.ReadOnlyModelViewSet):
+class InstitutionViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = serializers.InstitutionSerializer
     queryset = Institution.objects.order_by("name")

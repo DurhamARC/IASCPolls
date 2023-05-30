@@ -1,3 +1,5 @@
+import json
+
 from django.core.exceptions import BadRequest
 from django.http import HttpResponse
 from django.utils.encoding import escape_uri_path
@@ -8,6 +10,7 @@ from rest_framework import status
 
 from iasc import renderers
 from iasc.models import Institution, Survey
+from iasc.utils import get_error_message
 
 
 def get_survey_detail(request):
@@ -36,15 +39,28 @@ class IASCZipFileMixin(object):
         Return the response with the proper content disposition and the customized
         filename instead of the browser default (or lack thereof).
         """
-        response = super().finalize_response(request, response, *args, **kwargs)
-        is_zip = response.accepted_renderer.format == "zip"
+        try:
+            response = super().finalize_response(request, response, *args, **kwargs)
+            is_zip = response.accepted_renderer.format == "zip"
 
-        if is_zip and isinstance(response, Response):
-            response["content-disposition"] = "attachment; filename={}".format(
-                escape_uri_path(self.get_filename(request=request, *args, **kwargs)),
+            if is_zip and isinstance(response, Response):
+                response["content-disposition"] = "attachment; filename={}".format(
+                    escape_uri_path(
+                        self.get_filename(request=request, *args, **kwargs)
+                    ),
+                )
+
+            return response
+
+        except BadRequest as e:
+            error_message = get_error_message(e)
+            return HttpResponse(
+                json.JSONEncoder().encode(
+                    {"status": "badrequest", "message": error_message}
+                ),
+                content_type="application/json",
+                status=status.HTTP_400_BAD_REQUEST,
             )
-
-        return response
 
 
 class IASCXLSXFileMixin(XLSXFileMixin):
@@ -73,12 +89,23 @@ class IASCXLSXFileMixin(XLSXFileMixin):
         Intercept response and return "HTTP 204 NO CONTENT" if no data returned from query
         (i.e. don't download empty Excel sheets)
         """
-        response = super().finalize_response(request, response, *args, **kwargs)
+        try:
+            response = super().finalize_response(request, response, *args, **kwargs)
 
-        if len(response.data) == 0:
+            if len(response.data) == 0:
+                return HttpResponse(
+                    {"status": "notfound", "message": "No data matched the request"},
+                    status=status.HTTP_404_NOT_FOUND,
+                )
+
+        except BadRequest as e:
+            error_message = get_error_message(e)
             return HttpResponse(
-                {"status": "notfound", "message": "No data matched the request"},
-                status=status.HTTP_404_NOT_FOUND,
+                json.JSONEncoder().encode(
+                    {"status": "badrequest", "message": error_message}
+                ),
+                content_type="application/json",
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
         return response

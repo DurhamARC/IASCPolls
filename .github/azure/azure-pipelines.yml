@@ -113,15 +113,20 @@ stages:
                 -DB_SSL_ENABLED "$(DB_SSL_ENABLED)"
               ScriptType: 'Inline Script'
               InlineScript: |
+                export PATH=$PATH:/opt/python/latest/bin/:/usr/local/.rbenv/bin:/opt/nodejs/lts/bin:/opt/dotnet/lts:/opt/python/latest/bin:/opt/php/lts/bin:/opt/php-composer:/opt/nodejs/9/bin
                 echo "Working directory is $(pwd)"
                 export WORKDIR=$(pwd)
+                whereis python
                 echo "python is $(python --version) in $(which python)"
+                echo "python3.8 is $(python3.8 --version) in $(which python3.8)"
+                ls /opt/python/
                 echo "\$PYTHONPATH is $PYTHONPATH"
                 echo "\$PATH is $PATH"
                 echo "Creating virtual environment:"
-                python -m venv venv
+                python3.8 -m venv venv
                 chmod +x ./venv/bin/activate
                 echo "Activating virtual environment:"
                 . ./venv/bin/activate
+                echo "python is now $(python --version) in $(which python)"
                 echo "Install requirements..."
                 python -m pip install -r requirements.txt
