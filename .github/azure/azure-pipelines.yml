@@ -120,6 +120,6 @@ stages:
 
           - task: AzureAppServiceManage@0
             inputs:
-              azureSubscription: $(connectedServiceName)
+              azureSubscription: $(azureSubscription)
               Action: 'Restart Azure App Service'
-              WebAppName: $(webAppName)
+              WebAppName: $(appName)
