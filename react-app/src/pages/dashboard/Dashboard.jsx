@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { Navigate } from "react-router-dom";
+import "./dashboard.css";
 import axios from "axios";
 import NavBar from "../../components/nav/NavBar";
 import Footer from "../../components/footer/Footer";
 import Table from "../../components/DashboardTable";
 import CreateContainer from "../../components/CreateContainer";
-import AddParticipants from "../../components/AddParticipants";
+import AddParticipants from "../../components/addparticipants/AddParticipants";
 import { AuthContext } from "../../components/AuthContext";
 import { MessageContext } from "../../components/MessageHandler";
 

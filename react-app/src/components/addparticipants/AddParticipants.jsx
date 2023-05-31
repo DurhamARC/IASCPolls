@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import CreateableSelect from "react-select/creatable";
 import axios from "axios";
-import { MessageContext } from "./MessageHandler";
-import { API } from "../Api";
+import { MessageContext } from "../MessageHandler";
+import { API } from "../../Api";
 
 /**
  * Display loading bar while participants file uploading
