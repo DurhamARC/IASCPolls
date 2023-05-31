@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
-import NavBar from "../components/NavBar";
-import Footer from "../components/Footer";
-import { MessageContext } from "../components/MessageHandler";
+import NavBar from "../../components/nav/NavBar";
+import Footer from "../../components/footer/Footer";
+import { MessageContext } from "../../components/MessageHandler";
+import "./download.css";
 
 function DownloadParticipants() {
   const location = useLocation();

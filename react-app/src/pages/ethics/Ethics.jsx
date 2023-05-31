@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import Footer from "../components/Footer";
-import NavBar from "../components/NavBar";
+import Footer from "../../components/footer/Footer";
+import NavBar from "../../components/nav/NavBar";
+import "./ethics.css";
 
 // menu not working properly
 

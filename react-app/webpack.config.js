@@ -34,4 +34,15 @@ module.exports = {
   resolve: {
     extensions: [".js", ".jsx"],
   },
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        reactVendor: {
+          test: /[\\/]node_modules[\\/](react|react-dom|react-router-dom)[\\/]/,
+          name: "vendor-react",
+          chunks: "all",
+        },
+      },
+    },
+  },
 };

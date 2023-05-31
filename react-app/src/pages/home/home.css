@@ -1,0 +1,207 @@
+.home-all .nav a {
+  color: #f5f5f5;
+}
+
+.home-all .nav a:hover {
+  color: #ffa500;
+  transition: 0.2s ease-in;
+}
+
+.home--container {
+  display: flex;
+  flex-direction: row;
+  height: 70vh;
+}
+
+.home {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 6vw 4vw 4vw 4vw;
+}
+
+.home--title {
+  padding: 0 0 0 6vw;
+  width: 80%;
+  font-size: 4.5vw;
+}
+
+.home-pic {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background-position: top right;
+  background-image: url("../../imgs/magnifying-glass-scientists-background.png");
+  background-repeat: no-repeat;
+  background-size: 60%;
+  padding: 0;
+  z-index: 0;
+}
+
+@media (max-width: 1000px) {
+  .home-pic {
+    display: none;
+  }
+}
+
+.home--eyecatching {
+  display: flex;
+  flex-direction: row;
+  background-color: #ffa500;
+  align-items: center;
+  padding: 2vw;
+  height: 80vh;
+}
+
+.home--eyecatching div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  margin-left: 2vw;
+}
+
+.home--eyecatching h2 {
+  font-size: 1.6vw;
+  font-weight: 500;
+  color: #ffffff;
+  margin-top: 1vw;
+  margin-bottom: 2vw;
+}
+
+.home--eyecatching h1 {
+  color: #ffffff;
+  font-size: 4vw;
+  margin-bottom: 2vw;
+}
+
+.home-pic-2 {
+  width: 100%;
+  height: 30vw;
+  background-position: center;
+  background-image: url("../../imgs/front-page-comp.png");
+  background-repeat: no-repeat;
+  background-size: 30vw;
+}
+
+.container.home--about {
+  position: relative;
+  margin-bottom: 2vw;
+  background-color: rgba(255, 192, 86, 0.5);
+  height: 80vh;
+}
+
+.home-pic-3 {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-position: center;
+  background-image: url("../../imgs/front-page-scientists.png");
+  background-repeat: no-repeat;
+  background-size: 50vw;
+}
+
+.home--about--overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(233, 233, 233, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.home--about--text {
+  text-align: center;
+  padding: 2vw;
+  width: 80%;
+}
+
+.home--about--text h2 {
+  font-size: 2.5vw;
+  font-weight: 700;
+  margin-bottom: 1vw;
+}
+
+.home--about--text h3 {
+  font-size: 1.4vw;
+  margin-bottom: 2vw;
+}
+
+.home--button {
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  font-weight: 500;
+  text-align: center;
+  background-color: #007bff;
+  color: #ffffff;
+  border: 2px solid #007bff;
+}
+
+@media (max-width: 450px) {
+  .home--container {
+    flex-direction: column;
+    justify-content: flex-start;
+    height: auto;
+    padding: 0;
+  }
+  .home--title {
+    padding: 1rem;
+  }
+
+  .home-pic {
+    width: 100%;
+    height: 50vh;
+  }
+
+  .home--eyecatching {
+    height: auto;
+    padding: 2vw;
+  }
+  .home--eyecatching h1 {
+    height: auto;
+    font-size: 2rem;
+    padding: 0;
+  }
+
+  .home--eyecatching h2 {
+    padding-left: 0;
+    font-size: 1rem;
+  }
+
+  .home-pic-2 {
+    background-size: contain;
+  }
+
+  .home-pic-3 {
+    background-size: 10rem;
+    padding: 5rem;
+  }
+
+  .home--about {
+    height: auto;
+    flex-direction: column;
+    padding: 1rem;
+    padding-top: 4rem;
+  }
+  .home-pic {
+    background-size: 20rem;
+  }
+
+  .home--about h3 {
+    font-size: 1rem;
+  }
+
+  .home--button {
+    font-size: 1rem;
+    padding-bottom: 1rem;
+  }
+}
