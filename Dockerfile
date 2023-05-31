@@ -117,7 +117,9 @@ COPY iasc ./iasc
 COPY frontend ./frontend
 COPY manage.py .
 
+EXPOSE 8000
+
 # The code to run when container is started:
 CMD ["python manage.py migrate && \
       gunicorn --timeout=300 --log-file=- --access-logfile '-'\
-        --log-level=debug --bind=0.0.0.0:5000 iasc.wsgi"]
+        --log-level=debug --bind=0.0.0.0:8000 iasc.wsgi"]
