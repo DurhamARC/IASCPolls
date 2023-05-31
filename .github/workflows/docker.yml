@@ -60,13 +60,13 @@ jobs:
 
   release-dev:
     name: Release to Azure Pipelines Dev
-    needs: test
+    needs: docker
     runs-on: ubuntu-latest
 
     # Only run for Main branch, and NOT PRs
     if: |
-      contains('refs/heads/main', github.ref)
-      github.event.workflow_run.conclusion == 'success'
+      github.ref == 'refs/heads/main'
+      && github.event.workflow_run.conclusion == 'success'
       && github.event_name != 'pull_request'
 
     steps:
@@ -79,13 +79,13 @@ jobs:
 
   release-prod:
     name: Release to Azure Pipelines Production
-    needs: test
+    needs: docker
     runs-on: ubuntu-latest
 
     # Only run for Release branch, and NOT PRs
     if: |
-      contains('refs/heads/release', github.ref)
-      github.event.workflow_run.conclusion == 'success'
+      github.ref == 'refs/heads/release'
+      && github.event.workflow_run.conclusion == 'success'
       && github.event_name != 'pull_request'
 
     steps:
