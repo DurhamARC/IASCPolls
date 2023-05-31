@@ -9,6 +9,7 @@ services:
     restart: on-failure
     ports:
       - "127.0.0.1:8080:8080/tcp"
+      - "127.0.0.1:2222:2222/tcp"
     env_file:
       - .env
     depends_on:
