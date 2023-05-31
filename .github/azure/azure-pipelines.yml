@@ -30,8 +30,6 @@ variables:
     value: 'svc-con-awh-01'
   - name: webAppResourceGroupName
     value: 'du-uks-awh-arc-iasc01'
-  - name: allowedHosts
-    value: 'iasc.awh.durham.ac.uk,iasc-dev.awh.durham.ac.uk'
 
   - name: containerRegistryName
     value: 'https://index.docker.io/v1'
@@ -60,17 +58,17 @@ stages:
               appSettings: |
                 [{
                   "name": "ALLOWED_HOSTS",
-                  "value": "$(allowedHosts)",
+                  "value": "$(ALLOWED_HOSTS)",
                   "slotSetting": false
                 },
                 {
                   "name": "SITE_URL",
-                  "value": "https://$(allowedHosts)",
+                  "value": "$(SITE_URL)",
                   "slotSetting": false
                 },
                 {
                   "name": "CSRF_TRUSTED_ORIGINS",
-                  "value": "https://$(allowedHosts)",
+                  "value": "$(CSRF_TRUSTED_ORIGINS)",
                   "slotSetting": false
                 },
                 {
