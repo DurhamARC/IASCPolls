@@ -1,5 +1,6 @@
 import React from "react";
-import { AuthConsumer } from "./AuthContext";
+import { AuthConsumer } from "../AuthContext";
+import "./nav.css";
 
 export default function NavBar() {
   return (

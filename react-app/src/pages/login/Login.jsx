@@ -1,10 +1,11 @@
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import NavBar from "../components/NavBar";
-import Footer from "../components/Footer";
+import NavBar from "../../components/nav/NavBar";
+import Footer from "../../components/footer/Footer";
+import "./login.css";
 
-import { AuthContext } from "../components/AuthContext";
-import { client } from "../Api";
+import { AuthContext } from "../../components/AuthContext";
+import { client } from "../../Api";
 
 export default function Login() {
   const { setAuth, setCurrentUser } = useContext(AuthContext);
@@ -53,7 +54,7 @@ export default function Login() {
       <NavBar />
       <div className="login-box">
         <div className="login--content">
-          <div className="home-pic login--pic" />
+          <div className="login--pic" />
           <div>
             <h1>Login</h1>
           </div>

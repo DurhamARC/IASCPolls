@@ -1,0 +1,39 @@
+.download--container {
+  border: 2px solid rgb(221, 210, 210);
+  height: 85vh;
+  width: 60vw;
+  background-color: #eeecec;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  margin-top: 2rem;
+}
+
+.download--content {
+  width: 50%;
+  height: 80%;
+  border: 2px solid rgb(221, 210, 210);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.download--content div {
+  width: 100%;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.download--button {
+  font-size: 1rem;
+  padding: 0.2rem;
+  width: 8rem;
+  background-color: #007bff;
+  border-color: #0062cc;
+}

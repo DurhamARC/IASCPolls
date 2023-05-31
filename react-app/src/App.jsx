@@ -1,18 +1,17 @@
 // import logo from './logo.svg';
 import React from "react";
-import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import "./styles/global.css";
 import { ErrorBoundary } from "react-error-boundary";
-import Home from "./pages/Home";
-import Poll from "./pages/Survey";
-import About from "./pages/About";
-import Thanks from "./pages/Thanks";
-import Ethics from "./pages/Ethics";
-import Error from "./pages/Error";
-import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
-import DownloadParticipants from "./pages/DownloadParticipants";
-
+import Home from "./pages/home/Home";
+import Poll from "./pages/survey/Survey";
+import About from "./pages/about/About";
+import Thanks from "./pages/thanks/Thanks";
+import Ethics from "./pages/ethics/Ethics";
+import Error from "./pages/error/Error";
+import Login from "./pages/login/Login";
+import Dashboard from "./pages/dashboard/Dashboard";
+import DownloadParticipants from "./pages/download/DownloadParticipants";
 import { AuthProvider } from "./components/AuthContext";
 import { MessageProvider } from "./components/MessageHandler";
 import Alert from "./components/Alert";

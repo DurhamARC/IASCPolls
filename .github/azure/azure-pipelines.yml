@@ -5,6 +5,8 @@
 trigger:
 - none
 
+pr: none
+
 appendCommitMessageToRunName: true
 
 pool:
@@ -17,116 +19,105 @@ resources:
 
 variables:
   - group: arc_iasc
+
+  - name: appName
+    ${{ if eq( variables['Build.SourceBranchName'], 'release' ) }}:
+      value: 'duuksawharciasc01'
+    ${{ if ne( variables['Build.SourceBranchName'], 'release' ) }}:
+      value: 'duuksawharciascdevel01'
     
   - name: azureSubscription
     value: 'svc-con-awh-01'
-  - name: appName
-    value: 'duuksawharciasc01'
   - name: webAppResourceGroupName
     value: 'du-uks-awh-arc-iasc01'
-  - name: runtimeStack
-    value: 'PYTHON|3.8'
-  - name: allowedHosts
-    value: 'iasc.awh.durham.ac.uk'
+
+  - name: containerRegistryName
+    value: 'https://index.docker.io/v1'
+  - name: dockerfile
+    value: '$(Build.SourcesDirectory)/Dockerfile'
+  - name: dockerRegistryServiceConnection
+    value: 'DurhamARCDockerHub'
+  - name: imageRepository
+    value: 'durhamarc/iasc'
 
 stages:
-  - stage: Build
-    displayName: Build and zip content
-    jobs:
-      - job: Build
-        displayName: Build and Zip content
-        steps:
-          - checkout: self
-          - script: |
-              sudo apt-get -y install zip
-              echo  '$(System.DefaultWorkingDirectory)'
-            displayName: Run script
-
-          # Install NodeJS
-          - task: NodeTool@0
-            inputs:
-              versionSpec: '16.x'
-            displayName: 'Install Node.js'
-
-          - script: |
-              npm install
-            displayName: 'Install NPM packages'
-            workingDirectory: react-app/
-
-          - script: |
-              npm run webpack
-            displayName: 'Build static site with npm'
-            workingDirectory: react-app/
-
-          - task: ArchiveFiles@2
-            inputs:
-              rootFolderOrFile: '$(System.DefaultWorkingDirectory)'
-              includeRootFolder: false
-              archiveType: "zip"
-              archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip"
-              replaceExistingArchive: true
-            displayName: "Archive Files"
-
-          - publish: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip"
-            artifact: $(appName)
-            displayName: "Upload Artifact"
-
   - stage: Release
     displayName: Release
     jobs:
       - job: Release
         displayName: Release
         steps:
-          - task: DownloadPipelineArtifact@2
+          - task: AzureAppServiceSettings@1
+            displayName: Azure App Service Settings
             inputs:
-              buildType: 'current'
-              artifactName: $(appName)
-              targetPath: '$(System.DefaultWorkingDirectory)'
+              azureSubscription: $(azureSubscription)
+              appName: $(appName)
+              # To deploy the settings on a slot, provide slot name as below.
+              # By default, the settings would be applied to the actual Web App (Production slot)
+              # slotName: staging
+              appSettings: |
+                [{
+                  "name": "ALLOWED_HOSTS",
+                  "value": "$(ALLOWED_HOSTS)",
+                  "slotSetting": false
+                },
+                {
+                  "name": "SITE_URL",
+                  "value": "$(SITE_URL)",
+                  "slotSetting": false
+                },
+                {
+                  "name": "CSRF_TRUSTED_ORIGINS",
+                  "value": "$(CSRF_TRUSTED_ORIGINS)",
+                  "slotSetting": false
+                },
+                {
+                  "name": "DB_HOST",
+                  "value": "$(DB_HOST)",
+                  "slotSetting": false
+                },
+                {
+                  "name": "DB_PORT",
+                  "value": "$(DB_PORT)",
+                  "slotSetting": false
+                },
+                {
+                  "name": "DB_NAME",
+                  "value": "$(DB_NAME)",
+                  "slotSetting": false
+                },
+                {
+                  "name": "DB_PASS",
+                  "value": "$(DB_PASS)",
+                  "slotSetting": false
+                },
+                {
+                  "name": "DB_USER",
+                  "value": "$(DB_USER)",
+                  "slotSetting": false
+                },
+                {
+                  "name": "DB_SSL_ENABLED",
+                  "value": "$(DB_SSL_ENABLED)",
+                  "slotSetting": false
+                }]
 
           # https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/azure-rm-web-app-deployment-v4
           - task: AzureRmWebAppDeployment@4
             inputs:
               ConnectionType: 'AzureRM'
               azureSubscription: '$(azureSubscription)'
-              appType: 'webAppLinux'
+              appType: 'webAppContainer'
               WebAppName: '$(appName)'
               deployToSlotOrASE: true
               ResourceGroupName: '$(webAppResourceGroupName)'
               SlotName: 'production'
-              packageForLinux: '$(System.DefaultWorkingDirectory)/$(Build.BuildId).zip'
-              RuntimeStack: '$(runtimeStack)'
-              StartupCommand: >-
-                python -m pip install -r requirements.txt &&
-                python manage.py migrate &&
-                gunicorn --bind=0.0.0.0:8000 --access-logfile '-' --log-level=debug iasc.wsgi
-              AppSettings: >-
-                -SCM_DO_BUILD_DURING_DEPLOYMENT "true"
-                -ENABLE_ORYX_BUILD "true"
-                -ALLOWED_HOSTS "$(allowedHosts)"
-                -SITE_URL "https://$(allowedHosts)"
-                -CSRF_TRUSTED_ORIGINS "https://$(allowedHosts)"
-                -DB_HOST "$(DB_HOST)"
-                -DB_PORT "$(DB_PORT)"
-                -DB_NAME "$(DB_NAME)"
-                -DB_PASS "$(DB_PASS)"
-                -DB_USER "$(DB_USER)"
-                -DB_SSL_ENABLED "$(DB_SSL_ENABLED)"
-              ScriptType: 'Inline Script'
-              InlineScript: |
-                export PATH=$PATH:/opt/python/latest/bin/:/usr/local/.rbenv/bin:/opt/nodejs/lts/bin:/opt/dotnet/lts:/opt/python/latest/bin:/opt/php/lts/bin:/opt/php-composer:/opt/nodejs/9/bin
-                echo "Working directory is $(pwd)"
-                export WORKDIR=$(pwd)
-                whereis python
-                echo "python is $(python --version) in $(which python)"
-                echo "python3.8 is $(python3.8 --version) in $(which python3.8)"
-                ls /opt/python/
-                echo "\$PYTHONPATH is $PYTHONPATH"
-                echo "\$PATH is $PATH"
-                echo "Creating virtual environment:"
-                python3.8 -m venv venv
-                chmod +x ./venv/bin/activate
-                echo "Activating virtual environment:"
-                . ./venv/bin/activate
-                echo "python is now $(python --version) in $(which python)"
-                echo "Install requirements..."
-                python -m pip install -r requirements.txt
+              DockerNamespace: $(DOCKER_REGISTRY_SERVER_URL)
+              DockerRepository: $(imageRepository)
+              DockerImageTag: 'latest'
+
+          - task: AzureAppServiceManage@0
+            inputs:
+              azureSubscription: $(azureSubscription)
+              Action: 'Restart Azure App Service'
+              WebAppName: $(appName)
