@@ -1,0 +1,35 @@
+.thankyou--container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.thankyou {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 700px;
+  height: 600px;
+  margin: 2rem;
+  padding: 2rem 4rem 6rem;
+  text-align: left;
+  border: 2px solid rgba(51, 51, 51, 1);
+  background-color: #eeecec;
+  border-radius: 5px;
+}
+
+@media screen and (max-width: 450px) {
+  .thankyou--title {
+    font-size: 2rem;
+    -webkit-line-clamp: 3;
+    margin-top: 2rem;
+  }
+  .thankyou--para {
+    padding: 0;
+    margin: 0;
+    font-size: 1.3rem;
+  }
+}

@@ -1,0 +1,41 @@
+.ethics--container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.ethics--content p,
+ol,
+ul {
+  margin-top: 1rem;
+}
+
+.ethics--content li {
+  margin-left: 2rem;
+  margin-top: 0.5rem;
+}
+
+.ethics-content h3 {
+  padding: 1rem;
+}
+
+.ethics--content {
+  margin-bottom: 5rem;
+  width: 80%;
+}
+
+@media (max-width: 450px) {
+  .ethics--container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+  }
+
+  .ethics {
+    margin-bottom: 5rem;
+    width: 80%;
+  }
+}

@@ -1,0 +1,45 @@
+.footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 10bh;
+}
+
+.footer ul {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.footer li {
+  list-style: none;
+  margin-left: 1rem;
+}
+
+.footer li a {
+  font-weight: 500;
+  letter-spacing: -0.05em;
+  padding: 1rem;
+  color: #333;
+  text-decoration: none;
+}
+
+.footer p {
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -0.05em;
+}
+
+.footer li a:hover {
+  color: rgba(51, 51, 51, 0.7); /* Change the color to 70% visibility */
+}
+
+@media (max-width: 450px) {
+  .footer p {
+    padding-left: 1rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+}
