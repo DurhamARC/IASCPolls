@@ -57,6 +57,11 @@ stages:
               # slotName: staging
               appSettings: |
                 [{
+                  "name": "WEBSITES_PORT",
+                  "value": 8000,
+                  "slotSetting": false
+                },
+                {
                   "name": "ALLOWED_HOSTS",
                   "value": "$(ALLOWED_HOSTS)",
                   "slotSetting": false
