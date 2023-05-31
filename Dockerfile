@@ -99,7 +99,7 @@ RUN apt-get update -q && \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy /venv from the previous stage:
-COPY --from=build_node /app/frontend/static/frontend /app/frontend/static/frontend
+COPY --from=build_node /app/frontend/static/dist /app/frontend/static/dist
 COPY --from=build_node /app/react-app/webpack-stats.json /app/react-app/webpack-stats.json
 COPY --from=build_python /venv /venv
 ENV PATH /opt/conda/bin:$PATH
