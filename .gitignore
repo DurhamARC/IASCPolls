@@ -134,10 +134,14 @@ dmypy.json
 
 # Node
 node_modules/
-/frontend/static/frontend/
-/frontend/static/dist/
 webpack-stats.json
 /react-app/stats.json
+
+# Django
+/frontend/static/frontend/
+/frontend/static/dist/
+/frontend/static/admin/
+/frontend/static/rest_framework/
 
 # OSX
 .DS_Store
