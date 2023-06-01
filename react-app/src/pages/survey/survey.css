@@ -220,7 +220,6 @@
   padding-left: 5rem !important;
 }
 
-
 @media screen and (max-width: 768px) {
   .poll--box {
     width: 95%;
@@ -236,6 +235,7 @@
     margin-right: 0rem;
     border: #d9d1d3;
     height: 80vh;
+    margin-bottom: 1rem;
   }
   .poll--box {
     width: 95%;
