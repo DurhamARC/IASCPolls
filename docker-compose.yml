@@ -2,12 +2,14 @@ version: '3.6'
 
 services:
   iasc:
+#    image: durhamarc/iasc:latest
     build:
       context: .
       target: iasc
     restart: on-failure
     ports:
-      - "127.0.0.1:5000:5000/tcp"
+      - "127.0.0.1:8080:8080/tcp"
+      - "127.0.0.1:2222:2222/tcp"
     env_file:
       - .env
     depends_on:

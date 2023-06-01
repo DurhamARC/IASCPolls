@@ -84,21 +84,3 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-
-  build:
-    name: Call Azure Pipelines Build
-    needs: test
-    runs-on: ubuntu-latest
-
-    # Only run for Release or Main branches, and NOT PRs
-    if: |
-      contains('refs/heads/main refs/heads/release', github.ref)
-      && github.event_name != 'pull_request'
-
-    steps:
-      - name: Azure Pipelines Action
-        uses: Azure/pipelines@v1.2
-        with:
-          azure-pipeline-name: DurhamARC.IASCPolls
-          azure-devops-project-url: ${{ secrets.AZURE_DEVOPS_URL }}
-          azure-devops-token: ${{ secrets.AZURE_DEVOPS_TOKEN }}

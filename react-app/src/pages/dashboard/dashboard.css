@@ -142,6 +142,8 @@
   width: 100%;
   align-items: center;
   text-align: center;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .dashboard--question--table tr {
