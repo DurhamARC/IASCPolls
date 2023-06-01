@@ -74,6 +74,7 @@
   .site-title {
     height: 20vw;
     padding: 0;
+    padding-top: 3vw;
   }
 
   .site-title a {
@@ -81,7 +82,7 @@
   }
 
   .nav-logo {
-    background-size: 15vw;
+    background-size: 20vw;
     width: 100vw;
   }
 
