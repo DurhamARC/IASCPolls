@@ -20,12 +20,12 @@ function Home() {
         </div>
       </div>
 
-      <div className="container home--eyecatching">
+      <div className="container home--ethics--container">
         <div className="home">
           <div className="home-pic-2" />
         </div>
         <div className="home">
-          <div className="home--eyecatching--content">
+          <div className="home--ethics--content">
             <h1>Ethics and Anonymisation</h1>
             <h2>
               We are committed to guaranteeing the anonymity of all survey
@@ -40,7 +40,7 @@ function Home() {
         </div>
       </div>
 
-      <div className="container home--about">
+      <div className="container home--about--container">
         <div className="home-pic-3">
           <div className="home--about--overlay">
             <div className="home--about--text">
