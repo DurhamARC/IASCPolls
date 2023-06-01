@@ -8,9 +8,8 @@
 }
 
 .home--container {
-  display: flex;
   flex-direction: row;
-  height: 70vh;
+  height: 50vw;
 }
 
 .home {
@@ -48,16 +47,16 @@
   }
 }
 
-.home--eyecatching {
+.home--ethics--container {
   display: flex;
   flex-direction: row;
   background-color: #ffa500;
   align-items: center;
   padding: 2vw;
-  height: 80vh;
+  height: 60vw;
 }
 
-.home--eyecatching div {
+.home--ethics--container div {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -65,7 +64,7 @@
   margin-left: 2vw;
 }
 
-.home--eyecatching h2 {
+.home--ethics--container h2 {
   font-size: 1.6vw;
   font-weight: 500;
   color: #ffffff;
@@ -73,7 +72,7 @@
   margin-bottom: 2vw;
 }
 
-.home--eyecatching h1 {
+.home--ethics--container h1 {
   color: #ffffff;
   font-size: 4vw;
   margin-bottom: 2vw;
@@ -88,11 +87,11 @@
   background-size: 30vw;
 }
 
-.container.home--about {
+.home--about--container {
   position: relative;
   margin-bottom: 2vw;
   background-color: rgba(255, 192, 86, 0.5);
-  height: 80vh;
+  height: 60vw;
 }
 
 .home-pic-3 {
@@ -149,59 +148,64 @@
 @media (max-width: 450px) {
   .home--container {
     flex-direction: column;
-    justify-content: flex-start;
-    height: auto;
-    padding: 0;
+    height: 40vh;
   }
-  .home--title {
-    padding: 1rem;
-  }
-
-  .home-pic {
-    width: 100%;
-    height: 50vh;
-  }
-
-  .home--eyecatching {
-    height: auto;
-    padding: 2vw;
-  }
-  .home--eyecatching h1 {
-    height: auto;
-    font-size: 2rem;
-    padding: 0;
-  }
-
-  .home--eyecatching h2 {
-    padding-left: 0;
-    font-size: 1rem;
-  }
-
-  .home-pic-2 {
-    background-size: contain;
-  }
-
-  .home-pic-3 {
-    background-size: 10rem;
-    padding: 5rem;
-  }
-
-  .home--about {
-    height: auto;
+  .home--ethics--container {
+    height: 100vh;
     flex-direction: column;
-    padding: 1rem;
-    padding-top: 4rem;
   }
-  .home-pic {
-    background-size: 20rem;
+  .home--ethics--content {
+    height: 10vh;
+    flex-direction: column;
   }
 
-  .home--about h3 {
-    font-size: 1rem;
+  .home--about--container {
+    height: 100vh;
+  }
+  .home {
+    width: 100%;
+  }
+  .home div {
+    width: 100%;
+    height: 100%;
+    align-items: center;
+  }
+
+  .home--title {
+    padding: 0;
+    width: 90%;
+    font-size: 3rem;
   }
 
   .home--button {
+    width: 100%;
+  }
+  .home--about--text h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1vw;
+  }
+
+  .home--about--text h3 {
     font-size: 1rem;
-    padding-bottom: 1rem;
+    margin-bottom: 2vw;
+  }
+
+  .home-pic-2 {
+    background-size: 70vw;
+    height: 10vw;
+  }
+  .home--pic--3 {
+    background-size: 10vw;
+  }
+  .home--ethics--container h1 {
+    font-size: 2rem;
+  }
+  .home--ethics--container h2 {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #ffffff;
+    margin-top: 1vw;
+    margin-bottom: 2vw;
   }
 }

@@ -216,16 +216,17 @@
 }
 
 @media screen and (max-width: 450px) {
-  .poll--box {
-    width: 95%;
-    margin-top: 1rem;
-    height: none;
-  }
   .poll {
     padding: 0rem;
     margin-left: 0rem;
     margin-right: 0rem;
     border: #d9d1d3;
+    height: 80vh;
+  }
+  .poll--box {
+    width: 95%;
+    margin-top: 1rem;
+    height: 75vh;
   }
   .poll--total {
     height: auto;
@@ -251,5 +252,6 @@
   }
   .poll--options li {
     flex-direction: row;
+    padding: 1rem;
   }
 }
