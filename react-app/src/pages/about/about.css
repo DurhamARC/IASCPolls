@@ -9,6 +9,49 @@
   width: 80%;
 }
 
+.about h1 {
+  padding: 3rem 0rem 0rem 0rem;
+}
+
+.about p,
+ol,
+ul,
+h2,
+h4 {
+  margin-top: 1rem;
+}
+
+.about h2 {
+  margin-bottom: 0rem;
+  padding: 0rem;
+  padding-top: 1rem;
+}
+
+.about h3 {
+  margin-top: 0rem;
+}
+
+.about h4 {
+  font-size: 1.2rem;
+}
+
+.about li {
+  margin-left: 2rem;
+  margin-top: 0.5rem;
+}
+
+.about {
+  margin-bottom: 5rem;
+  width: 80%;
+}
+
+.about--question {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 0rem 1rem 1rem 1rem;
+}
+
 @media (max-width: 450px) {
   .about--container {
     display: flex;

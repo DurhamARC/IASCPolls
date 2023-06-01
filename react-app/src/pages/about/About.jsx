@@ -10,11 +10,12 @@ export default function About() {
         <NavBar />
         <div className="about">
           <h1>About</h1>
-          <h2>Long-term, 2024-30 and beyond</h2>
+          <h2>Long-term</h2>
+          <h3>2024-30 and beyond</h3>
           <p>
             We aim to set up a hub-and-spoke, international network
-            provisionally titled ‘The Institute for Ascertaining Scientific
-            Consensus’ (IASC). IASC will be capable of emailing &gt;100,000
+            provisionally titled ‘the Institute for Ascertaining Scientific
+            Consensus’ (IASC). IASC will be capable of emailing over 100,000
             scientists, asking for an agree/disagree response regarding a
             specific statement of interest, a candidate scientific fact such as
             ‘Covid is caused by a virus’. Emails will be sent internally within
@@ -34,7 +35,8 @@ export default function About() {
             things differently.
           </p>
 
-          <h2>Pilot project, 2022-23</h2>
+          <h2>Pilot Project</h2>
+          <h3>2022-23</h3>
           <p>
             During 2022-23 a miniature version of IASC is operating out of
             Durham University, UK, led by Professor Peter Vickers. The
@@ -86,10 +88,15 @@ export default function About() {
             iron out any teething problems with the methodology and ICT
             architecture. The current front-runner is:
           </p>
-          <h3>
-            Science has put it beyond reasonable doubt that COVID-19 is caused
-            by a virus.
-          </h3>
+
+          <div className="about--question">
+            <h4>
+              <i>
+                Science has put it beyond reasonable doubt that COVID-19 is
+                caused by a virus.
+              </i>
+            </h4>
+          </div>
           <p>
             The second statement to be tested is yet to be decided. Amongst the
             huge variety of options are the following:
@@ -106,12 +113,12 @@ export default function About() {
               factor.
             </li>
           </ul>
-
-          <h2>
+          <h2>Advisory Boards</h2>
+          <p>
             The project has two advisory boards. The first consists of a group
             of experts who will periodically advise on overall project strategy:
-          </h2>
-          <h3>Advisory Board (project strategy)</h3>
+          </p>
+          <h3>Project Strategy Advisory Board</h3>
           <ol>
             <li>
               Steve Lewandowsky (Chair in Cognitive Psychology, Bristol, UK)
@@ -159,7 +166,7 @@ export default function About() {
             international rollout:
           </p>
 
-          <h3>Advisory Board (scientists):</h3>
+          <h3>Scientific Advisory Board:</h3>
 
           <ol>
             <li>Jim Al-Khalili (Professor, Theoretical Physics, Surrey, UK)</li>
@@ -320,10 +327,11 @@ export default function About() {
             </li>
           </ol>
 
-          <h2>
-            Method, including advantages over currently available
-            state-of-the-art methodologies
-          </h2>
+          <h2>Methodology</h2>
+          <h4>
+            Including advantages over currently available state-of-the-art
+            methodologies
+          </h4>
           <p>
             The vast majority of methodologies currently being used to survey
             scientists fail to meet any of the following three criteria, all of
@@ -387,17 +395,17 @@ export default function About() {
             rate (&gt;75%) might well be achieved.
           </p>
 
-          <h2>Objections and replies</h2>
+          <h2>Objections and Replies</h2>
           <p>
             A few possible objections to the proposed programme, and initial
             responses, are as follows:
           </p>
 
-          <h3>
+          <h4>
             The programme will only appeal to ‘realists’, who are predisposed to
             accept that science delivers truths/facts about our world. But there
             are many non-realists, who would reject this.
-          </h3>
+          </h4>
           <p>
             The so-called ‘scientific realism/antirealism debate’ concerns
             knowledge of unobservables. In fact, nearly all non-realists do
@@ -408,7 +416,7 @@ export default function About() {
             monograph, Identifying Future-Proof Science (OUP 2022).
           </p>
 
-          <h3>Many scholars reject the link between consensus and truth</h3>
+          <h4>Many scholars reject the link between consensus and truth</h4>
           <p>
             First: There are different kinds, and strengths, of ‘consensus’. Few
             scholars would dispute that truth can be accessed via an absolutely
@@ -424,10 +432,10 @@ export default function About() {
             connection between ‘consensus’ and ‘truth’.
           </p>
 
-          <h3>
+          <h4>
             Targeted scientists would soon become fatigued, and the process
             would collapse
-          </h3>
+          </h4>
           <p>
             The network would constantly be shifting. Fatigue at an institution
             in the network would be monitored via the return rate of the
@@ -435,7 +443,7 @@ export default function About() {
             the network would perpetually be added.
           </p>
 
-          <h3>Often, the pool of ‘relevant scientists’ would be very small</h3>
+          <h4>Often, the pool of ‘relevant scientists’ would be very small</h4>
           <p>
             Precisely how ‘relevant scientists’ would be selected is something
             that would be worked out as the project developed. Initially, the
@@ -458,10 +466,10 @@ export default function About() {
             reliably to some scientific statements.
           </p>
 
-          <h3>
+          <h4>
             Any ‘Institute for Scientific Consensus’ wouldn’t influence the
             public very much
-          </h3>
+          </h4>
           <p>
             Research shows that consensus announcements have great power to
             influence; e.g. Bartoš et al. (2022), ‘Communicating doctors’

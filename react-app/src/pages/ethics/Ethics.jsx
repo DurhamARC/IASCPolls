@@ -114,10 +114,12 @@ export default function Ethics() {
                 each targeted scientist, and the server records which links have
                 been used by deleting them as they are used. (N.B. Even during
                 these two weeks there is no way to link a participant with their
-                vote, since this information isn’t recorded by IASC. A rare
+                vote, since this information isn’t recorded by IASC. A possible
                 edge-case exception is when all participants respond in the same
                 way. In that case, knowing if a scientist voted is sufficient to
-                know how they voted.)
+                know how they voted. However, with our expected response rate
+                and the number of targeted scientists, this is an unlikely
+                scenario).
               </p>
               <p>
                 However, various exemptions are listed in the Freedom of
