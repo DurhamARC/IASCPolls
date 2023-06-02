@@ -1,9 +1,13 @@
 .thankyou--container {
-  height: 100vh;
+  height: auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.thankyou--container .container {
+  height: 80vh;
 }
 
 .thankyou {
@@ -12,7 +16,7 @@
   align-items: center;
   justify-content: center;
   width: 700px;
-  height: 600px;
+  height: 500px;
   margin: 2rem;
   padding: 2rem 4rem 6rem;
   text-align: left;

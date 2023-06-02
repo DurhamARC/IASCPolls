@@ -4,12 +4,21 @@ import Symbol from "./Symbol";
 function Table({ data, updateData }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
+  const [filter, setFilter] = useState("all"); // Added state for the filter
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
 
-  const totalPages = Math.ceil(data.length / itemsPerPage);
+  // Filter the data based on the selected filter
+  let filteredData = data;
+  if (filter === "active") {
+    filteredData = data.filter((row) => row.active);
+  } else if (filter === "inactive") {
+    filteredData = data.filter((row) => !row.active);
+  }
+
+  const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
@@ -23,8 +32,38 @@ function Table({ data, updateData }) {
     }
   };
 
+  const handleFilterChange = (newFilter) => {
+    setFilter(newFilter);
+    setCurrentPage(1); // Reset the current page when the filter changes
+  };
+
   return (
     <div className="dashboard--overview--questions">
+      <div className="dashboard--overview-active">
+        <div className="dashboard--overview-active-box">
+          <button
+            type="button"
+            className={`filter-button ${filter === "all" ? "active" : ""}`}
+            onClick={() => handleFilterChange("all")}
+          >
+            all
+          </button>
+          <button
+            type="button"
+            className={`filter-button ${filter === "active" ? "active" : ""}`}
+            onClick={() => handleFilterChange("active")}
+          >
+            active
+          </button>
+          <button
+            type="button"
+            className={`filter-button ${filter === "inactive" ? "active" : ""}`}
+            onClick={() => handleFilterChange("inactive")}
+          >
+            inactive
+          </button>
+        </div>
+      </div>
       <table className="dashboard--question--table">
         <thead>
           <tr>
