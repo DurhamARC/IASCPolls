@@ -49,7 +49,7 @@
 .nav-logo {
   height: 7vh;
   width: 10vw;
-  background-image: url("../../imgs/logo.png");
+  background-image: url("../../imgs/min/logo.svg");
   background-size: 14vh;
   background-repeat: no-repeat;
   z-index: 999;
