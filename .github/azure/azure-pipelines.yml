@@ -44,6 +44,13 @@ stages:
       - job: Release
         displayName: Release
         steps:
+          - script: |
+              commitHash=${sourceVersion:0:8}
+              echo ${imageRepository}:${commitHash}
+              echo "##vso[task.setvariable variable=commitHash]$commitHash"
+            env: { sourceVersion: $(Build.SourceVersion) }
+            displayName: Git Hash 8-digit
+
           # https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/azure-rm-web-app-deployment-v4
           - task: AzureRmWebAppDeployment@4
             inputs:
@@ -54,7 +61,8 @@ stages:
               WebAppName: '$(appName)'
               DockerNamespace: $(DOCKER_REGISTRY_SERVER_URL)
               DockerRepository: $(imageRepository)
-              DockerImageTag: 'latest'
+              # commitHash defined in above script.
+              DockerImageTag: $(commitHash)
               AppSettings: >-
                 -ALLOWED_HOSTS "$(ALLOWED_HOSTS)"
                 -SITE_URL "$(SITE_URL)"
