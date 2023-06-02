@@ -82,30 +82,35 @@ export default function Dashboard() {
       <NavBar />
       <div className="dashboard" ref={dashboardRef}>
         <div className="dashboard--overview">
-          <div>
-            <button
-              type="button"
-              onClick={createNew}
-              className="button dashboard--button"
-            >
-              <div>
-                <span className="material-symbols-outlined">edit_square</span>
-              </div>
-              <div>Create</div>
-            </button>
+          <div className="create-add-container">
+            <div>
+              <button
+                type="button"
+                onClick={createNew}
+                className="button dashboard--button"
+              >
+                <div>
+                  <span className="material-symbols-outlined">edit_square</span>
+                </div>
+                <div>Create</div>
+              </button>
+            </div>
+            <div>
+              <button
+                type="button"
+                onClick={openAddParticipants}
+                className="button dashboard--button"
+              >
+                <div>
+                  <span className="material-symbols-outlined">
+                    contact_page
+                  </span>
+                </div>
+                <div>Add Participants</div>
+              </button>
+            </div>
           </div>
-          <div>
-            <button
-              type="button"
-              onClick={openAddParticipants}
-              className="button dashboard--button"
-            >
-              <div>
-                <span className="material-symbols-outlined">contact_page</span>
-              </div>
-              <div>Add Participants</div>
-            </button>
-          </div>
+          <div className="pie-chart">Put a pie chart here</div>
         </div>
         <div className="dashboard--projects">
           {showCreateContainer && (

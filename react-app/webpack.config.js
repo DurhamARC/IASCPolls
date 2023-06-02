@@ -32,11 +32,9 @@ module.exports = {
       },
       {
         test: /\.(jpe?g|png|gif|svg|webp)$/i,
-        use: {
-          loader: "url-loader",
-          options: {
-            limit: 25000,
-          },
+        type: "asset/resource",
+        generator: {
+          filename: "./img/[name]-[hash][ext]",
         },
       },
     ],

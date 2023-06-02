@@ -2,10 +2,10 @@ import React from "react";
 import NavBar from "../../components/nav/NavBar";
 import Footer from "../../components/footer/Footer";
 import "./home.css";
-import mobileFrontPage from "../../imgs/mobile-front-page.png";
-import frontPageComp from "../../imgs/balance.png";
-import frontPageScientists from "../../imgs/scientists-shaking-hands.png";
-import magnifyingGlassScientistsBackground from "../../imgs/magnifying-glass-scientists-background.png";
+import mobileFrontPage from "../../imgs/min/mobile-front-page.webp";
+import frontPageComp from "../../imgs/min/balance.svg";
+import frontPageScientists from "../../imgs/min/scientists-shaking-hands.webp";
+import magnifyingGlassScientistsBackground from "../../imgs/min/magnifying-glass-scientists-background.webp";
 
 function Home() {
   const isMobile = window.innerWidth <= 768; // Check if the window width is less than or equal to 768px

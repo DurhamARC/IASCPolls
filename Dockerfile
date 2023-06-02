@@ -94,7 +94,7 @@ ENV SSL_CERT_FILE /etc/ssl/certs/ca-certificates.crt
 # Replicate environment from miniconda image
 RUN apt-get update -q && \
     apt-get install -q -y --no-install-recommends \
-        openssh-server ca-certificates \
+        nginx openssh-server ca-certificates \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -115,9 +115,11 @@ RUN echo "Make sure django is installed:" && \
 
 # ssh
 ENV SSH_PASSWD "root:Docker!"
-ENV SSH_PORT 2222
 RUN echo "$SSH_PASSWD" | chpasswd
 COPY conf/sshd_config /etc/ssh/
+
+# nginx
+COPY conf/subsite.conf /etc/nginx/sites-available/default
 
 COPY iasc ./iasc
 COPY frontend ./frontend
@@ -125,8 +127,6 @@ COPY manage.py .
 COPY conf/init.sh /usr/local/bin/
 RUN chmod u+x /usr/local/bin/init.sh
 
-ENV SERVICE_PORT=8080
-ENV BIND_ADDRESS=0.0.0.0:$SERVICE_PORT
 EXPOSE 8080 2222
 
 # The code to run when container is started:
