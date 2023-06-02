@@ -10,6 +10,7 @@
   top: 0;
   left: 0;
   border-bottom: 2px solid #b8bcc5;
+  padding: 0 2rem 0 2rem;
 }
 
 .nav ul {
@@ -28,7 +29,6 @@
   padding: 1rem;
   text-decoration: none;
   border-bottom: none;
-  margin-right: 1rem;
 }
 
 .nav a:hover {
@@ -41,7 +41,7 @@
 }
 
 .nav li a {
-  font-size: 1.3rem;
+  font-size: 1.5rem; /* Increased font size for better readability */
   font-weight: 700;
   letter-spacing: -0.05em;
 }
@@ -58,27 +58,41 @@
 }
 
 .site-title {
-  padding-left: 6vw;
+  padding-left: 1rem;
 }
 
-@media screen and (max-width: 450px) {
-  html,
-  body {
-    margin: 0;
-    padding: 0;
-  }
-
+@media screen and (max-width: 768px) {
   .nav {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     padding: 0;
     width: 100vw;
   }
 
-  .nav li {
-    display: none;
+  .site-title {
+    height: 20vw;
     padding: 0;
+    padding-top: 3vw;
+  }
+
+  .site-title a {
+    padding: 0;
+  }
+
+  .nav-logo {
+    background-size: 20vw;
+    width: 100vw;
+  }
+
+  .nav li {
+    padding: 0;
+    margin-bottom: 1rem;
+  }
+
+  .nav li a {
+    font-size: 4vw;
   }
 
   .site-title {

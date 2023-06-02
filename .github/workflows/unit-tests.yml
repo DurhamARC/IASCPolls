@@ -1,5 +1,12 @@
 name: Unit Tests
-on: [push, pull_request]
+on:
+  push:
+    paths:
+      - 'iasc/**/*'
+      - 'frontend/**/*'
+  pull_request:
+    types:
+      - opened
 
 jobs:
   test:
