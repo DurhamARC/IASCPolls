@@ -7,9 +7,10 @@ module.exports = {
     frontend: "./src/index.jsx",
   },
   output: {
-    path: path.resolve("../frontend/static/frontend/"),
-    filename: "[name]-[hash].js",
-    publicPath: "static/frontend/",
+    filename: "[name]-[chunkhash].js",
+    chunkFilename: "[name]-[chunkhash].bundle.js",
+    path: path.resolve("../frontend/static/dist/"),
+    publicPath: "static/dist/",
   },
   plugins: [
     new CleanWebpackPlugin(),
@@ -29,6 +30,13 @@ module.exports = {
         test: /\.css$/,
         use: ["style-loader", "css-loader"],
       },
+      {
+        test: /\.(jpe?g|png|gif|svg|webp)$/i,
+        type: "asset/resource",
+        generator: {
+          filename: "./img/[name]-[hash][ext]",
+        },
+      },
     ],
   },
   resolve: {
@@ -40,6 +48,16 @@ module.exports = {
         reactVendor: {
           test: /[\\/]node_modules[\\/](react|react-dom|react-router-dom)[\\/]/,
           name: "vendor-react",
+          chunks: "all",
+        },
+        axios: {
+          test: /[\\/]node_modules[\\/](axios)[\\/]/,
+          name: "axios",
+          chunks: "all",
+        },
+        reactSelect: {
+          test: /[\\/]node_modules[\\/](react-select)[\\/]/,
+          name: "react-select",
           chunks: "all",
         },
       },

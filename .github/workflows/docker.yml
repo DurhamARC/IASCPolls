@@ -2,20 +2,25 @@
 name: Build Docker Images
 
 on:
-  workflow_run:
-    workflows: [Unit Tests]
-    types:
-      - completed
+  push:
+    branches:
+     - 'main'
+     - 'release'
+
+#  workflow_run:
+#    workflows: [Unit Tests]
+#    types:
+#      - completed
 
 env:
   DOCKERHUB_REPO: durhamarc/iasc
 
 jobs:
   docker:
-    if: |
-      github.event.workflow_run.conclusion == 'success'
-      && contains('refs/heads/main refs/heads/release', github.ref)
-      && github.event_name != 'pull_request'
+#    if: |
+#      github.event.workflow_run.conclusion == 'success'
+#      contains('refs/heads/main refs/heads/release', github.ref)
+#      && github.event_name != 'pull_request'
 
     runs-on: ubuntu-latest
     steps:
@@ -41,8 +46,11 @@ jobs:
             ${{ runner.os }}-buildx-
 
       # https://stackoverflow.com/questions/59810838/how-to-get-the-short-sha-for-the-github-workflow
-      - name: Add SHORT_SHA env property with commit short sha
-        run: echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
+      # https://stackoverflow.com/questions/58033366/how-to-get-the-current-branch-within-github-actions
+      - name: Add SHORT_SHA and BRANCH to env
+        run: |
+          echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV \
+          && echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -54,28 +62,12 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           target: iasc
-          tags: ${{ env.DOCKERHUB_REPO }}:latest , ${{ env.DOCKERHUB_REPO }}:${{ env.SHORT_SHA }}
+          tags: >
+            ${{ env.DOCKERHUB_REPO }}:latest , 
+            ${{ env.DOCKERHUB_REPO }}:${{ env.SHORT_SHA }} ,
+            ${{ env.DOCKERHUB_REPO }}:${{ env.BRANCH }}
           cache-from: type=gha,scope=${{ github.workflow }}
           cache-to: type=gha,scope=${{ github.workflow }},mode=max
-
-  release-dev:
-    name: Release to Azure Pipelines Dev
-    needs: docker
-    runs-on: ubuntu-latest
-
-    # Only run for Main branch, and NOT PRs
-    if: |
-      github.ref == 'refs/heads/main'
-      && github.event.workflow_run.conclusion == 'success'
-      && github.event_name != 'pull_request'
-
-    steps:
-      - name: Azure Pipelines Action
-        uses: Azure/pipelines@v1.2
-        with:
-          azure-pipeline-name: DurhamARC.IASCPolls.dev
-          azure-devops-project-url: ${{ secrets.AZURE_DEVOPS_URL }}
-          azure-devops-token: ${{ secrets.AZURE_DEVOPS_TOKEN }}
 
   release-prod:
     name: Release to Azure Pipelines Production
@@ -83,15 +75,32 @@ jobs:
     runs-on: ubuntu-latest
 
     # Only run for Release branch, and NOT PRs
-    if: |
-      github.ref == 'refs/heads/release'
-      && github.event.workflow_run.conclusion == 'success'
-      && github.event_name != 'pull_request'
+    if: github.ref == 'refs/heads/release'
+#      && github.event.workflow_run.conclusion == 'success'
+#      && github.event_name != 'pull_request'
 
     steps:
       - name: Azure Pipelines Action
         uses: Azure/pipelines@v1.2
         with:
           azure-pipeline-name: DurhamARC.IASCPolls
+          azure-devops-project-url: ${{ secrets.AZURE_DEVOPS_URL }}
+          azure-devops-token: ${{ secrets.AZURE_DEVOPS_TOKEN }}
+
+  release-dev:
+    name: Release to Azure Pipelines Dev
+    needs: docker
+    runs-on: ubuntu-latest
+
+    # Only run for Main branch, and NOT PRs
+    if: github.ref == 'refs/heads/main'
+#      && github.event.workflow_run.conclusion == 'success'
+#      && github.event_name != 'pull_request'
+
+    steps:
+      - name: Azure Pipelines Action
+        uses: Azure/pipelines@v1.2
+        with:
+          azure-pipeline-name: DurhamARC.IASCPolls.dev
           azure-devops-project-url: ${{ secrets.AZURE_DEVOPS_URL }}
           azure-devops-token: ${{ secrets.AZURE_DEVOPS_TOKEN }}

@@ -2,11 +2,8 @@
 # Manually triggered from build-azure.yml
 # https://aka.ms/yaml
 
-trigger:
-- none
-
+trigger: none
 pr: none
-
 appendCommitMessageToRunName: true
 
 pool:
@@ -28,7 +25,7 @@ variables:
     
   - name: azureSubscription
     value: 'svc-con-awh-01'
-  - name: webAppResourceGroupName
+  - name: resourceGroupName
     value: 'du-uks-awh-arc-iasc01'
 
   - name: containerRegistryName
@@ -47,74 +44,35 @@ stages:
       - job: Release
         displayName: Release
         steps:
-          - task: AzureAppServiceSettings@1
-            displayName: Azure App Service Settings
-            inputs:
-              azureSubscription: $(azureSubscription)
-              appName: $(appName)
-              # To deploy the settings on a slot, provide slot name as below.
-              # By default, the settings would be applied to the actual Web App (Production slot)
-              # slotName: staging
-              appSettings: |
-                [{
-                  "name": "ALLOWED_HOSTS",
-                  "value": "$(ALLOWED_HOSTS)",
-                  "slotSetting": false
-                },
-                {
-                  "name": "SITE_URL",
-                  "value": "$(SITE_URL)",
-                  "slotSetting": false
-                },
-                {
-                  "name": "CSRF_TRUSTED_ORIGINS",
-                  "value": "$(CSRF_TRUSTED_ORIGINS)",
-                  "slotSetting": false
-                },
-                {
-                  "name": "DB_HOST",
-                  "value": "$(DB_HOST)",
-                  "slotSetting": false
-                },
-                {
-                  "name": "DB_PORT",
-                  "value": "$(DB_PORT)",
-                  "slotSetting": false
-                },
-                {
-                  "name": "DB_NAME",
-                  "value": "$(DB_NAME)",
-                  "slotSetting": false
-                },
-                {
-                  "name": "DB_PASS",
-                  "value": "$(DB_PASS)",
-                  "slotSetting": false
-                },
-                {
-                  "name": "DB_USER",
-                  "value": "$(DB_USER)",
-                  "slotSetting": false
-                },
-                {
-                  "name": "DB_SSL_ENABLED",
-                  "value": "$(DB_SSL_ENABLED)",
-                  "slotSetting": false
-                }]
+          - script: |
+              commitHash=${sourceVersion:0:8}
+              echo ${commitHash}
+              echo "##vso[task.setvariable variable=commitHash]$commitHash"
+            env: { sourceVersion: $(Build.SourceVersion) }
+            displayName: Git Hash 8-digit
 
           # https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/azure-rm-web-app-deployment-v4
           - task: AzureRmWebAppDeployment@4
             inputs:
-              ConnectionType: 'AzureRM'
-              azureSubscription: '$(azureSubscription)'
               appType: 'webAppContainer'
-              WebAppName: '$(appName)'
               deployToSlotOrASE: true
-              ResourceGroupName: '$(webAppResourceGroupName)'
-              SlotName: 'production'
+              ResourceGroupName: '$(resourceGroupName)'
+              azureSubscription: '$(azureSubscription)'
+              WebAppName: '$(appName)'
               DockerNamespace: $(DOCKER_REGISTRY_SERVER_URL)
               DockerRepository: $(imageRepository)
-              DockerImageTag: 'latest'
+              # commitHash defined in above script.
+              DockerImageTag: $(commitHash)
+              AppSettings: >-
+                -ALLOWED_HOSTS "$(ALLOWED_HOSTS)"
+                -SITE_URL "$(SITE_URL)"
+                -CSRF_TRUSTED_ORIGINS "$(CSRF_TRUSTED_ORIGINS)"
+                -DB_HOST "$(DB_HOST)"
+                -DB_PORT "$(DB_PORT)"
+                -DB_NAME "$(DB_NAME)"
+                -DB_PASS "$(DB_PASS)"
+                -DB_USER "$(DB_USER)"
+                -DB_SSL_ENABLED "$(DB_SSL_ENABLED)"
 
           - task: AzureAppServiceManage@0
             inputs:

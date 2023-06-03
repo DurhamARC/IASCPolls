@@ -94,12 +94,12 @@ ENV SSL_CERT_FILE /etc/ssl/certs/ca-certificates.crt
 # Replicate environment from miniconda image
 RUN apt-get update -q && \
     apt-get install -q -y --no-install-recommends \
-        ca-certificates \
+        nginx openssh-server ca-certificates \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy /venv from the previous stage:
-COPY --from=build_node /app/frontend/static/frontend /app/frontend/static/frontend
+COPY --from=build_node /app/frontend/static/dist /app/frontend/static/dist
 COPY --from=build_node /app/react-app/webpack-stats.json /app/react-app/webpack-stats.json
 COPY --from=build_python /venv /venv
 ENV PATH /opt/conda/bin:$PATH
@@ -113,11 +113,21 @@ ENTRYPOINT ["/bin/bash", "--login", "-c"]
 RUN echo "Make sure django is installed:" && \
     python -c "import django"
 
+# ssh
+ENV SSH_PASSWD "root:Docker!"
+RUN echo "$SSH_PASSWD" | chpasswd
+COPY conf/sshd_config /etc/ssh/
+
+# nginx
+COPY conf/subsite.conf /etc/nginx/sites-available/default
+
 COPY iasc ./iasc
 COPY frontend ./frontend
 COPY manage.py .
+COPY conf/init.sh /usr/local/bin/
+RUN chmod u+x /usr/local/bin/init.sh
+
+EXPOSE 8080 2222
 
 # The code to run when container is started:
-CMD ["python manage.py migrate && \
-      gunicorn --timeout=300 --log-file=- --access-logfile '-'\
-        --log-level=debug --bind=0.0.0.0:5000 iasc.wsgi"]
+ENTRYPOINT ["init.sh"]
