@@ -6,6 +6,11 @@ import PollForm from "../../components/SurveyForm";
 import Footer from "../../components/footer/Footer";
 import "./survey.css";
 
+/**
+ * Request Poll page on /poll?survey=1&unique_id=12345
+ * @returns {JSX.Element}
+ * @constructor
+ */
 export default function Poll() {
   const location = useLocation();
   const history = useNavigate();
@@ -18,6 +23,13 @@ export default function Poll() {
 
   useEffect(() => {
     const fetchData = async () => {
+      /*
+        Although we could look up the parameter for the survey from
+        the unique_id directly, requesting the question detail from
+        /api/survey/${surveyId}/ is actually useful as it allows the
+        web server to cache the response, which would not be possible
+        for the unique_id key.
+       */
       try {
         // Make the API call to check if the survey exists
         const response = await axios.get(`/api/survey/${surveyId}/`);
