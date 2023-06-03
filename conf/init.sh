@@ -16,5 +16,6 @@ cd /app
 python manage.py migrate
 python manage.py collectstatic --noinput
 
+# Add `--access-logfile '-' --log-level=debug` for debugging
 gunicorn --workers 3 --timeout=20 \
          --log-file=- --log-level=info --bind=127.0.0.1:5000 iasc.wsgi
