@@ -380,7 +380,9 @@ class ViewsTestCase(HTTPTestCase):
             data = self.helper_get_xls_data(resp.content)
 
             # Check that the Excel sheet returned contains the correct header and no. of rows
-            self.assertEquals(data.pop(0), ["vote", "institution", "discipline"])
+            self.assertEquals(
+                data.pop(0), ["vote", "institution", "discipline", "added"]
+            )
             self.assertEquals(len(data), len(self.flat_test_data))
 
             resp = self.GET(
@@ -407,14 +409,14 @@ class ViewsTestCase(HTTPTestCase):
                 f"/result/zip/?survey={self.survey_id}",
                 self.test_question,
                 "Results",
-                ["survey", "vote", "institution", "discipline"],
+                ["survey", "vote", "institution", "discipline", "added"],
             )
 
             self.helper_test_zipped_sheets(
                 f"/result/zip/",
                 self.test_question,
                 "Results",
-                ["survey", "vote", "institution", "discipline"],
+                ["survey", "vote", "institution", "discipline", "added"],
             )
 
         def test_09_institution_discipline():

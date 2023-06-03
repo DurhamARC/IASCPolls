@@ -118,7 +118,7 @@ class ResultSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Result
-        fields = ["vote", "institution", "discipline"]
+        fields = ["vote", "institution", "discipline", "added"]
 
 
 class MultiLinkSerializer(ActiveLinkSerializer):
@@ -143,5 +143,5 @@ class MultiResultSerializer(ResultSerializer):
         return f"Results-{slugify(filename, allow_unicode=True)}.xlsx"
 
     class Meta:
-        model = models.ActiveLink
-        fields = ["filename", "survey", "vote", "institution", "discipline"]
+        model = models.Result
+        fields = ["filename", "survey", "vote", "institution", "discipline", "added"]
