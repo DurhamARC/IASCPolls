@@ -7,6 +7,7 @@ import Footer from "../../components/footer/Footer";
 import Table from "../../components/DashboardTable";
 import CreateContainer from "../../components/CreateContainer";
 import AddParticipants from "../../components/addparticipants/AddParticipants";
+import PieChart from "../../components/PieChart";
 import { AuthContext } from "../../components/AuthContext";
 import { MessageContext } from "../../components/MessageHandler";
 
@@ -110,7 +111,9 @@ export default function Dashboard() {
               </button>
             </div>
           </div>
-          <div className="pie-chart">Put a pie chart here</div>
+          <div className="pie-chart">
+            <PieChart surveyId={1} />
+          </div>
         </div>
         <div className="dashboard--projects">
           {showCreateContainer && (

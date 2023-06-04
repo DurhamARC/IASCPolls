@@ -204,4 +204,7 @@ ul {
     margin: 8px;
     width: 97%;
   }
+  .dashboard--overview {
+    display: none !important;
+  }
 }

@@ -67,22 +67,22 @@ function Table({ data, updateData }) {
       <table className="dashboard--question--table">
         <thead>
           <tr>
-            <th>Statement</th>
+            <th className="no-mobile">Statement</th>
             <th>ID</th>
             <th>Completed</th>
-            <th>Links</th>
+            <th className="no-mobile">Links</th>
             <th>Expiry</th>
             <th>Active</th>
-            <th>Results</th>
+            <th className="no-mobile">Results</th>
           </tr>
         </thead>
         <tbody>
           {currentItems.map((row) => (
             <tr key={row.id}>
-              <td>{row.question}</td>
+              <td className="no-mobile">{row.question}</td>
               <td>{row.id}</td>
               <td>{Math.round((row.voted * 100) / row.participants)}%</td>
-              <td>
+              <td className="no-mobile">
                 <a href={`/download?pollId=${row.id}`}>
                   <span className="material-symbols-outlined">groups</span>
                 </a>
@@ -99,7 +99,7 @@ function Table({ data, updateData }) {
                   }}
                 />
               </td>
-              <td>
+              <td className="no-mobile">
                 <a href={`/api/result/xls/?survey=${row.id}`}>
                   <span className="material-symbols-outlined">download</span>
                 </a>
