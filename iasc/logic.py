@@ -49,7 +49,7 @@ def xl_disciplines_to_db(disciplines: list):
     disciplines_db = list(d.name for d in Discipline.objects.all())
     to_create = []
     for d in disciplines:
-        d = d.strip()
+        d = d.strip().title()
         if d not in disciplines_db and d not in EXCLUDE_DEPARTMENTS:
             to_create += [Discipline(name=d)]
 
@@ -100,7 +100,7 @@ def parse_excel_sheet_to_db(sheet, **kwargs):
         # Iterate over departments:
         for department in disciplines_xl:
             df = pd.read_excel(xls, department)
-            department = department.strip()
+            department = department.strip().title()
             if department in EXCLUDE_DEPARTMENTS:
                 log.warning(f"Skipping {department} sheet")
                 continue
