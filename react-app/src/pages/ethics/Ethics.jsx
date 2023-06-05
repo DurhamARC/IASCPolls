@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Footer from "../../components/footer/Footer";
-import NavBar from "../../components/nav/NavBar";
 import "./ethics.css";
 
 // menu not working properly
@@ -21,7 +20,6 @@ export default function Ethics() {
   };
   return (
     <div>
-      <NavBar />
       <div className="ethics">
         <div className="ethics--menu">
           {menuItems.map((title, index) => (

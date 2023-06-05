@@ -1,5 +1,4 @@
 import React from "react";
-import NavBar from "../../components/nav/NavBar";
 import Footer from "../../components/footer/Footer";
 import "./home.css";
 import mobileFrontPage from "../../imgs/min/mobile-front-page.webp";
@@ -12,7 +11,6 @@ function Home() {
 
   return (
     <div className="home-all">
-      <NavBar />
       <div className="container home--container">
         <div>
           <div>

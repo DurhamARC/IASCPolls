@@ -1,6 +1,5 @@
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import NavBar from "../../components/nav/NavBar";
 import Footer from "../../components/footer/Footer";
 import "./login.css";
 
@@ -56,7 +55,6 @@ export default function Login() {
 
   return (
     <div className="container login--container">
-      <NavBar />
       <div className="login-box">
         <div className="login--content">
           <div className="login--pic" />

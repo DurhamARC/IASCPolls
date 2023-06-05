@@ -1,5 +1,4 @@
 import React from "react";
-import NavBar from "../../components/nav/NavBar";
 import Footer from "../../components/footer/Footer";
 import "./about.css";
 
@@ -7,7 +6,6 @@ export default function About() {
   return (
     <div>
       <div className="about--container">
-        <NavBar />
         <div className="about">
           <h1>About</h1>
           <h2>Long-term</h2>

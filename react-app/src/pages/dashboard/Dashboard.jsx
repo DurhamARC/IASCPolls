@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import { Navigate } from "react-router-dom";
 import "./dashboard.css";
 import { client } from "../../Api";
-import NavBar from "../../components/nav/NavBar";
 import Footer from "../../components/footer/Footer";
 import Table from "../../components/DashboardTable";
 import CreateContainer from "../../components/CreateContainer";
@@ -80,7 +79,6 @@ export default function Dashboard() {
 
   return (
     <div className="container">
-      <NavBar />
       <div className="dashboard" ref={dashboardRef}>
         <div className="dashboard--overview">
           <div className="create-add-container">

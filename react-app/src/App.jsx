@@ -5,6 +5,7 @@ import "./styles/global.css";
 import { ErrorBoundary } from "react-error-boundary";
 import { AuthProvider } from "./components/AuthContext";
 import { MessageProvider } from "./components/MessageHandler";
+import NavBar from "./components/nav/NavBar";
 import Alert from "./components/Alert";
 
 const Home = lazy(() =>
@@ -53,6 +54,7 @@ function App() {
           <AuthProvider>
             <Suspense fallback={<div>Loading...</div>}>
               <BrowserRouter>
+                <NavBar />
                 <Routes>
                   <Route path="/" element={<Home />} />
                   <Route path="/poll" element={<Poll />} />
