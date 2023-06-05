@@ -43,26 +43,10 @@ export default function Dashboard() {
     });
   }, []);
 
-  const createNew = () => {
-    setShowCreateContainer(true);
-  };
-
-  const closeCreateContainer = () => {
-    setShowCreateContainer(false);
-  };
-
-  const openAddParticipants = () => {
-    setShowAddParticipants(true);
-  };
-
-  const closeAddParticipants = () => {
-    setShowAddParticipants(false);
-  };
-
   const handleClickOutside = (event) => {
     if (dashboardRef.current && !dashboardRef.current.contains(event.target)) {
-      closeCreateContainer();
-      closeAddParticipants();
+      setShowCreateContainer(false);
+      setShowAddParticipants(false);
     }
   };
 
@@ -85,7 +69,9 @@ export default function Dashboard() {
             <div>
               <button
                 type="button"
-                onClick={createNew}
+                onClick={() => {
+                  setShowCreateContainer(true);
+                }}
                 className="button dashboard--button"
               >
                 <div>
@@ -97,7 +83,9 @@ export default function Dashboard() {
             <div>
               <button
                 type="button"
-                onClick={openAddParticipants}
+                onClick={() => {
+                  setShowAddParticipants(true);
+                }}
                 className="button dashboard--button"
               >
                 <div>
@@ -115,10 +103,18 @@ export default function Dashboard() {
         </div>
         <div className="dashboard--projects">
           {showCreateContainer && (
-            <CreateContainer onClose={closeCreateContainer} />
+            <CreateContainer
+              onClose={() => {
+                setShowCreateContainer(false);
+              }}
+            />
           )}
           {showAddParticipants && (
-            <AddParticipants onClose={closeAddParticipants} />
+            <AddParticipants
+              onClose={() => {
+                setShowAddParticipants(false);
+              }}
+            />
           )}
           <Table data={questionDatabase} updateData={updateData} />
         </div>
