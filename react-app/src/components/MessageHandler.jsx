@@ -111,6 +111,8 @@ function MessageProvider({ children }) {
       if (typeof e.response.data === "object") {
         if ("message" in e.response.data) {
           err.message = e.response.data.message;
+        } else if ("detail" in e.response.data) {
+          err.message = e.response.data.detail;
         } else {
           err.message = JSON.stringify(e.response.data);
         }
