@@ -12,9 +12,9 @@ export default function PollForm({ uniqueId }) {
 
   const options = [
     { value: "5", label: "Strongly Disagree" },
-    { value: "4", label: "Weakly Disagree" },
+    { value: "4", label: "Disagree" },
     { value: "3", label: "Neutral" },
-    { value: "2", label: "Weakly Agree" },
+    { value: "2", label: "Agree" },
     { value: "1", label: "Strongly Agree" },
   ];
 
