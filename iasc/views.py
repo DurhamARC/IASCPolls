@@ -399,7 +399,7 @@ class XLSActiveLinkViewSet(mixins.IASCXLSXFileMixin, ActiveLinkViewSet):
     def __init__(self, **kwargs):
         super()
         self.column_header = copy.copy(self.column_header)
-        self.column_header["titles"] = ["Name", "E-mail Address", "Unique Link"]
+        self.column_header["titles"] = ["First Name", "E-mail Address", "Unique Link"]
         self.column_header["column_width"] = [30, 40, 70]
 
 
