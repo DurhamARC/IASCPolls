@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { Navigate } from "react-router-dom";
 import "./dashboard.css";
-import axios from "axios";
+import { client } from "../../Api";
 import NavBar from "../../components/nav/NavBar";
 import Footer from "../../components/footer/Footer";
 import Table from "../../components/DashboardTable";
@@ -22,7 +22,7 @@ export default function Dashboard() {
   const isLocal = process.env.NODE_ENV === "development";
 
   const fetchData = async () => {
-    const response = await axios.get("/api/survey/");
+    const response = await client.get("/api/survey/");
     const questionData = response.data.results;
     setQuestionDatabase(questionData);
   };

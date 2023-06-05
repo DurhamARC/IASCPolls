@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import axios from "axios";
+import { client } from "../Api";
 import { MessageContext } from "./MessageHandler";
 
 export default function Symbol({
@@ -9,9 +9,9 @@ export default function Symbol({
   inactiveSymbol,
   onChange,
 }) {
-  const { pushMessage } = useContext(MessageContext);
+  const { pushMessage, pushError } = useContext(MessageContext);
   const setActive = (active) => {
-    axios
+    client
       .post("/api/survey/close/", {
         survey: surveyId,
       })
@@ -21,7 +21,10 @@ export default function Symbol({
           "All active links deleted.",
           `Survey ${surveyId} closed`,
           "info"
-        );
+        ).catch((error) => {
+          console.error("Error submitting answer:", error);
+          pushError(error);
+        });
         onChange(active);
       });
   };

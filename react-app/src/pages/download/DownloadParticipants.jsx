@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useLocation } from "react-router-dom";
-import axios from "axios";
+import { client } from "../../Api";
 import NavBar from "../../components/nav/NavBar";
 import Footer from "../../components/footer/Footer";
 import { MessageContext } from "../../components/MessageHandler";
@@ -20,8 +20,8 @@ function DownloadParticipants() {
     const fetchData = async () => {
       try {
         const [institutionsResponse, surveyResponse] = await Promise.all([
-          axios.get(`/api/survey/${pollId}/institutions/`),
-          axios.get(`/api/survey/${pollId}/`),
+          client.get(`/api/survey/${pollId}/institutions/`),
+          client.get(`/api/survey/${pollId}/`),
         ]).catch((e) => {
           pushError(e);
         });
@@ -46,9 +46,8 @@ function DownloadParticipants() {
 
   const handleDownloadAll = async () => {
     try {
-      const response = await axios
+      const response = await client
         .get(`/api/links/zip/?survey=${pollId}`, {
-          // THIS IS NOT WORKING WILL NEED TO BE
           responseType: "blob",
         })
         .catch((e) => {
@@ -71,7 +70,7 @@ function DownloadParticipants() {
 
   const handleDownload = async (institution) => {
     try {
-      const response = await axios.get("/api/links/xls/", {
+      const response = await client.get("/api/links/xls/", {
         responseType: "blob",
         params: {
           survey: pollId,

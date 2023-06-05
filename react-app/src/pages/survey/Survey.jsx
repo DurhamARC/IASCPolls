@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { client } from "../../Api";
 import NavBar from "../../components/nav/NavBar";
 import PollForm from "../../components/SurveyForm";
 import Footer from "../../components/footer/Footer";
@@ -32,7 +32,7 @@ export default function Poll() {
        */
       try {
         // Make the API call to check if the survey exists
-        const response = await axios.get(`/api/survey/${surveyId}/`);
+        const response = await client.get(`/api/survey/${surveyId}/`);
         const surveyData = response.data;
 
         if (surveyData) {

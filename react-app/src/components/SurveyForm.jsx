@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { client } from "../Api";
 
 import { MessageContext } from "./MessageHandler";
 
@@ -23,22 +23,23 @@ export default function PollForm({ uniqueId }) {
     setOptionSelected(true);
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
     if (selectedOption !== "") {
-      try {
-        const data = {
-          unique_id: uniqueId,
-          vote: parseInt(selectedOption, 10),
-        };
+      const data = {
+        unique_id: uniqueId,
+        vote: parseInt(selectedOption, 10),
+      };
 
-        axios.post("/api/vote/", data).then(() => {
+      await client
+        .post("/api/vote/", data)
+        .then(() => {
           navigate("/thankyou");
+        })
+        .catch((error) => {
+          console.error("Error submitting answer:", error);
+          pushError(error);
         });
-      } catch (error) {
-        console.error("Error submitting answer:", error);
-        pushError(error);
-      }
     } else {
       alert("Please select an option.");
     }

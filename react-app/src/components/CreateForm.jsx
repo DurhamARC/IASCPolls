@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
-import axios from "axios";
 
+import { client } from "../Api";
 import { MessageContext } from "./MessageHandler";
 
 function getDatePlusMonth() {
@@ -45,7 +45,7 @@ function CreateForm({
       expiry: endDate,
     };
 
-    await axios
+    await client
       .post("/api/survey/create/", data)
       .then(() => {
         setSurveyDetails(event);

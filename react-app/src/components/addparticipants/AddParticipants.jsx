@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import CreateableSelect from "react-select/creatable";
-import axios from "axios";
+import { client, API } from "../../Api";
 import { MessageContext } from "../MessageHandler";
-import { API } from "../../Api";
 
 /**
  * Display loading bar while participants file uploading
@@ -180,7 +179,7 @@ function AddParticipants({ onClose }) {
       formData.append("file", file);
       formData.append("institution", institution);
 
-      await axios.post("/api/participants/upload/", formData, {
+      await client.post("/api/participants/upload/", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
