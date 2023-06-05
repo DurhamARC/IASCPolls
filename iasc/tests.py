@@ -59,6 +59,7 @@ class ViewsTestCase(HTTPTestCase):
 
         self.test_question = "Were the dish and the spoon complicit in the cow's crime?"
         self.test_institution = "Test University"
+        self.sheet_header = ["First Name", "E-mail Address", "Unique Link"]
 
         self.links = None
         self.survey_id = None
@@ -76,8 +77,7 @@ class ViewsTestCase(HTTPTestCase):
         logged_in = self.client.login(username=self.username, password=self.password)
         self.assertTrue(logged_in)
 
-    @staticmethod
-    def helper_create_workbook(data):
+    def helper_create_workbook(self, data):
         wb = Workbook()
         sheet1 = wb.active
         sheet1.title = "Physics"
@@ -85,8 +85,8 @@ class ViewsTestCase(HTTPTestCase):
         wb.create_sheet("Chemistry")
 
         for i, sheet in enumerate(wb):
-            sheet["A1"] = "First Name"
-            sheet["B1"] = "E-Mail Address"
+            sheet["A1"] = self.sheet_header[0]
+            sheet["B1"] = self.sheet_header[1]
 
             for row, (name, email) in enumerate(data[i], start=2):
                 sheet[f"A{row}"] = name
@@ -284,7 +284,7 @@ class ViewsTestCase(HTTPTestCase):
             data = self.helper_get_xls_data(resp.content)
 
             # Check that the Excel sheet returned contains the correct header
-            self.assertEquals(data.pop(0), ["Name", "E-mail Address", "Unique Link"])
+            self.assertEquals(data.pop(0), self.sheet_header)
             # Check that the Excel sheet contains the correct number of rows
             self.assertEquals(len(data), len(self.flat_test_data))
 
@@ -301,7 +301,7 @@ class ViewsTestCase(HTTPTestCase):
                 f"/links/zip/?survey={self.survey_id}",
                 self.test_institution,
                 "IASC",
-                ["Name", "E-mail Address", "Unique Link"],
+                self.sheet_header,
             )
 
         def test_05_vote():
