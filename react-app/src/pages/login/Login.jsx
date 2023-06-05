@@ -23,6 +23,7 @@ export default function Login() {
   };
 
   const navigate = useNavigate();
+  const maxErrorLength = 250;
 
   const submitLogin = (event) => {
     event.preventDefault();
@@ -41,8 +42,12 @@ export default function Login() {
           navigate("/dashboard");
         })
         .catch((err) => {
-          console.log(err.response.data[0]);
-          setPasswordError(err.response.data[0]);
+          console.log(err.response.data);
+          if (typeof err.response.data === "object") {
+            setPasswordError(err.response.data[0]);
+            return;
+          }
+          setPasswordError(err.response.data.substring(0, maxErrorLength));
         });
     } else {
       setPasswordError("Invalid username or password");
