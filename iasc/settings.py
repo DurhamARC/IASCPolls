@@ -207,7 +207,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # How many bits of randomness to generate for ActiveLinks.
 # The more bits, the lower the probability of collision, but the longer and less readable the key
-RANDOM_KEY_BYTES = 32
+RANDOM_KEY_BYTES = 16
 
 # Raise value for max upload fields, useful when creating/deleting large amounts of data
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 100_000
