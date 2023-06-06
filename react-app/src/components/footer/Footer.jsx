@@ -2,6 +2,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { AuthConsumer } from "../AuthContext";
 import "./footer.css";
+import Logout from "../logout/Logout";
 
 /**
  * Render the site Footer.
@@ -21,9 +22,14 @@ export default function Footer() {
           <div>
             <NavLink to="/ethics">Ethics</NavLink>
             <NavLink to="/about">About</NavLink>
-            <NavLink to={isAuth ? "/logout" : "/login"}>
-              {isAuth ? "Logout" : "Login"}
-            </NavLink>
+            {isAuth ? (
+              <>
+                <NavLink to="/dashboard">Dashboard</NavLink>
+                <Logout to="/logout">Logout</Logout>
+              </>
+            ) : (
+              <NavLink to="/login">Login</NavLink>
+            )}
           </div>
         </nav>
       )}

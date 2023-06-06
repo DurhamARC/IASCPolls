@@ -23,6 +23,7 @@ function AuthProvider({ children }) {
   const setAuth = (bool) => {
     _setAuth(bool);
     localStorage.setItem("isAuth", bool);
+    if (!bool) localStorage.removeItem("isAuth");
   };
 
   /**
@@ -32,6 +33,7 @@ function AuthProvider({ children }) {
   const setCurrentUser = (username) => {
     _setCurrentUser(username);
     localStorage.setItem("currentUser", username);
+    if (!username) localStorage.removeItem("currentUser");
   };
 
   /**

@@ -1,6 +1,7 @@
 import React from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { AuthConsumer } from "../AuthContext";
+import Logout from "../logout/Logout";
 import "./nav.css";
 
 /**
@@ -32,7 +33,7 @@ export default function NavBar({ className }) {
   return (
     <AuthConsumer>
       {({ isAuth }) => (
-        <nav className={`nav ${cssClass}`}>
+        <nav className={`${cssClass}`}>
           <div className="site-title">
             <NavLink to="/" className="nav-logo" />
           </div>
@@ -43,7 +44,7 @@ export default function NavBar({ className }) {
             {isAuth && (
               <>
                 <NavLink to="/dashboard">Dashboard</NavLink>
-                <NavLink to="/logout">Logout</NavLink>
+                <Logout to="/logout">Logout</Logout>
               </>
             )}
           </div>
