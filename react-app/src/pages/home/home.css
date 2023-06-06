@@ -1,3 +1,16 @@
+.home-all p {
+  font-size: 1.6vw;
+  font-weight: 500;
+  margin-top: 1vw;
+  margin-bottom: 2vw;
+}
+
+.home-all h2 {
+  font-size: 4vw;
+  font-weight: 700;
+  margin-bottom: 1vw;
+}
+
 .home--button {
   padding: 8px 10px;
   border-radius: 5px;
@@ -21,6 +34,17 @@
   position: relative;
   background-color: #f4f5fa;
   height: 60vw;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.home--about--text {
+  max-width: 1920px;
+  position: relative;
+}
+
+.home--about--overlay {
+  margin: 0 auto;
 }
 
 .home--ethics--container {
@@ -28,7 +52,18 @@
   background-color: #fed26f;
   padding: 2vw;
   height: 60vw;
+  width: 100%;
   margin-bottom: 2vw;
+}
+
+.home--ethics--text {
+  max-width: 1920px;
+  width: 100%;
+}
+
+.home--ethics--overlay {
+  margin: 0 auto;
+  width: 100%;
 }
 
 /* main */
@@ -37,6 +72,7 @@
   padding: 0 0 6vw 6vw;
   width: 50%;
   font-size: 4.5vw;
+  position: relative;
 }
 
 .home-pic {
@@ -44,7 +80,7 @@
   top: 0;
   right: 0;
   width: 100%;
-  height: 100%;
+  height: 100vw;
   background-position: top right;
   background-repeat: no-repeat;
   background-size: 60%;
@@ -60,19 +96,6 @@
   justify-content: center;
   align-items: flex-start;
   margin-left: 4vw;
-}
-
-p {
-  font-size: 1.6vw;
-  font-weight: 500;
-  margin-top: 1vw;
-  margin-bottom: 2vw;
-}
-
-h2 {
-  font-size: 4vw;
-  font-weight: 700;
-  margin-bottom: 1vw;
 }
 
 .home-pic-2 {
@@ -112,6 +135,9 @@ h2 {
   width: 80%;
 }
 
+/**
+ * Mobile CSS
+ */
 @media (max-width: 768px) {
   .home--container {
     justify-content: flex-end;
@@ -121,8 +147,11 @@ h2 {
     height: auto;
   }
 
-  .home--about--overlay,
   .home--about--container {
+    height: auto;
+  }
+
+  .home--about--overlay {
     position: relative;
     height: auto;
     padding: 2rem;
@@ -151,25 +180,30 @@ h2 {
     width: 100%;
   }
 
-  p {
+  .home-all p {
     font-size: 1rem;
     word-wrap: break-word;
     overflow-wrap: break-word;
     font-weight: 500;
-    margin: 1em 0 2em;
+    text-align: justify;
+    margin: 2em 0;
   }
 
-  h2 {
+  .home-all h2 {
     font-size: 2rem;
     font-weight: 700;
     word-wrap: break-word;
     overflow-wrap: break-word;
   }
 
+  .home-all h1 {
+    padding-top: 1em;
+  }
+
   .home-pic-2 {
     background-size: contain;
     width: 100vw;
-    height: 30vh;
+    height: 10em;
   }
 
   .home-pic-3 {
@@ -181,18 +215,23 @@ h2 {
     display: block;
   }
 
+  .home--ethics--container div {
+    margin: 0;
+  }
+
   .home--ethics--container {
     height: auto;
     text-align: center;
   }
 
-  .home--ethics--container a {
+  .home--ethics--container a,
+  .home--ethics--container h2 {
     width: 100%;
   }
 
-  .home--ethics--content {
+  .home--ethics--text {
     text-align: center;
-    padding: 2em;
+    padding: 0 2em 2em;
     margin: 2em;
   }
 
@@ -207,5 +246,18 @@ h2 {
     margin-top: 1em;
     width: 100vw;
     height: 50vh;
+  }
+}
+
+/**
+ * Very large screens over 1080p
+ */
+@media (min-width: 1920px) {
+  .home-all p {
+    font-size: 2rem;
+  }
+
+  .home-all h2 {
+    font-size: 4.75rem;
   }
 }

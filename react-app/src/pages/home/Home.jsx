@@ -76,7 +76,7 @@ function Home() {
           className="home-pic-2"
           style={{ backgroundImage: `url(${frontPageComp})` }}
         />
-        <div className="home--ethics--content">
+        <div className="home--ethics--text">
           <h2>Ethics and Anonymisation</h2>
           <p>
             We are committed to guaranteeing the anonymity of all survey
