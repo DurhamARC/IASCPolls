@@ -177,9 +177,9 @@ export default function Ethics() {
                 Although the survey invitation emails are sent from various
                 different local institutions, the data itself goes directly to
                 the project hub (Durham, UK). The spoke representatives in the
-                IASC hub-and-spoke network, who send the emails, cannot access
-                any data. This includes knowledge of who has/hasn’t chosen to
-                participate at their own institution.
+                IASC hub-and-spoke network, who send the emails, necessarily
+                have access to a list of scientists at their own institution,
+                collected from their publicly available profiles.
               </p>
 
               <h3>What encryption method is used?</h3>
