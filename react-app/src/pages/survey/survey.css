@@ -48,7 +48,6 @@
 .poll--blurb {
   font-weight: 300;
   font-size: 1.3rem;
-  letter-spacing: -0.05em;
   color: #5c667d;
   align-items: center;
   margin-top: 2rem;
@@ -81,7 +80,6 @@
   list-style: none;
   font-weight: 500;
   font-size: 1.5rem;
-  letter-spacing: -0.05em;
   color: #14213d;
   margin: 0;
   display: flex;
@@ -136,7 +134,7 @@
 }
 
 .poll--options {
-  padding: 0rem 2rem 0rem 2rem;
+  padding: 0 2rem 0 2rem;
 }
 
 .poll--options li {
@@ -151,7 +149,7 @@
   position: relative;
   width: 1.5rem;
   height: 1.5rem;
-  margin: 0.5rem 0rem 0.5rem 0rem;
+  margin: 0.5rem 0 0.5rem 0;
   outline: none;
   border: 2px solid #14213d;
   border-radius: 5px;
@@ -224,15 +222,14 @@
   .poll--box {
     width: 95%;
     margin-top: 1rem;
-    height: none;
     border: #d9d1d3;
     background-color: #f5f5f5;
     height: auto;
   }
   .poll {
-    padding: 0rem;
-    margin-left: 0rem;
-    margin-right: 0rem;
+    padding: 0;
+    margin-left: 0;
+    margin-right: 0;
     border: #d9d1d3;
     height: 80vh;
     margin-bottom: 1rem;
@@ -247,7 +244,7 @@
   }
 
   .background-blur {
-    height: 0%;
+    height: 0;
   }
   .poll--options {
     font-size: 1.2rem;
@@ -270,6 +267,6 @@
     width: auto;
   }
   .poll--checkbox {
-    margin: 0rem 1rem 0rem 0rem;
+    margin: 0 1rem 0 0;
   }
 }
