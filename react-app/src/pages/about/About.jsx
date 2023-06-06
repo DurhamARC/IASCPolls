@@ -124,8 +124,10 @@ export default function About() {
               Cory Clark (Behavioral Scientist, University of Pennsylvania, USA)
             </li>
             <li>Henry Taylor (Philosopher of Psychology, Birmingham, UK)</li>
-            <li>Angela Woods (Director of the </li>
-            <li>Institute for Medical Humanities, Durham, UK)</li>
+            <li>
+              Angela Woods (Director of the Institute for Medical Humanities,
+              Durham, UK)
+            </li>
             <li>
               John N Parker (Professor of Sociology and Human Geography, Oslo,
               Norway)
@@ -156,6 +158,11 @@ export default function About() {
             </li>
             <li>Tarun Menon (Azim Premji University, Bangalore, India)</li>
             <li>Wei Wang (Tsinghua University, Beijing, China)</li>
+            <li>
+              Naomi Oreskes (Professor of the History of Science and Affiliated
+              Professor of Earth and Planetary Sciences, Harvard University,
+              USA)
+            </li>
           </ol>
           <p>
             The second advisory board consists of scientists from a range of
