@@ -1,6 +1,5 @@
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Footer from "../../components/footer/Footer";
 import "./login.css";
 
 import { AuthContext } from "../../components/AuthContext";
@@ -94,7 +93,6 @@ export default function Login() {
           </form>
         </div>
       </div>
-      <Footer />
     </div>
   );
 }

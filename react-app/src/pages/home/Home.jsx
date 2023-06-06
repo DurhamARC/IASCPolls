@@ -1,5 +1,4 @@
 import React from "react";
-import Footer from "../../components/footer/Footer";
 import "./home.css";
 import mobileFrontPage from "../../imgs/min/mobile-front-page.webp";
 import frontPageComp from "../../imgs/min/balance.svg";
@@ -88,8 +87,6 @@ function Home() {
           </div>
         </div>
       </div>
-
-      <Footer />
     </div>
   );
 }

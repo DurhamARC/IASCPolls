@@ -6,6 +6,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { AuthProvider } from "./components/AuthContext";
 import { MessageProvider } from "./components/MessageHandler";
 import NavBar from "./components/nav/NavBar";
+import Footer from "./components/footer/Footer";
 import Alert from "./components/Alert";
 
 const Home = lazy(() =>
@@ -66,6 +67,7 @@ function App() {
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/download" element={<DownloadParticipants />} />
                 </Routes>
+                <Footer />
               </BrowserRouter>
             </Suspense>
           </AuthProvider>

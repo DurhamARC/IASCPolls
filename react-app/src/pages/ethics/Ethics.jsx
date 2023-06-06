@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Footer from "../../components/footer/Footer";
 import "./ethics.css";
 
 // menu not working properly
@@ -215,7 +214,6 @@ export default function Ethics() {
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 }

@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from "react";
 import { useLocation } from "react-router-dom";
 import { client } from "../../Api";
 import NavBar from "../../components/nav/NavBar";
-import Footer from "../../components/footer/Footer";
 import { MessageContext } from "../../components/MessageHandler";
 import "./download.css";
 
@@ -132,7 +131,6 @@ function DownloadParticipants() {
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 }

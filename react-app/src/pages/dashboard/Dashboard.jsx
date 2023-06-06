@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import { Navigate } from "react-router-dom";
 import "./dashboard.css";
 import { client } from "../../Api";
-import Footer from "../../components/footer/Footer";
 import Table from "../../components/DashboardTable";
 import CreateContainer from "../../components/CreateContainer";
 import AddParticipants from "../../components/addparticipants/AddParticipants";
@@ -119,7 +118,6 @@ export default function Dashboard() {
           <Table data={questionDatabase} updateData={updateData} />
         </div>
       </div>
-      <Footer />
     </div>
   );
 }

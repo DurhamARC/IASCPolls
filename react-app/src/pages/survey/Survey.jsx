@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { client } from "../../Api";
 import NavBar from "../../components/nav/NavBar";
 import PollForm from "../../components/SurveyForm";
-import Footer from "../../components/footer/Footer";
 import "./survey.css";
 
 /**
@@ -67,7 +66,6 @@ export default function Poll() {
           <PollForm uniqueId={uniqueId} />
         </div>
       </div>
-      <Footer />
     </div>
   );
 }

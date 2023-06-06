@@ -1,6 +1,5 @@
 import React from "react";
 import NavBar from "../../components/nav/NavBar";
-import Footer from "../../components/footer/Footer";
 import "./thanks.css";
 
 export default function Thanks() {
@@ -32,7 +31,6 @@ export default function Thanks() {
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 }
