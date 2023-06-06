@@ -1,11 +1,9 @@
 import React from "react";
-import NavBar from "../../components/nav/NavBar";
 import "./thanks.css";
 
 export default function Thanks() {
   return (
     <div className="thankyou--container">
-      <NavBar />
       <div className="container centered">
         <div className="thankyou">
           <h1>Thank you for your participation!</h1>

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useLocation } from "react-router-dom";
 import { client } from "../../Api";
-import NavBar from "../../components/nav/NavBar";
 import { MessageContext } from "../../components/MessageHandler";
 import "./download.css";
 
@@ -93,7 +92,6 @@ function DownloadParticipants() {
 
   return (
     <div>
-      <NavBar />
       <div className="container">
         <div className="download--container">
           <h2>Download Voting Links for...</h2>

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { client } from "../../Api";
-import NavBar from "../../components/nav/NavBar";
 import PollForm from "../../components/SurveyForm";
 import "./survey.css";
 
@@ -55,7 +54,6 @@ export default function Poll() {
     <div className="poll--total">
       <div className="background-blur" />
       <div className="background-blur mirror" />
-      <NavBar />
       <div className="poll">
         <div className="poll--box">
           <div className="poll--blurb">
