@@ -4,6 +4,7 @@
   align-items: center;
   width: 100%;
   min-height: 4rem;
+  border-bottom: none;
 }
 
 .footer div {
@@ -11,12 +12,14 @@
   margin-left: 1rem;
 }
 
-.footer div a {
+.footer div a,
+.footer div button {
   font-weight: 500;
   letter-spacing: -0.05em;
   padding: 1rem;
   color: #333;
   text-decoration: none;
+  border: none;
 }
 
 .footer p {
@@ -25,7 +28,8 @@
   letter-spacing: -0.05em;
 }
 
-.footer a:hover {
+.footer a:hover,
+.footer button:hover {
   color: rgba(51, 51, 51, 0.7); /* Change the color to 70% visibility */
 }
 

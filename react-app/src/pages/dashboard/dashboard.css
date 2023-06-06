@@ -3,7 +3,7 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 80vh;
   width: 100vw;
 }
 
@@ -74,7 +74,7 @@
   border: none;
   background-color: #f5f5f5;
   color: #14213d;
-  font-size: 1.5rem;
+  font-size: 1rem;
   font-weight: 500;
   display: flex;
   flex-direction: column;
@@ -295,7 +295,7 @@
 
 .dashboard--next--page span {
   width: 10vw;
-  font-size: 1.5vw;
+  text-align: center;
   padding: 1rem;
 }
 
@@ -605,7 +605,6 @@ input[type="file"][value]:not([value=""]) {
     display: none;
   }
   .dashboard--overview-active-box {
-    font-size: 3vw;
     width: 90vw;
   }
   .filter-button {
@@ -613,7 +612,6 @@ input[type="file"][value]:not([value=""]) {
   }
   .dashboard--next--page span {
     width: 30vw;
-    font-size: 3vw;
     padding: 1rem;
   }
 }
