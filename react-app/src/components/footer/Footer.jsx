@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { AuthConsumer } from "../AuthContext";
 import "./footer.css";
 import Logout from "../logout/Logout";
@@ -15,13 +15,19 @@ import Logout from "../logout/Logout";
  * @constructor
  */
 export default function Footer() {
+  const path = useLocation().pathname.substring(1);
+
   return (
     <AuthConsumer>
       {({ isAuth }) => (
         <nav className="footer">
           <div>
-            <NavLink to="/ethics">Ethics</NavLink>
-            <NavLink to="/about">About</NavLink>
+            <NavLink to="/ethics" state={{ last: path }}>
+              Ethics
+            </NavLink>
+            <NavLink to="/about" state={{ last: path }}>
+              About
+            </NavLink>
             {isAuth ? (
               <>
                 <NavLink to="/dashboard">Dashboard</NavLink>

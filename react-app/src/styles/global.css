@@ -102,10 +102,39 @@ ul {
   transition: 0.2s ease-in-out;
 }
 
+.alert {
+  border: 1px solid #000;
+  border-radius: 4px;
+  background: #eee;
+  display: block;
+  float: left;
+  width: 50%;
+  padding: 8px;
+  margin: 8px 8px 8px 25%;
+  position: relative;
+  z-index: 9999;
+  filter: drop-shadow(2px 4px 4px rgba(0, 0, 0, 0.25));
+}
+
 .alert--float {
   position: absolute;
   width: 100%;
   margin-top: 10px;
+}
+
+.alert--block {
+  position: fixed;
+  display: block;
+  width: 50%;
+  margin: 10px 25% auto;
+}
+
+.alert.alert--linkable {
+  cursor: pointer;
+}
+
+div.alert.alert--linkable.alert--info:hover {
+  background: #bbe4ff;
 }
 
 .alert.alert--error {
@@ -120,7 +149,7 @@ ul {
 
 .alert.alert--info {
   border: 1px solid #007bff;
-  background: #6bbcff;
+  background: #9ccdff;
 }
 
 .alert > .alert--symbol {
@@ -140,10 +169,9 @@ ul {
   margin-right: 50px;
 }
 
-.alert > span.alert--title {
-}
-
-.alert > span.alert--message {
+.alert .alert--title {
+  margin: 0;
+  padding: 0;
 }
 
 .animate-entry {
@@ -179,20 +207,6 @@ ul {
   .button {
     width: 15rem;
   }
-}
-
-.alert {
-  border: 1px solid #000;
-  border-radius: 4px;
-  background: #eee;
-  display: block;
-  float: left;
-  width: 50%;
-  padding: 8px;
-  margin: 8px 8px 8px 25%;
-  position: relative;
-  z-index: 9999;
-  filter: drop-shadow(2px 4px 4px rgba(0, 0, 0, 0.25));
 }
 
 @media only screen and (max-width: 600px) {
