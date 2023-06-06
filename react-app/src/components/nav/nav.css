@@ -64,11 +64,12 @@ nav a:hover,
     padding: 0;
     width: 100vw;
     border: none;
+    height: 10rem;
   }
 
   .site-title {
-    height: 20vw;
-    padding: 3vw 0 0;
+    height: 5rem;
+    padding: 0;
   }
 
   .site-title a {
@@ -76,7 +77,8 @@ nav a:hover,
   }
 
   .nav-logo {
-    background-size: 20vw;
+    background-size: contain;
+    margin: 1em;
     width: 100vw;
   }
 
@@ -89,7 +91,6 @@ nav a:hover,
 }
 
 /* Route-specific CSS */
-
 @media screen and (min-width: 769px) {
   .nav-index a,
   .nav-index button {

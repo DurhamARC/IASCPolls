@@ -24,10 +24,8 @@
 }
 
 .home--ethics--container {
-  display: flex;
   flex-direction: row;
   background-color: #fed26f;
-  align-items: center;
   padding: 2vw;
   height: 60vw;
   margin-bottom: 2vw;
@@ -61,19 +59,20 @@
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  margin-left: 2vw;
+  margin-left: 4vw;
 }
 
-.home--ethics--container h2 {
+p {
   font-size: 1.6vw;
   font-weight: 500;
   margin-top: 1vw;
   margin-bottom: 2vw;
 }
 
-.home--ethics--container h1 {
+h2 {
   font-size: 4vw;
-  margin-bottom: 2vw;
+  font-weight: 700;
+  margin-bottom: 1vw;
 }
 
 .home-pic-2 {
@@ -113,39 +112,20 @@
   width: 80%;
 }
 
-.home--about--text h2 {
-  font-size: 2.5vw;
-  font-weight: 700;
-  margin-bottom: 1vw;
-}
-
-.home--about--text h3 {
-  font-size: 1.6vw;
-  margin-bottom: 2vw;
-}
-
 @media (max-width: 768px) {
   .home--container {
-    flex-direction: column;
-    height: 100vh;
     justify-content: flex-end;
     flex-direction: column-reverse;
     padding: 6vw;
     background-color: #264a8e;
+    height: auto;
   }
 
-  .home--ethics--container {
-    height: 100vh;
-    flex-direction: column;
-  }
-
+  .home--about--overlay,
   .home--about--container {
-    height: 100vh;
-  }
-
-  .home--ethics--content {
-    height: 10vh;
-    flex-direction: column;
+    position: relative;
+    height: auto;
+    padding: 2rem;
   }
 
   .home div {
@@ -159,7 +139,7 @@
 
   .home--title {
     padding: 0;
-    width: 90%;
+    width: 100%;
     font-size: 3rem;
     text-align: center;
     color: #ded3d3;
@@ -171,41 +151,49 @@
     width: 100%;
   }
 
-  .home--about--text h2 {
+  p {
+    font-size: 1rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    font-weight: 500;
+    margin: 1em 0 2em;
+  }
+
+  h2 {
     font-size: 2rem;
     font-weight: 700;
-    margin-bottom: 1vw;
     word-wrap: break-word;
     overflow-wrap: break-word;
   }
 
-  .home--about--text h3 {
-    font-size: 1rem;
-    margin-bottom: 2vw;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-  }
-
-  .home--ethics--container .home .home-pic-2 {
-    display: none;
-    height: 0;
-    margin: 0;
+  .home-pic-2 {
+    background-size: contain;
+    width: 100vw;
+    height: 30vh;
   }
 
   .home-pic-3 {
     display: none;
   }
 
-  .home--ethics--container h1 {
-    font-size: 2rem;
+  .home--ethics--container {
+    height: auto;
+    display: block;
   }
 
-  .home--ethics--container h2 {
-    font-size: 1rem;
-    font-weight: 500;
-    color: #ffffff;
-    margin-top: 1vw;
-    margin-bottom: 2vw;
+  .home--ethics--container {
+    height: auto;
+    text-align: center;
+  }
+
+  .home--ethics--container a {
+    width: 100%;
+  }
+
+  .home--ethics--content {
+    text-align: center;
+    padding: 2em;
+    margin: 2em;
   }
 
   .home-all .nav a {
@@ -213,9 +201,11 @@
   }
 
   .home-pic-mobile {
-    background-size: 90vw;
+    background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    margin-top: 10vw;
+    margin-top: 1em;
+    width: 100vw;
+    height: 50vh;
   }
 }
