@@ -25,6 +25,10 @@
   border-radius: 5px;
 }
 
+.thankyou p {
+  margin: 0.5em 0;
+}
+
 @media screen and (max-width: 768px) {
   .thankyou--title {
     font-size: 2rem;
