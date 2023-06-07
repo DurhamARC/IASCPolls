@@ -57,8 +57,7 @@ export default function Poll() {
       <div className="poll">
         <div className="poll--box">
           <div className="poll--blurb">
-            Please read the following statement carefully and answer with a
-            response that aligns with your perspective on the given topic.
+            Please respond to the following statement:
           </div>
           <div className="poll--question">{pollQuestion}</div>
           <PollForm uniqueId={uniqueId} />
