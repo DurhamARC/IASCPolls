@@ -17,6 +17,10 @@ import Logout from "../logout/Logout";
 export default function Footer() {
   const path = useLocation().pathname.substring(1);
 
+  // Array of path locations where footer should be hidden
+  const hide = ["poll", "thankyou"];
+  if (hide.includes(path)) return null;
+
   return (
     <AuthConsumer>
       {({ isAuth }) => (
