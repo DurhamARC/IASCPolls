@@ -79,7 +79,10 @@ function Table({ data, updateData }) {
         <tbody>
           {currentItems.map((row) => (
             <tr key={row.id}>
-              <td className="no-mobile">{row.question}</td>
+              <td className="no-mobile">
+                {row.question.substring(0, 50)}
+                {row.question.length > 50 && "..."}
+              </td>
               <td>{row.id}</td>
               <td>{Math.round((row.voted * 100) / row.participants)}%</td>
               <td className="no-mobile">

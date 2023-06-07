@@ -245,6 +245,7 @@
 .dashboard--question--table::-webkit-scrollbar {
   width: 8px; /* Width of the scrollbar */
 }
+
 .dashboard--question--table td {
   padding: 1rem;
   width: 100%;
@@ -252,6 +253,11 @@
   text-align: center;
   overflow: hidden;
   white-space: nowrap;
+}
+
+.dashboard--question--table td:first-child {
+  max-width: 6em;
+  overflow-x: hidden;
 }
 
 .dashboard--question--table tr {
