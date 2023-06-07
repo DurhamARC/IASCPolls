@@ -12,7 +12,7 @@ export default function About() {
           <p>
             We aim to set up a hub-and-spoke, international network
             provisionally titled ‘the Institute for Ascertaining Scientific
-            Consensus’ (IASC). IASC will be capable of emailing over 100,000
+            Consensus’ (IASC). IASC will be capable of emailing thousands of
             scientists, asking for an agree/disagree response regarding a
             specific statement of interest, a candidate scientific fact such as
             ‘Covid is caused by a virus’. Emails will be sent internally within

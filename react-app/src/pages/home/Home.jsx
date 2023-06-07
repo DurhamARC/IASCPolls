@@ -51,7 +51,7 @@ function Home() {
             <h2>What is IASC?</h2>
             <p>
               The Institute for Ascertaining Scientific Consensus (IASC) is a
-              global network that can email over 100,000 scientists with a
+              global network that can email thousands of scientists with a
               specific statement of interest, such as &ldquo;Covid is caused by
               a virus&rdquo;, and request an agree/disagree response within two
               minutes. The responses will be instantly and anonymously recorded
