@@ -161,6 +161,11 @@ class ActiveLink(models.Model):
             institution=participant.institution,
             discipline=participant.discipline,
         )
+
+        # Increment vote count in Survey
+        self.survey.voted += 1
+        self.survey.save()
+
         self.delete()
         return result
 

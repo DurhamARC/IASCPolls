@@ -311,7 +311,8 @@ class ViewsTestCase(HTTPTestCase):
             /links/
             """
 
-            for _, _, link in self.links:
+            count = 0
+            for _a, _b, link in self.links:
                 path = parse.urlparse(link)
                 params = parse.parse_qs(path.query)
 
@@ -323,8 +324,21 @@ class ViewsTestCase(HTTPTestCase):
                     contains="success",
                 )
 
+                count += 1
+
                 self.assertEquals(resp["status"], "success")
                 self.assertEquals(resp["message"], "Voted")
+
+                # Verify that voting is incrementing the vote count on the survey
+                result = self.GET(
+                    f"/api/survey/{self.survey_id}/",
+                    status=200,
+                    mimetype=self.mimetypes["json"],
+                    startswith=b"{",
+                    contains="voted",
+                )
+
+                self.assertEquals(result["voted"], count)
 
             resp = self.GET(
                 "/api/links/",
