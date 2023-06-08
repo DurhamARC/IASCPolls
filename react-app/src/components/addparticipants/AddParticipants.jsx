@@ -111,6 +111,7 @@ function AddParticipants({ onClose }) {
   const fileInputRef = useRef(null);
   const [file, setFile] = useState(null);
   const [institution, setInstitution] = useState();
+  const [ignoreConflicts, setIgnoreConflicts] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [filename, setFilename] = useState("");
@@ -135,6 +136,11 @@ function AddParticipants({ onClose }) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [onClose]);
+
+  const handleIgnoreConflicts = (event) => {
+    console.log(event);
+    setIgnoreConflicts(event.target.value);
+  };
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -177,6 +183,7 @@ function AddParticipants({ onClose }) {
     try {
       const formData = new FormData();
       formData.append("file", file);
+      formData.append("ignore_conflicts", ignoreConflicts);
       formData.append("institution", institution);
 
       await client.post("/api/participants/upload/", formData, {
@@ -216,6 +223,40 @@ function AddParticipants({ onClose }) {
                 setInstitution(i);
               }}
             />
+
+            <div className="ignore-conflicts">
+              <p>Ignore Conflicts</p>
+
+              <div className="ignore-conflicts-field">
+                <label htmlFor="ignore-conflicts">
+                  True
+                  <input
+                    type="radio"
+                    id="ignore-conflicts-true"
+                    className="poll--checkbox create--checkbox"
+                    name="ignore_conflicts"
+                    value="true"
+                    onChange={handleIgnoreConflicts}
+                  />
+                </label>
+              </div>
+
+              <div className="ignore-conflicts-field">
+                <label htmlFor="ignore-conflicts">
+                  False
+                  <input
+                    type="radio"
+                    id="ignore-conflicts-false"
+                    className="poll--checkbox create--checkbox"
+                    name="ignore_conflicts"
+                    value="false"
+                    onChange={handleIgnoreConflicts}
+                    defaultChecked
+                  />
+                </label>
+              </div>
+            </div>
+
             <div
               className={`file-drop-area ${filename ? "file-selected" : ""}`}
               role="button"
@@ -238,6 +279,7 @@ function AddParticipants({ onClose }) {
                   </>
                 )}
               </div>
+
               <input
                 type="file"
                 accept=".xlsx"
