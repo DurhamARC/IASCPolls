@@ -69,20 +69,6 @@ export default function Dashboard() {
               <button
                 type="button"
                 onClick={() => {
-                  setShowCreateContainer(true);
-                }}
-                className="button dashboard--button"
-              >
-                <div>
-                  <span className="material-symbols-outlined">edit_square</span>
-                </div>
-                <div>Create</div>
-              </button>
-            </div>
-            <div>
-              <button
-                type="button"
-                onClick={() => {
                   setShowAddParticipants(true);
                 }}
                 className="button dashboard--button"
@@ -93,6 +79,21 @@ export default function Dashboard() {
                   </span>
                 </div>
                 <div>Add Participants</div>
+              </button>
+            </div>
+
+            <div>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowCreateContainer(true);
+                }}
+                className="button dashboard--button"
+              >
+                <div>
+                  <span className="material-symbols-outlined">edit_square</span>
+                </div>
+                <div>Create</div>
               </button>
             </div>
           </div>
