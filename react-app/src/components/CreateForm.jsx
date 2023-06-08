@@ -27,7 +27,7 @@ function CreateForm({
   };
 
   const handleActiveChange = (event) => {
-    setActive(event.target.checked);
+    setActive(event.target.value);
   };
 
   const handleEndDateChange = (event) => {
@@ -80,18 +80,21 @@ function CreateForm({
         <div className="create--checkbox">
           <label htmlFor="check_yes">
             <input
-              type="checkbox"
-              name="check_yes"
-              checked={active}
+              type="radio"
+              name="active"
+              id="check_yes"
+              value="true"
               onChange={handleActiveChange}
+              defaultChecked
             />
             Yes
           </label>
           <label htmlFor="check_no">
             <input
-              type="checkbox"
-              name="check_no"
-              checked={!active}
+              type="radio"
+              name="active"
+              id="check_no"
+              value="false"
               onChange={handleActiveChange}
             />
             No
