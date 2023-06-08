@@ -118,6 +118,11 @@ export default function About() {
           <h3>Project Strategy Advisory Board</h3>
           <ol>
             <li>
+              Naomi Oreskes (Professor of the History of Science and Affiliated
+              Professor of Earth and Planetary Sciences, Harvard University,
+              USA)
+            </li>
+            <li>
               Steve Lewandowsky (Chair in Cognitive Psychology, Bristol, UK)
             </li>
             <li>
@@ -159,9 +164,10 @@ export default function About() {
             <li>Tarun Menon (Azim Premji University, Bangalore, India)</li>
             <li>Wei Wang (Tsinghua University, Beijing, China)</li>
             <li>
-              Naomi Oreskes (Professor of the History of Science and Affiliated
-              Professor of Earth and Planetary Sciences, Harvard University,
-              USA)
+              Dave Sweet (MD, FRCP(C); ‘Clarity’ Co-President and Co-Founder)
+            </li>
+            <li>
+              Tom Lamb (JD; Entrepreneur; ‘Clarity’ Co-President and Co-Founder)
             </li>
           </ol>
           <p>
