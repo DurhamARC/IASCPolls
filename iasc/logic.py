@@ -18,6 +18,8 @@ def create_survey_in_db(question, expiry, **kwargs):
     kind = kwargs.get("kind", "LI")
     active = kwargs.get("active", True)
     create_active_links = kwargs.get("create_active_links", True)
+    institution = kwargs.get("institution", None)
+
     # Avoid error "unconverted data remains: :00.000" by taking
     # only the first 16 characters of the expected datetime string:
     expiry = make_aware(datetime.strptime(expiry[:16], "%Y-%m-%dT%H:%M"))
@@ -28,7 +30,13 @@ def create_survey_in_db(question, expiry, **kwargs):
 
     if create_active_links:
         to_create = []
-        for participant in Participant.objects.all():
+        participants = Participant.objects
+
+        # Filter on institution if set
+        if institution:
+            participants = participants.filter(institution=institution)
+
+        for participant in participants.all():
             to_create += [
                 ActiveLink(
                     participant=participant,

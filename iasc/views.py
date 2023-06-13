@@ -28,6 +28,7 @@ from iasc.utils import (
     get_error_message,
     request_has_keys,
     validate_string,
+    validate_int,
     to_boolean,
 )
 
@@ -115,9 +116,15 @@ class CreateSurveyView(ViewSet):
             validate_string(question, "Question")
             validate_string(expiry, "Expiry")
 
+            institution = None
+            if "institution" in request.data.keys():
+                institution = int(request.data["institution"])
+                validate_int(institution, "institution", positive=True)
+
             create_survey_in_db(
                 question,
                 expiry,
+                institution=institution,
                 kind=request.data.get("kind", "LI"),
                 active=request.data.get("active", True),
                 create_active_links=request.data.get("create_active_links", True),
@@ -257,8 +264,17 @@ class UploadParticipantsView(ViewSet):
 
             validate_string(institution, "Institution")
 
+            # Check upload is a file
             if not type(file_obj) is InMemoryUploadedFile:
                 raise ValidationError("Request did not contain a valid file")
+
+            # Check file type is Excel Spreadsheet
+            extension = file_obj.name.split(".")[-1]
+            if not (
+                extension == "xlsx"
+                and file_obj.content_type == "application/vnd.ms-excel"
+            ):
+                raise ValidationError("Uploaded file was not an Excel Spreadsheet")
 
             # Read file content
             file_content = file_obj.read()

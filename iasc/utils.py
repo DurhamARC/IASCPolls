@@ -34,7 +34,21 @@ def validate_string(string, name):
     @return:
     """
     if type(string) is not str or not len(string.strip()):
-        raise ValidationError(f"{name} must be a string of >0 length")
+        raise ValidationError(f"{name} must be a string of >0 length.")
+
+
+def validate_int(integer, name, positive=False):
+    """
+    Validate an integer
+    @param integer:
+    @param name:
+    @param positive:
+    @return:
+    """
+    if type(integer) is not int and not int(integer):
+        raise ValidationError(
+            f"{name} must be a {'positive ' if positive else ''}integer. Got {type(integer)}."
+        )
 
 
 def to_boolean(request, key):
