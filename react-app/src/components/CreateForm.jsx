@@ -65,8 +65,9 @@ function CreateForm({
   return (
     <form onSubmit={handleSubmit}>
       <h1>Create a Survey</h1>
+
       <label htmlFor="statement">
-        <h3>Statement</h3>
+        <p>Statement</p>
         <textarea
           id="statement"
           value={statement}
@@ -75,8 +76,9 @@ function CreateForm({
           placeholder="Enter the statement the participants will see"
         />
       </label>
+
       <div className="checkbox">
-        <h3>Active</h3>
+        <p>Active</p>
         <div className="create--checkbox">
           <label htmlFor="check_yes">
             <input
@@ -101,8 +103,9 @@ function CreateForm({
           </label>
         </div>
       </div>
+
       <label htmlFor="endDate">
-        <h3>End Date</h3>
+        <p>End Date</p>
         <input
           id="endDate"
           type="datetime-local"
@@ -110,6 +113,7 @@ function CreateForm({
           onChange={handleEndDateChange}
         />
       </label>
+
       <button type="submit">Submit</button>
     </form>
   );

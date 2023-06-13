@@ -321,7 +321,6 @@
 
 .create-container label {
   margin-top: 1rem;
-  font-size: 1.5rem;
   width: 100%;
   min-width: 100%;
 }
@@ -374,6 +373,10 @@
 
 .create-container input[type="file"]:hover::before {
   color: #007bff;
+}
+
+.create-container .checkbox {
+  margin-top: 1rem;
 }
 
 .create-container .create--statement {
