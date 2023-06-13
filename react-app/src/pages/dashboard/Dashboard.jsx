@@ -1,46 +1,24 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { Navigate } from "react-router-dom";
 import "./dashboard.css";
-import { client } from "../../Api";
 import Table from "../../components/DashboardTable";
 import CreateContainer from "../../components/CreateContainer";
 import AddParticipants from "../../components/addparticipants/AddParticipants";
-import PieChart from "../../components/PieChart";
+// import PieChart from "../../components/PieChart";
 import { AuthContext } from "../../components/AuthContext";
-import { MessageContext } from "../../components/MessageHandler";
 
+/**
+ * Create Dashboard React component to contain page
+ * @returns {JSX.Element}
+ * @constructor
+ */
 export default function Dashboard() {
   const [showCreateContainer, setShowCreateContainer] = useState(false);
   const [showAddParticipants, setShowAddParticipants] = useState(false);
-  const [questionDatabase, setQuestionDatabase] = useState([]);
   const dashboardRef = useRef(null);
 
   const { isAuth } = useContext(AuthContext);
-  const { raiseError } = useContext(MessageContext);
   const isLocal = process.env.NODE_ENV === "development";
-
-  const fetchData = async () => {
-    const response = await client.get("/api/survey/");
-    const questionData = response.data.results;
-    setQuestionDatabase(questionData);
-  };
-
-  const updateData = (rowid, value) => {
-    const newDatabase = [...questionDatabase];
-    for (let row = 0; row < newDatabase.length; row += 1) {
-      if (newDatabase[row].id === rowid) {
-        newDatabase[row].active = value;
-        break;
-      }
-    }
-    setQuestionDatabase([...newDatabase]);
-  };
-
-  useEffect(() => {
-    fetchData().catch((error) => {
-      raiseError(error, "Error fetching survey data:");
-    });
-  }, []);
 
   const handleClickOutside = (event) => {
     if (dashboardRef.current && !dashboardRef.current.contains(event.target)) {
@@ -97,9 +75,7 @@ export default function Dashboard() {
               </button>
             </div>
           </div>
-          <div className="pie-chart">
-            <PieChart surveyId={1} />
-          </div>
+          <div className="pie-chart">{/* <PieChart surveyId={1} /> */}</div>
         </div>
         <div className="dashboard--projects">
           {showCreateContainer && (
@@ -116,7 +92,7 @@ export default function Dashboard() {
               }}
             />
           )}
-          <Table data={questionDatabase} updateData={updateData} />
+          <Table />
         </div>
       </div>
     </div>

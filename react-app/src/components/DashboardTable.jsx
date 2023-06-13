@@ -1,69 +1,128 @@
-import React, { useState } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import Symbol from "./Symbol";
+import { client } from "../Api";
+import { MessageContext } from "./MessageHandler";
 
-function Table({ data, updateData }) {
+/**
+ * Display the survey table in the dashboard and manage the data returned
+ *
+ * @returns {JSX.Element}
+ * @constructor
+ */
+function Table() {
+  const itemsPerPage = 10;
+
+  /* MessageContext allows raising errors and messages */
+  const { raiseError } = useContext(MessageContext);
+
+  /* Table State */
+  const [questionDatabase, setQuestionDatabase] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(5);
-  const [filter, setFilter] = useState("all"); // Added state for the filter
+  const [filter, setFilter] = useState(""); // Added state for the filter
+  const [count, setCount] = useState(0);
+  const [totalPages, _setTotalPages] = useState(0);
 
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const onError = (error) => {
+    raiseError(error, "Error fetching survey data:");
+  };
 
-  // Filter the data based on the selected filter
-  let filteredData = data;
-  if (filter === "active") {
-    filteredData = data.filter((row) => row.active);
-  } else if (filter === "inactive") {
-    filteredData = data.filter((row) => !row.active);
-  }
+  /* Retrieve data from server */
+  const fetchData = async () => {
+    // Make request to the server
+    const response = await client.get(
+      `/api/survey/?page=${currentPage}&active=${filter}`
+    );
 
-  const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+    // Set data
+    const questionData = response.data.results;
+    setQuestionDatabase(questionData);
+    setCount(response.data.count);
+  };
 
+  /* Make changes directly to live dataset attributes */
+  /* Used (for example) when deactivating a survey */
+  const updateData = (rowid, value) => {
+    const newDatabase = [...questionDatabase];
+    for (let row = 0; row < newDatabase.length; row += 1) {
+      if (newDatabase[row].id === rowid) {
+        newDatabase[row].active = value;
+        break;
+      }
+    }
+    setQuestionDatabase([...newDatabase]);
+  };
+
+  /* Navigate to next page */
   const handleNextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
     }
   };
 
+  /* Navigate to previous page */
   const handlePrevPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
     }
   };
 
+  /* Change the filter type */
   const handleFilterChange = (newFilter) => {
     setFilter(newFilter);
-    setCurrentPage(1); // Reset the current page when the filter changes
+    // Reset the current page when the filter changes, which reloads the data.
+    setCurrentPage(1);
   };
 
+  /**
+   * useEffect hooks, which run on changes to State...
+   */
+
+  /* Calculate total pages based on count of items whenever `count` changes */
+  useEffect(() => {
+    _setTotalPages(Math.ceil(count / itemsPerPage));
+  }, [count]);
+
+  /* When currentPage or filter changes... */
+  useEffect(() => {
+    fetchData().catch(onError);
+  }, [currentPage, filter]);
+
+  /* React useEffect hook runs on first component render */
+  useEffect(() => {
+    fetchData().catch(onError);
+  }, []);
+
+  /* Render the component */
   return (
     <div className="dashboard--overview--questions">
+      {/* Change filter mode */}
       <div className="dashboard--overview-active">
         <div className="dashboard--overview-active-box">
           <button
             type="button"
-            className={`filter-button ${filter === "all" ? "active" : ""}`}
-            onClick={() => handleFilterChange("all")}
+            className={`filter-button ${filter === "" ? "active" : ""}`}
+            onClick={() => handleFilterChange("")}
           >
             all
           </button>
           <button
             type="button"
-            className={`filter-button ${filter === "active" ? "active" : ""}`}
-            onClick={() => handleFilterChange("active")}
+            className={`filter-button ${filter === "true" ? "active" : ""}`}
+            onClick={() => handleFilterChange("true")}
           >
             active
           </button>
           <button
             type="button"
-            className={`filter-button ${filter === "inactive" ? "active" : ""}`}
-            onClick={() => handleFilterChange("inactive")}
+            className={`filter-button ${filter === "false" ? "active" : ""}`}
+            onClick={() => handleFilterChange("false")}
           >
             inactive
           </button>
         </div>
       </div>
+
+      {/* Display Table body by mapping questionDatabase */}
       <table className="dashboard--question--table">
         <thead>
           <tr>
@@ -77,7 +136,7 @@ function Table({ data, updateData }) {
           </tr>
         </thead>
         <tbody>
-          {currentItems.map((row) => (
+          {questionDatabase.map((row) => (
             <tr key={row.id}>
               <td className="no-mobile">
                 {row.question.substring(0, 50)}
@@ -112,6 +171,7 @@ function Table({ data, updateData }) {
         </tbody>
       </table>
 
+      {/* Pagination: navigate data by setting page */}
       <div className="dashboard--next--page">
         <button
           type="button"
