@@ -14,7 +14,6 @@ function Home() {
    */
   useLayoutEffect(() => {
     const setIsMobile = () => {
-      console.log(window.innerWidth <= 768);
       _setIsMobile(window.innerWidth <= 768);
     };
     window.addEventListener("resize", setIsMobile);
