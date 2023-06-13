@@ -264,8 +264,17 @@ class UploadParticipantsView(ViewSet):
 
             validate_string(institution, "Institution")
 
+            # Check upload is a file
             if not type(file_obj) is InMemoryUploadedFile:
                 raise ValidationError("Request did not contain a valid file")
+
+            # Check file type is Excel Spreadsheet
+            extension = file_obj.name.split(".")[-1]
+            if not (
+                extension == "xlsx"
+                and file_obj.content_type == "application/vnd.ms-excel"
+            ):
+                raise ValidationError("Uploaded file was not an Excel Spreadsheet")
 
             # Read file content
             file_content = file_obj.read()

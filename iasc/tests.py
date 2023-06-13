@@ -182,7 +182,9 @@ class ViewsTestCase(HTTPTestCase):
             stream = self.helper_create_workbook(self.test_data)
 
             upload = SimpleUploadedFile(
-                "file.mp4", stream, content_type="application/vnd.ms-excel"
+                "file.xlsx",
+                stream,
+                content_type="application/vnd.ms-excel",
             )
             self.POST(
                 "/api/participants/upload/",
