@@ -250,11 +250,14 @@ There are further optional parameters which can be given to this route:
 
 ```javascript
 {
-  "create_active_links": "True"
+  "create_active_links": "True",
+  "institution": 1
 }
 ```
 
-This will allow you to create a survey without creating ActiveLinks in the database.
+Setting `create_active_links` will allow you to create a survey without creating ActiveLinks in the database.
+
+The `institution` parameter takes an institution ID, and will create ActiveLinks ONLY for participants in that institution.
 
 ## Close surveys
 `POST /api/survey/close/`  

@@ -478,6 +478,37 @@ class ViewsTestCase(HTTPTestCase):
             self.assertTrue("first_name" in resp.keys())
             self.assertEquals(resp["username"], self.username)
 
+        def test_11_create_survey_with_institution():
+            """
+            Test creating survey with institution parameter
+            """
+            with_institution = "Different University"
+            institution = Institution.objects.create(name=with_institution)
+            discipline = Discipline.objects.get(name="Physics")
+            Participant.objects.create(
+                email="test2@mytest.test",
+                name="TestParticipant",
+                institution=institution,
+                discipline=discipline,
+            )
+
+            resp = self.POST(
+                "/api/survey/create/",
+                {
+                    "question": "Test Create Survey With Institution",
+                    "expiry": "2023-06-24T23:00",
+                    "active": "True",
+                    "institution": institution.id,
+                    "create_active_links": "True",
+                },
+                mimetype=self.mimetypes["json"],
+            )
+
+            self.assertEquals(resp["status"], "success")
+            self.assertEquals(resp["message"], "Survey created.")
+            self.assertEquals(Survey.objects.count(), 2)
+            self.assertEquals(ActiveLink.objects.count(), 1)
+
         #
         # Run all the integration tests defined within this function:
         print(f"\n{len(dir())-1} Integration tests found")
