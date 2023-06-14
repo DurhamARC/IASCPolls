@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 
 import { client } from "../Api";
 import { MessageContext } from "./MessageHandler";
+import { Institution } from "./Institution";
 
 function getDatePlusMonth() {
   const date = new Date();
@@ -20,6 +21,8 @@ function CreateForm({
   const [statement, setStatement] = useState("");
   const [active, setActive] = useState(true);
   const [endDate, setEndDate] = useState(getDatePlusMonth());
+  const [displayInst, setDisplayInst] = useState(false);
+  const [institution, setInstitution] = useState(null);
   const { pushError } = useContext(MessageContext);
 
   const handleStatementChange = (event) => {
@@ -34,6 +37,10 @@ function CreateForm({
     setEndDate(event.target.value);
   };
 
+  const showInstitution = (event) => {
+    setDisplayInst(event.target.checked);
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setSubmitting(true);
@@ -45,21 +52,27 @@ function CreateForm({
       expiry: endDate,
     };
 
+    // If an institution is selected, append it to the data
+    if (displayInst && institution !== null && institution !== "") {
+      data.institution = institution;
+    }
+
+    // Make server API request
     await client
       .post("/api/survey/create/", data)
       .then(() => {
         setSurveyDetails(event);
         setSubmitting(false);
         setCompleted(true);
+
+        if (typeof onSubmit === "function") {
+          onSubmit();
+        }
       })
       .catch((err) => {
         pushError(err);
         setSubmitting(false);
       });
-
-    if (typeof onSubmit === "function") {
-      onSubmit();
-    }
   };
 
   return (
@@ -104,7 +117,30 @@ function CreateForm({
         </div>
       </div>
 
-      <label htmlFor="endDate">
+      <div className="checkbox">
+        <label htmlFor="set_institution">
+          Specify Institution? &nbsp;
+          <input
+            type="checkbox"
+            name="set_institution"
+            id="set_institution"
+            checked={displayInst}
+            onChange={showInstitution}
+          />
+        </label>
+
+        {displayInst && (
+          <div>
+            <Institution
+              onChangeInstitution={setInstitution}
+              returnID
+              hideTitle
+            />
+          </div>
+        )}
+      </div>
+
+      <label htmlFor="endDate" className="checkbox">
         <p>End Date</p>
         <input
           id="endDate"
