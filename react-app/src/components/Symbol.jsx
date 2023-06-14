@@ -15,17 +15,17 @@ export default function Symbol({
       .post("/api/survey/close/", {
         survey: surveyId,
       })
-      .then((result) => {
-        console.log(result.data.message);
+      .then(() => {
         pushMessage(
-          "All active links deleted.",
+          "Any remaining active links have been deleted.",
           `Survey ${surveyId} closed`,
           "info"
-        ).catch((error) => {
-          console.error("Error submitting answer:", error);
-          pushError(error);
-        });
+        );
         onChange(active);
+      })
+      .catch((error) => {
+        console.error("Error submitting answer:", error);
+        pushError(error);
       });
   };
 
