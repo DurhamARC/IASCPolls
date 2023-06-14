@@ -73,7 +73,6 @@ function AddParticipants({ onClose }) {
   }, [onClose]);
 
   const handleIgnoreConflicts = (event) => {
-    console.log(event);
     setIgnoreConflicts(event.target.value);
   };
 
@@ -119,7 +118,7 @@ function AddParticipants({ onClose }) {
       const formData = new FormData();
       formData.append("file", file);
       formData.append("ignore_conflicts", ignoreConflicts);
-      formData.append("institution", institution);
+      formData.append("institution", institution.label);
 
       await client.post("/api/participants/upload/", formData, {
         headers: {
@@ -157,9 +156,7 @@ function AddParticipants({ onClose }) {
               <Institution
                 createable
                 className="add-participants-input"
-                onChangeInstitution={(i) => {
-                  setInstitution(i);
-                }}
+                onChangeInstitution={setInstitution}
               />
             </div>
 
