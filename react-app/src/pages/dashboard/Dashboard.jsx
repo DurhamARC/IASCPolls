@@ -15,6 +15,7 @@ import { AuthContext } from "../../components/AuthContext";
 export default function Dashboard() {
   const [showCreateContainer, setShowCreateContainer] = useState(false);
   const [showAddParticipants, setShowAddParticipants] = useState(false);
+  const [reloadCtr, setReloadCtr] = useState(0);
   const dashboardRef = useRef(null);
 
   const { isAuth } = useContext(AuthContext);
@@ -83,6 +84,9 @@ export default function Dashboard() {
               onClose={() => {
                 setShowCreateContainer(false);
               }}
+              createdCallback={() => {
+                setReloadCtr(reloadCtr + 1);
+              }}
             />
           )}
           {showAddParticipants && (
@@ -92,7 +96,7 @@ export default function Dashboard() {
               }}
             />
           )}
-          <Table />
+          <Table reload={reloadCtr} />
         </div>
       </div>
     </div>

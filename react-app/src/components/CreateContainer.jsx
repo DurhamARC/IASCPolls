@@ -2,7 +2,18 @@ import React, { useState, useEffect, useRef } from "react";
 import CreateConfirmation from "./CreateConfirmation";
 import CreateForm from "./CreateForm";
 
-/* Choose what component to display */
+/**
+ * Factory component which chooses what component
+ * to display, and passes the appropriate props
+ * @param completed
+ * @param submitting
+ * @param surveyDetails
+ * @param setSurveyDetails
+ * @param setSubmitting
+ * @param setCompleted
+ * @returns {JSX.Element}
+ * @constructor
+ */
 function DisplayComponent({
   completed,
   submitting,
@@ -31,12 +42,21 @@ function DisplayComponent({
   );
 }
 
-function CreateContainer({ onClose }) {
+/**
+ * Container which displays CreateForm and other modals
+ * depending on progress through new survey submission.
+ * @param onClose
+ * @param createdCallback
+ * @returns {JSX.Element}
+ * @constructor
+ */
+function CreateContainer({ onClose, createdCallback }) {
   const [submitting, setSubmitting] = useState(false);
   const [completed, setCompleted] = useState(false);
   const [surveyDetails, setSurveyDetails] = useState(null);
   const containerRef = useRef(null);
 
+  // Handle window closure
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -53,6 +73,11 @@ function CreateContainer({ onClose }) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [onClose]);
+
+  // Signal to parent that survey was created
+  useEffect(() => {
+    createdCallback(surveyDetails);
+  }, [completed]);
 
   return (
     <div className="overlay">

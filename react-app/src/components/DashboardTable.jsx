@@ -9,7 +9,7 @@ import { MessageContext } from "./MessageHandler";
  * @returns {JSX.Element}
  * @constructor
  */
-function Table() {
+function Table({ reload }) {
   const itemsPerPage = 10;
 
   /* MessageContext allows raising errors and messages */
@@ -82,10 +82,10 @@ function Table() {
     _setTotalPages(Math.ceil(count / itemsPerPage));
   }, [count]);
 
-  /* When currentPage or filter changes... */
+  /* When currentPage, filter, or reload changes... */
   useEffect(() => {
     fetchData().catch(onError);
-  }, [currentPage, filter]);
+  }, [currentPage, filter, reload]);
 
   /* React useEffect hook runs on first component render */
   useEffect(() => {
