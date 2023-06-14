@@ -13,7 +13,7 @@ function Table({ reload }) {
   const itemsPerPage = 10;
 
   /* MessageContext allows raising errors and messages */
-  const { raiseError } = useContext(MessageContext);
+  const { pushError } = useContext(MessageContext);
 
   /* Table State */
   const [questionDatabase, setQuestionDatabase] = useState([]);
@@ -23,7 +23,7 @@ function Table({ reload }) {
   const [totalPages, _setTotalPages] = useState(0);
 
   const onError = (error) => {
-    raiseError(error, "Error fetching survey data:");
+    pushError(error, "Error fetching survey data");
   };
 
   /* Retrieve data from server */
@@ -157,6 +157,7 @@ function Table({ reload }) {
                   activeSymbol="stop_circle"
                   inactiveSymbol="close"
                   onChange={(value) => {
+                    console.log(row.id, value);
                     updateData(row.id, value);
                   }}
                 />
