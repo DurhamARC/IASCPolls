@@ -31,6 +31,42 @@ function MessageHandler({ messages = [], removeMessage }) {
   );
 }
 
+/**
+ * Extract an error message from a server XHR response
+ * @param e
+ * @returns {string|*}
+ */
+function getErrorMessage(e) {
+  // Handle various types of object which might be used as err.message:
+  if (
+    typeof e === "object" &&
+    "request" in e &&
+    e.request instanceof XMLHttpRequest
+  ) {
+    // If we got an XHR response
+    if (typeof e.response.data === "object") {
+      // Which contained a JSON object from the Django server...
+      if ("message" in e.response.data) {
+        // And it had a message inside the data field!
+        return e.response.data.message;
+      }
+      if ("detail" in e.response.data) {
+        // Or maybe that field was called "detail".
+        return e.response.data.detail;
+      }
+      // Otherwise, we didn't find it. All else failed, so return a string representation
+      return JSON.stringify(e.response.data);
+    }
+    if (typeof e.response.data === "string") {
+      // Or XHR response contained just a string
+      return e.response.data;
+    }
+  }
+
+  // Or if it was just a string by itself, or we didn't find anything valid:
+  return e;
+}
+
 /** *
  * MessageProvider allows state transfer using React Context,
  * to allow messages to be passed from anywhere in the React
@@ -101,31 +137,7 @@ function MessageProvider({ children }) {
 
     err.severity = "error";
     err.id = getRandomID();
-
-    // Handle various types of object which might be used as err.message:
-    if (
-      typeof e === "object" &&
-      "request" in e &&
-      e.request instanceof XMLHttpRequest
-    ) {
-      // If we got an XHR response
-      if (typeof e.response.data === "object") {
-        // Which contained a JSON object from the Django server...
-        if ("message" in e.response.data) {
-          err.message = e.response.data.message;
-        } else if ("detail" in e.response.data) {
-          err.message = e.response.data.detail;
-        } else {
-          err.message = JSON.stringify(e.response.data);
-        }
-      } else if (typeof e.response.data === "string") {
-        // Or which contained just a string
-        err.message = e.response.data;
-      }
-    } else if (typeof e === "string") {
-      // Or if it was just a string by itself:
-      err.message = e;
-    }
+    err.message = getErrorMessage(e);
 
     // Add the message for display:
     setMessages([...messages, err]);
@@ -177,4 +189,4 @@ function MessageProvider({ children }) {
 }
 
 const MessageConsumer = MessageContext.Consumer;
-export { MessageProvider, MessageConsumer };
+export { MessageProvider, MessageConsumer, getErrorMessage };
