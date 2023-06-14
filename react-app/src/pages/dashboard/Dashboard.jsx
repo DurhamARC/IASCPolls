@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { Navigate } from "react-router-dom";
 import "./dashboard.css";
-import Table from "../../components/DashboardTable";
+import DashboardTable from "../../components/DashboardTable";
 import CreateContainer from "../../components/CreateContainer";
 import AddParticipants from "../../components/addparticipants/AddParticipants";
 // import PieChart from "../../components/PieChart";
@@ -96,7 +96,7 @@ export default function Dashboard() {
               }}
             />
           )}
-          <Table reload={reloadCtr} />
+          <DashboardTable reload={reloadCtr} />
         </div>
       </div>
     </div>

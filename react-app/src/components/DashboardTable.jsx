@@ -9,7 +9,7 @@ import { MessageContext } from "./MessageHandler";
  * @returns {JSX.Element}
  * @constructor
  */
-function Table({ reload }) {
+function DashboardTable({ reload }) {
   const itemsPerPage = 10;
 
   /* MessageContext allows raising errors and messages */
@@ -157,7 +157,6 @@ function Table({ reload }) {
                   activeSymbol="stop_circle"
                   inactiveSymbol="close"
                   onChange={(value) => {
-                    console.log(row.id, value);
                     updateData(row.id, value);
                   }}
                 />
@@ -196,4 +195,4 @@ function Table({ reload }) {
   );
 }
 
-export default Table;
+export default DashboardTable;
