@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="The Institute for Ascertaining Scientific Consensus"
+    />
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
+    <title>Institute for Ascertaining Scientific Consensus</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Inter", sans-serif;
+        background-color: #f5f5f5;
+        color: #14213d;
+      }
+
+      a {
+        color: #3c096c;
+      }
+
+      h1,
+      h2,
+      h3,
+      p,
+      ol,
+      ul {
+        font-family: "Inter", sans-serif;
+        font-style: normal;
+        margin-top: 1rem;
+      }
+
+      h1 {
+        font-size: 4rem;
+        font-weight: 700;
+        padding: 2rem 0 1rem 0;
+      }
+
+      h2 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        padding: 1rem 0 1rem 0;
+      }
+
+      h3 {
+        font-size: 1.7rem;
+        font-weight: 700;
+        padding: 1rem 0 0 0;
+      }
+
+      p,
+      ol,
+      ul {
+        font-size: 1.2rem;
+        font-weight: 400;
+      }
+
+      nav {
+        color: #14213d;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        min-width: 375px;
+        height: 7vh;
+        min-height: 6rem;
+        text-align: center;
+        position: relative;
+        z-index: 998;
+        top: 0;
+        left: 0;
+        border-bottom: 2px solid #b8bcc5;
+        padding: 0 2rem 0 2rem;
+      }
+
+      nav a,
+      .nav button {
+        color: #14213d;
+        padding: 1rem;
+        text-decoration: none;
+        border-bottom: none;
+      }
+
+      .nav-logo {
+        display: inline-block;
+        width: 10rem;
+        min-height: 3rem;
+      }
+
+      .footer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        min-height: 4rem;
+        border-bottom: none;
+      }
+
+      .footer div {
+        list-style: none;
+        margin-left: 1rem;
+      }
+
+      .footer div a,
+      .footer div button {
+        font-weight: 500;
+        padding: 1rem;
+        color: #333;
+        text-decoration: none;
+        border: none;
+      }
+
+      .footer p {
+        font-size: 1rem;
+        font-weight: 600;
+      }
+
+      .footer a:hover,
+      .footer button:hover {
+        color: rgba(51, 51, 51, 0.7); /* Change the color to 70% visibility */
+      }
+
+      @media (max-width: 450px) {
+        h1 {
+          font-size: 2.5rem;
+        }
+
+        h2 {
+          font-size: 2rem;
+        }
+
+        h3,
+        p,
+        ol,
+        ul {
+          font-size: 1rem;
+        }
+
+        .footer p {
+          padding-left: 1rem;
+          padding-top: 1rem;
+          padding-bottom: 1rem;
+        }
+      }
+
+      .server-error {
+        margin: 0 auto 5rem auto;
+        width: 80%;
+        max-width: 1920px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <div class="App">
+        <nav class="nav-about">
+          <div class="site-title">
+            <a class="nav-logo" href="/">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440.6 158.1">
+                <defs>
+                  <style>
+                    .a {
+                      fill: #fff;
+                    }
+                  </style>
+                </defs>
+                <path
+                  d="M257.9 158.2H89.4c-9.1 0-13.8-4.8-13.8-13.9 0-19.5-.1-39 0-58.5a14.6 14.6 0 0 0-4.5-10.9c-9.8-9.4-19.4-18.9-29-28.4-1.7-1.6-2.9-3.2-1.9-5.6s2.9-2.8 5.2-2.8h22.7c4.8 0 7.4-2.6 7.5-7.4s-.1-11.9 0-17.8c0-7.9 5.1-13 12.9-13h339c7.8 0 13 5.2 13 13v132.3c0 7.9-5.1 13-13.1 13ZM36.9 105.3v44c0 5.6-2.7 8.3-8.2 8.3H10.6c-5.3 0-8.1-2.7-8.1-7.9V61.1c0-5.3 2.8-8.1 8.2-8.1h18.1c5.3 0 8.1 2.8 8.1 8.1ZM19.6 38.5C8.3 38.4-.1 30.1 0 19.2S9.1.6 20 .7s19.5 8.6 19.4 19.2-8.9 18.7-19.8 18.6Z"
+                />
+                <path
+                  d="M208.5 97.8c0 9.6-.1 19.2 0 28.8 0 2-.6 2.8-2.7 2.8q-12.6-.2-25.2 0c-1.9 0-2.6-.8-2.6-2.6s.1-4.8 0-7.1a2.9 2.9 0 0 0-.2-.9l-.8.5c-7.8 10.5-18.9 12.9-31 12.4a40.8 40.8 0 0 1-23-7.8c-13.6-10-17-37.5 4.4-48.8 9.3-4.9 19.3-7.1 29.7-8 6-.5 11.9-.7 17.9-.9 1.5-.1 2-.8 2-2.2-.1-7.4-5-12.4-13.4-13.7-10.5-1.5-19.5 2-27.7 8.3-1.6 1.2-2.6 1.2-3.9-.3-4.4-4.8-8.8-9.5-13.3-14.2-1.3-1.4-1.2-2.4.3-3.6 12.6-10.7 27.4-15.2 43.7-15.2a61.3 61.3 0 0 1 21.2 3.1c12.8 4.7 19.5 14.5 22.1 27.2a135.9 135.9 0 0 1 2.4 20.2c.3 7.3.1 14.7.1 22ZM265.1 132.8c-17.4-.6-31-3.6-42.8-12.4-4.2-3.1-4.2-3.2-.5-7L235 99.5c1.4-1.6 2.4-1.7 4-.2 7 6.3 15 10 24.6 9.2a18 18 0 0 0 5.2-1.3 7 7 0 0 0 4.9-6.8 6.8 6.8 0 0 0-4.4-7c-4.3-1.6-8.6-2.9-12.9-4.3s-8.2-2.1-12.2-3.5c-11.1-4.1-18.7-11.3-19.8-23.7s3.7-22.3 14.2-29.1 19-7.8 29.6-7.5c12.6.4 24.4 3.4 34.7 10.9 4 2.9 4 3.1.6 6.6s-8.8 9-13.1 13.6c-1.3 1.4-2.3 1.4-3.8.2-7-5.6-14.7-8.8-23.9-6.9a29.7 29.7 0 0 0-3.9 1.3 6.3 6.3 0 0 0-3.9 6.3 5.7 5.7 0 0 0 4 5.8c5.3 1.7 10.7 3 16 4.7a93.8 93.8 0 0 1 13.8 4.8c13.8 6.8 19.4 18.8 15.9 33.8-2.9 12.7-11.7 19.8-23.6 23.4-6 1.8-12.5 2.4-15.9 3ZM373.3 132.6c-14.3-.1-26.7-3.1-37.5-11.2-12.4-9.4-18.9-22.1-20-37.6s3.3-31.8 15.8-43.7c8.9-8.4 19.8-12.8 31.8-14.3a61.3 61.3 0 0 1 34.8 5.2c3.4 1.6 6.5 4.1 9.8 6.2 1.4 1 1.3 2.1.2 3.3l-16.1 18.7c-1 1.2-1.9 1.3-3.2.2-6.9-6.1-14.9-8.2-23.6-5.1s-13.7 10.6-15.4 19.8a27.1 27.1 0 0 0 1.7 15.9c7.7 18.5 28.4 17.1 37.7 9.1 1.6-1.4 2.6-1.2 3.8.3 4.9 6.1 9.8 12.1 14.8 18.1 1.5 1.7 1.3 2.8-.4 4.1-8.1 6.4-17.5 9.4-27.6 10.6-2.5.3-5.1.3-6.6.4Z"
+                  class="a"
+                />
+                <path
+                  d="M178 89.8c-.8 15.2-13.9 23.8-28.3 18.5-3.7-1.3-6.3-3.7-6.8-7.8a10 10 0 0 1 4.2-9.8c4.8-3.4 10.4-4.3 16-4.8 3.6-.3 7.2-.4 10.8-.4s4.3 0 4.1 4.3Z"
+                />
+              </svg>
+            </a>
+          </div>
+          <div>
+            <a href="/">Home</a>
+            <a href="/about">About</a>
+            <a href="/ethics">Ethics</a>
+          </div>
+        </nav>
+        <div class="server-error">
+          <div class="about">
+            <h1>Server Error</h1>
+            <h3>Something went wrong</h3>
+            <p>
+              It's us, not you. Our site seems to be having some technical
+              difficulties. Please try
+              <a onClick="window.location.reload();">reloading the page</a> or
+              try again later.
+            </p>
+            <p>
+              As we are still developing this service, at periods of high load
+              we may experience some unintended outages. Generally these kinds
+              of problems are resolved quickly, so please come back later!
+            </p>
+            <h3>What is IASC?</h3>
+            <p>
+              We aim to set up a hub-and-spoke, international network
+              provisionally titled ‘the Institute for Ascertaining Scientific
+              Consensus’ (IASC). IASC will be capable of emailing thousands of
+              scientists, asking for an agree/disagree response regarding a
+              specific statement of interest.
+            </p>
+            <p>
+              This project has full ethics approval from Durham University (UK),
+              equivalent to IRB in the US. A full Data Protection Impact
+              Assessment has been undertaken: our basis for processing data
+              under GDPR is “Legitimate Interests“, and a Legitimate Interests
+              Assessment has been undertaken.
+            </p>
+          </div>
+        </div>
+        <nav class="footer">
+          <div>
+            <a href="/ethics">Ethics</a>
+            <a href="/about">About</a>
+            <a href="/login">Login</a>
+          </div>
+        </nav>
+      </div>
+    </div>
+  </body>
+</html>

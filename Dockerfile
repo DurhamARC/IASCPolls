@@ -120,6 +120,7 @@ COPY conf/sshd_config /etc/ssh/
 
 # nginx
 COPY conf/subsite.conf /etc/nginx/sites-available/default
+COPY conf/*.html /usr/share/nginx/html
 RUN mkdir -p /data/nginx/cache
 
 COPY iasc ./iasc
