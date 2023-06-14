@@ -12,7 +12,6 @@ import { API } from "../Api";
 export function Institution({
   onChangeInstitution,
   className,
-  returnID,
   hideTitle,
   createable,
 }) {
@@ -50,16 +49,10 @@ export function Institution({
       .catch(pushError);
   };
 
-  const getNewValue = (newValue) => {
-    console.log(newValue);
-    if (returnID && newValue !== null) return newValue.value;
-    if (newValue !== null) return newValue.label;
-    return null;
-  };
-
   const changeSelect = (newValue) => {
+    // NewValue is an object containing two members, .label and .value.
     setInstitution(newValue);
-    onChangeInstitution(getNewValue(newValue));
+    onChangeInstitution(newValue);
   };
 
   /**

@@ -18,7 +18,6 @@
   },
   "plugins": ["react"],
   "rules": {
-    "no-console": "off",
     "no-alert": "off",
     // Project is written in Javascript, not TypeScript, so ESLint warns about prop-types
     // Adding PropTypes adds a LOT of boilerplate code

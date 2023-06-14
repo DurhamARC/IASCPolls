@@ -108,7 +108,9 @@ function MessageProvider({ children }) {
       "request" in e &&
       e.request instanceof XMLHttpRequest
     ) {
+      // If we got an XHR response
       if (typeof e.response.data === "object") {
+        // Which contained a JSON object from the Django server...
         if ("message" in e.response.data) {
           err.message = e.response.data.message;
         } else if ("detail" in e.response.data) {
@@ -116,11 +118,16 @@ function MessageProvider({ children }) {
         } else {
           err.message = JSON.stringify(e.response.data);
         }
+      } else if (typeof e.response.data === "string") {
+        // Or which contained just a string
+        err.message = e.response.data;
       }
     } else if (typeof e === "string") {
+      // Or if it was just a string by itself:
       err.message = e;
     }
 
+    // Add the message for display:
     setMessages([...messages, err]);
   });
 

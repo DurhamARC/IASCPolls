@@ -272,7 +272,11 @@ class UploadParticipantsView(ViewSet):
             extension = file_obj.name.split(".")[-1]
             if not (
                 extension == "xlsx"
-                and file_obj.content_type == "application/vnd.ms-excel"
+                and file_obj.content_type
+                in [
+                    "application/vnd.ms-excel",
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                ]
             ):
                 raise ValidationError("Uploaded file was not an Excel Spreadsheet")
 

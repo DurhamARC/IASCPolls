@@ -9,11 +9,11 @@ import { MessageContext } from "./MessageHandler";
  * @returns {JSX.Element}
  * @constructor
  */
-function Table() {
+function DashboardTable({ reload }) {
   const itemsPerPage = 10;
 
   /* MessageContext allows raising errors and messages */
-  const { raiseError } = useContext(MessageContext);
+  const { pushError } = useContext(MessageContext);
 
   /* Table State */
   const [questionDatabase, setQuestionDatabase] = useState([]);
@@ -23,7 +23,7 @@ function Table() {
   const [totalPages, _setTotalPages] = useState(0);
 
   const onError = (error) => {
-    raiseError(error, "Error fetching survey data:");
+    pushError(error, "Error fetching survey data");
   };
 
   /* Retrieve data from server */
@@ -82,10 +82,10 @@ function Table() {
     _setTotalPages(Math.ceil(count / itemsPerPage));
   }, [count]);
 
-  /* When currentPage or filter changes... */
+  /* When currentPage, filter, or reload changes... */
   useEffect(() => {
     fetchData().catch(onError);
-  }, [currentPage, filter]);
+  }, [currentPage, filter, reload]);
 
   /* React useEffect hook runs on first component render */
   useEffect(() => {
@@ -195,4 +195,4 @@ function Table() {
   );
 }
 
-export default Table;
+export default DashboardTable;

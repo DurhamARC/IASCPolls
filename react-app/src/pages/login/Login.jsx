@@ -40,7 +40,6 @@ export default function Login() {
           navigate("/dashboard");
         })
         .catch((err) => {
-          console.log(err.response.data);
           if (typeof err.response.data === "object") {
             setPasswordError(err.response.data[0]);
             return;

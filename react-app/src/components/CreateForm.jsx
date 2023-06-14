@@ -54,14 +54,17 @@ function CreateForm({
 
     // If an institution is selected, append it to the data
     if (displayInst && institution !== null && institution !== "") {
-      data.institution = institution;
+      data.institution = institution.value;
     }
 
     // Make server API request
     await client
       .post("/api/survey/create/", data)
       .then(() => {
-        setSurveyDetails(event);
+        setSurveyDetails({
+          ...data,
+          institution: institution.label,
+        });
         setSubmitting(false);
         setCompleted(true);
 
@@ -131,11 +134,7 @@ function CreateForm({
 
         {displayInst && (
           <div>
-            <Institution
-              onChangeInstitution={setInstitution}
-              returnID
-              hideTitle
-            />
+            <Institution onChangeInstitution={setInstitution} hideTitle />
           </div>
         )}
       </div>
