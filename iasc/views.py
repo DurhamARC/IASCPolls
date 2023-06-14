@@ -345,7 +345,7 @@ class InstitutionViewSet(viewsets.ModelViewSet):
 class SurveyViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     serializer_class = serializers.SurveySerializer
-    queryset = Survey.objects.all().order_by("-expiry")
+    queryset = Survey.objects.all().order_by("-id")
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = SurveyFilter
 
