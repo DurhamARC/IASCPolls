@@ -60,20 +60,28 @@ class UserLoginView(APIView):
         @param request: {"username": "", "password": ""}
         @return: {"first_name": ""}
         """
+        try:
+            # Check data is not blank
+            if not len(request.data["username"]) or not len(request.data["password"]):
+                raise ValidationError("Username and password cannot be blank")
 
-        # Check data is not blank
-        assert len(request.data["username"])
-        assert len(request.data["password"])
+            # Validate user login
+            serializer = serializers.UserLoginSerializer(data=request.data)
+            if serializer.is_valid(raise_exception=True):
+                user = serializer.check_user(request.data)
+                login(request, user)
+                return Response(
+                    {
+                        "first_name": user.first_name,
+                    },
+                    status=status.HTTP_200_OK,
+                )
 
-        serializer = serializers.UserLoginSerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            user = serializer.check_user(request.data)
-            login(request, user)
+        except ValidationError as e:
+            error_message = get_error_message(e)
             return Response(
-                {
-                    "first_name": user.first_name,
-                },
-                status=status.HTTP_200_OK,
+                {"status": "error", "message": error_message},
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
 

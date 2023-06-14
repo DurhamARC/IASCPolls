@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./login.css";
 
+import { getErrorMessage } from "../../components/MessageHandler";
 import { AuthContext } from "../../components/AuthContext";
 import { client } from "../../Api";
 
@@ -40,11 +41,7 @@ export default function Login() {
           navigate("/dashboard");
         })
         .catch((err) => {
-          if (typeof err.response.data === "object") {
-            setPasswordError(err.response.data[0]);
-            return;
-          }
-          setPasswordError(err.response.data.substring(0, maxErrorLength));
+          setPasswordError(getErrorMessage(err).substring(0, maxErrorLength));
         });
     } else {
       setPasswordError("Invalid username or password");
