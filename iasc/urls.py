@@ -42,6 +42,7 @@ api_views = [
     (r"result/zip", views.ZipResultViewSet, "result/zip"),
     (r"result", views.ResultViewSet, "result"),
     (r"user", views.UserViewSet, "user"),
+    (r"health", views.HealthCheck, "health"),
 ]
 
 for v in api_views:

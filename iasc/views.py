@@ -473,3 +473,12 @@ class ZipResultViewSet(mixins.IASCZipFileMixin, XLSResultViewSet):
 
     def get_filename(self, request=None, *args, **kwargs):
         return "all_results.zip"
+
+
+# Azure Healthcheck route
+class HealthCheck(ViewSet):
+    permission_classes = (permissions.AllowAny,)
+    pagination_class = None
+
+    def list(self, request):
+        return Response({"status": "healthy"}, status=status.HTTP_200_OK)
