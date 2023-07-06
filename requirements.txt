@@ -1,5 +1,5 @@
 # Install using `conda install -c conda-forge --file requirements.txt`
-django==4.1.9
+django==4.1.10
 django-environ>=0.4.5
 django-webpack-loader~=1.4.1
 djangorestframework~=3.14.0
