@@ -18,6 +18,6 @@ authors:
     affiliation: 'Department of Philosophy, Durham University, UK'
 repository-code: 'https://github.com/DurhamARC/IASCPolls'
 license: MIT
-# version: 1.0.0
-# doi: 10.5281/zenodo.1234
-# date-released: 2023-06-01
+version: 1.0
+doi: 10.5281/zenodo.8155054
+date-released: 2023-07-17
