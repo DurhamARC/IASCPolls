@@ -8,7 +8,7 @@
 
 Polling System developed for the Institute for Ascertaining Scientific Consensus 
 (IASC). This platform provides a tailored architecture for surveying consensus 
-across the scientific community.
+across the scientific community, and is hosted at https://iasc.awh.durham.ac.uk/
 
 ## Durham University Project Team
 
@@ -132,18 +132,27 @@ liability or warranty for use of this code.
 ## Acknowledgements
 This project was supported by the Durham University Seedcorn project fund, Durham University Department of Philosophy, and the [Centre for Humanities Engaging Science and Society (CHESS)](https://www.durham.ac.uk/research/institutes-and-centres/humanities-engaging-science-society/).
 
-[//]: # (## Citation)
-[//]: # ()
-[//]: # (Please cite the associated papers for this work if you use this code:)
-[//]: # ()
-[//]: # (```)
-[//]: # (@article{xxx2021paper,)
-[//]: # (  title={Title},)
-[//]: # (  author={Author},)
-[//]: # (  journal={arXiv},)
-[//]: # (  year={2021})
-[//]: # (})
-[//]: # (```)
+## Citation
+
+Please cite the codebase for this work if you use or reference it in academic publications:
+
+### APA
+Mitchell Finnigan, S., Sheppard, J., & Vickers, P. (2023). _IASCPolls: The Institute for Ascertaining Scientific Consensus Polling Platform (Version 1.0)_ [Computer software]. https://doi.org/10.5281/zenodo.8155054
+
+### BibTeX
+```
+@software{
+    Mitchell_Finnigan_IASCPolls_The_Institute_2023,
+    author = {Mitchell Finnigan, Samantha and Sheppard, Joanne and Vickers, Peter},
+    doi = {10.5281/zenodo.8155054},
+    license = {MIT},
+    month = jul,
+    title = {{IASCPolls: The Institute for Ascertaining Scientific Consensus Polling Platform}},
+    url = {https://github.com/DurhamARC/IASCPolls},
+    version = {1.0},
+    year = {2023}
+}
+```
 
 [//]: # (## Usage)
 [//]: # ()
