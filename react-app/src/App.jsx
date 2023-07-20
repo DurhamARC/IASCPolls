@@ -9,6 +9,8 @@ import NavBar from "./components/nav/NavBar";
 import Footer from "./components/footer/Footer";
 import Alert from "./components/Alert";
 
+// The below configuration allows webpack to pack each page of the site separately.
+// These are then lazy-loaded into the application.
 const Home = lazy(() =>
   import(/* webpackChunkName: "home" */ "./pages/home/Home")
 );
@@ -39,6 +41,9 @@ const DownloadParticipants = lazy(() =>
   )
 );
 
+/**
+ * Display an error message if something goes wrong!
+ */
 function fallbackRender({ error }) {
   return (
     <Alert title="Something went wrong" severity="error">
@@ -47,6 +52,11 @@ function fallbackRender({ error }) {
   );
 }
 
+/**
+ * Render the app using React Router.
+ * Include providers for error messages (MessageProvider) and Authentication (AuthProvider).
+ * ErrorBoundary calls the fallbackRender method if an error bubbles up that far.
+ */
 function App() {
   return (
     <div className="App">
