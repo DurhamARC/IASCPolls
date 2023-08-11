@@ -4,6 +4,7 @@
 [![codecov.io](https://codecov.io/gh/DurhamARC/IASCPolls/branch/main/graphs/badge.svg)](https://codecov.io/gh/DurhamARC/IASCPolls/branch/main)
 [![License: MIT](https://img.shields.io/github/license/DurhamARC/IASCPolls)](https://github.com/DurhamARC/IASCPolls/blob/main/LICENSE)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![DOI: 10.5281/zenodo.8155054](https://zenodo.org/badge/DOI/10.5281/zenodo.8155054.svg)](https://doi.org/10.5281/zenodo.8155054)
 
 
 Polling System developed for the Institute for Ascertaining Scientific Consensus 
