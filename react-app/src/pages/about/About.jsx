@@ -8,8 +8,19 @@ export default function About() {
         <div className="about">
           <h1>About</h1>
           <p>
-            IASC is a large international hub-and-spoke network, uniquely able to survey the world&quot;s scientists on an ongoing basis, providing rich datasets regarding the opinions of scientists and scientific sub-communities, both at a time and also as opinions fluctuate over time. This includes the special case of ascertaining strength of scientific consensus regarding a particular statement of interest. The international reach of IASC&quot;s network also reveals any variation of scientific opinion across countries or geographical regions.
-            Following a successful pilot project running 2022-23 (involving 30 institutions), 80 institutions have now provisionally agreed to be part of the IASC network during the 2024-27 project. The 80 institutions are listed below, together with the &quot;spoke representative&quot; for each institution.
+            IASC is a large international hub-and-spoke network, uniquely able
+            to survey the world&quot;s scientists on an ongoing basis, providing
+            rich datasets regarding the opinions of scientists and scientific
+            sub-communities, both at a time and also as opinions fluctuate over
+            time. This includes the special case of ascertaining strength of
+            scientific consensus regarding a particular statement of interest.
+            The international reach of IASC&quot;s network also reveals any
+            variation of scientific opinion across countries or geographical
+            regions. Following a successful pilot project running 2022-23
+            (involving 30 institutions), 80 institutions have now provisionally
+            agreed to be part of the IASC network during the 2024-27 project.
+            The 80 institutions are listed below, together with the &quot;spoke
+            representative&quot; for each institution.
           </p>
 
           <h2>The 2024-27 IASC Network (80 institutions)</h2>
@@ -49,10 +60,14 @@ export default function About() {
             <li>University of Nebraska Omaha (Haixin Dang)</li>
             <li>University of California, Irvine (Kyle Stanford)</li>
             <li>University of California, San Diego (Gabriel Nyberg)</li>
-            <li>University of Pittsburgh (Edouard Machery and Laura Gradowski)</li>
+            <li>
+              University of Pittsburgh (Edouard Machery and Laura Gradowski)
+            </li>
             <li>Bucknell University (Matthew Slater)</li>
             <li>University of Pennsylvania (Cory Clark and Jesse Hamilton)</li>
-            <li>University of British Columbia (Heidi Tworek and Chris Tenove)</li>
+            <li>
+              University of British Columbia (Heidi Tworek and Chris Tenove)
+            </li>
             <li>University of Toronto (Mark Hallap)</li>
             <li>UNAM, Mexico (Aline Guevara) </li>
           </ul>
@@ -61,13 +76,15 @@ export default function About() {
           <ul>
             <li>CONICET, Argentina (Eleanora Cresto)</li>
             <li>UFRJ, Rio de Janeiro (Carolina Araujo)</li>
-            <li>Universidade Federal de Minas Gerais (Maria Cecília de Miranda N. Coelho)</li>
+            <li>
+              Universidade Federal de Minas Gerais (Maria Cecília de Miranda N.
+              Coelho)
+            </li>
             <li>Unicamp (Brazil) (Cristiano Torezzan)</li>
             <li>University of Buenos Aires (Santiago Ginnobili)</li>
             <li>Universidad de los Andes (Manuela Fernández Pinto)</li>
           </ul>
 
-    
           <h3>Asia (17 institutions)</h3>
           <ul>
             <li>University of Hong Kong (Tong King Lee)</li>
@@ -77,9 +94,14 @@ export default function About() {
             <li>Ateneo de Manila University (Guss Rodriguez)</li>
             <li>Nanyang Technological University (Grace Boey)</li>
             <li>National University of Singapore (Isaac Wilhelm)</li>
-            <li>University of the Philippines (Liza Ocampo and K.C. Abalos-Orendain)</li>
+            <li>
+              University of the Philippines (Liza Ocampo and K.C.
+              Abalos-Orendain)
+            </li>
             <li>Kathmandu University (Uddhab Pyakurel)</li>
-            <li>Universitas Airlangga (Unair) (Prof. Dr. Purnawan Basundoro)</li>
+            <li>
+              Universitas Airlangga (Unair) (Prof. Dr. Purnawan Basundoro)
+            </li>
             <li>University of Malaya (Azizan Baharuddin)</li>
             <li>University of Tokyo (Kohji Ishihara)</li>
             <li>Universiti Brunei Darussalam (Daniel Wee and Abby Tan)</li>
@@ -88,7 +110,7 @@ export default function About() {
             <li>Bogazici University (Lucas Thorpe)</li>
             <li>Hebrew University of Jerusalem (Arnon Levy)</li>
           </ul>
-    
+
           <h3>Africa (9 institutions)</h3>
           <ul>
             <li>University of Ibadan (Adeshina Afolayan)</li>
@@ -101,7 +123,7 @@ export default function About() {
             <li>University of Johannesburg (Sean Muller)</li>
             <li>Pretoria (Emma Ruttkamp-Bloem) </li>
           </ul>
-    
+
           <h3>Australasia (12 institutions)</h3>
           <ul>
             <li>Macquarie University (Mark Alfano)</li>
@@ -110,7 +132,10 @@ export default function About() {
             <li>University of Sydney (Richard North and Kathy Belov)</li>
             <li>University of Melbourne (Howard Sankey and Fiona Fidler)</li>
             <li>University of Adelaide (Antony Eagle)</li>
-            <li>University of Canterbury (Elizabeth Hopkins, Ian Wright, and Jack Copeland)</li>
+            <li>
+              University of Canterbury (Elizabeth Hopkins, Ian Wright, and Jack
+              Copeland)
+            </li>
             <li>Victoria University of Wellington (Richard Joyce)</li>
             <li>University of Western Australia (Chris Letheby)</li>
             <li>University of New South Wales (Michaelis Michael)</li>
@@ -118,37 +143,101 @@ export default function About() {
             <li>University of Queensland (Andrew Crowden)</li>
           </ul>
 
-          
           <h2>IASC Advisory Board</h2>
           <ol>
-            <li>Naomi Oreskes (Professor of the History of Science and Affiliated Professor of Earth and Planetary Sciences, Harvard University, USA)
-            Steve Lewandowsky (Chair in Cognitive Psychology, Bristol, UK)</li>
-            <li><ul><li>&quot;Special Advisor for Methodology&quot;</li></ul></li>
-            <li>Nick Allum (quantitative social scientist and Professor of Research Methodology, University of Essex, UK)</li>
-            <li><ul><li>&quot;Special Advisor for Methodology&quot;</li></ul></li>
-            <li>Brandon Vaidyanathan (Associate Professor and Chair, Department of Sociology, The Catholic University of America, USA)</li>
-            <li><ul><li>&quot;Special Advisor for Methodology&quot;</li></ul></li>
-            <li>John H. Evans (Tata Chancellor&quot;s Chair in Social Sciences; Associate Dean of Social Sciences; Department of Sociology, UCSD, USA)</li>
-            <li><ul><li>&quot;Special Advisor for Methodology&quot;</li></ul></li>
-            <li>Cory Clark (Behavioral Scientist, University of Pennsylvania, USA)</li>
+            <li>
+              Naomi Oreskes (Professor of the History of Science and Affiliated
+              Professor of Earth and Planetary Sciences, Harvard University,
+              USA) Steve Lewandowsky (Chair in Cognitive Psychology, Bristol,
+              UK)
+            </li>
+            <li>
+              <ul>
+                <li>&quot;Special Advisor for Methodology&quot;</li>
+              </ul>
+            </li>
+            <li>
+              Nick Allum (quantitative social scientist and Professor of
+              Research Methodology, University of Essex, UK)
+            </li>
+            <li>
+              <ul>
+                <li>&quot;Special Advisor for Methodology&quot;</li>
+              </ul>
+            </li>
+            <li>
+              Brandon Vaidyanathan (Associate Professor and Chair, Department of
+              Sociology, The Catholic University of America, USA)
+            </li>
+            <li>
+              <ul>
+                <li>&quot;Special Advisor for Methodology&quot;</li>
+              </ul>
+            </li>
+            <li>
+              John H. Evans (Tata Chancellor&quot;s Chair in Social Sciences;
+              Associate Dean of Social Sciences; Department of Sociology, UCSD,
+              USA)
+            </li>
+            <li>
+              <ul>
+                <li>&quot;Special Advisor for Methodology&quot;</li>
+              </ul>
+            </li>
+            <li>
+              Cory Clark (Behavioral Scientist, University of Pennsylvania, USA)
+            </li>
             <li>Henry Taylor (Philosopher of Psychology, Birmingham, UK)</li>
-            <li>Angela Woods (Director of the Institute for Medical Humanities, Durham, UK)</li>
-            <li>Sanford Goldberg (Chester D. Tripp Professor in the Humanities, Northwestern, USA)</li>
-            <li>Michael O&quot;Rourke (Professor of Philosophy, Michigan State, USA)</li>
-            <li>Peter Heslin (Professor and Data Science Specialist, Durham, UK)</li>
-            <li>Alan Real (Director of Advanced Research Computing, Durham, UK)</li>
-            <li>Mariann Hardey (Professor, Durham University Business School, UK)</li>
-            <li>Mike Bath (Research Commercialisation and Exploitation, Durham University, UK)</li>
-            <li>Kieran Fernandes (Associate Dean for Internationalisation, Durham University Business School, UK)</li>
+            <li>
+              Angela Woods (Director of the Institute for Medical Humanities,
+              Durham, UK)
+            </li>
+            <li>
+              Sanford Goldberg (Chester D. Tripp Professor in the Humanities,
+              Northwestern, USA)
+            </li>
+            <li>
+              Michael O&quot;Rourke (Professor of Philosophy, Michigan State,
+              USA)
+            </li>
+            <li>
+              Peter Heslin (Professor and Data Science Specialist, Durham, UK)
+            </li>
+            <li>
+              Alan Real (Director of Advanced Research Computing, Durham, UK)
+            </li>
+            <li>
+              Mariann Hardey (Professor, Durham University Business School, UK)
+            </li>
+            <li>
+              Mike Bath (Research Commercialisation and Exploitation, Durham
+              University, UK)
+            </li>
+            <li>
+              Kieran Fernandes (Associate Dean for Internationalisation, Durham
+              University Business School, UK)
+            </li>
             <li>Tarun Menon (Azim Premji University, Bangalore, India)</li>
             <li>Wei Wang (Tsinghua University, Beijing, China)</li>
-            <li>Dave Sweet (MD, FRCP(C); &quot;Clarity&quot; Co-President and Co-Founder)</li>
-            <li>Tom Lamb (JD; Entrepreneur; &quot;Clarity&quot; Co-President and Co-Founder) </li>
+            <li>
+              Dave Sweet (MD, FRCP(C); &quot;Clarity&quot; Co-President and
+              Co-Founder)
+            </li>
+            <li>
+              Tom Lamb (JD; Entrepreneur; &quot;Clarity&quot; Co-President and
+              Co-Founder){" "}
+            </li>
           </ol>
 
           <h2>Beta-Testing Group</h2>
           <p>
-            IASC has a beta-testing group of 116 scientists, as listed below. Every survey is initially tested by the core team (alpha testing), then by our Beta-Testing Group, before any full rollout across the entire network. In addition to testing the basic mechanics of the survey methodology, this also serves as a means to acquire all different kinds of potentially valuable feedback, prior to full rollout.
+            IASC has a beta-testing group of 116 scientists, as listed below.
+            Every survey is initially tested by the core team (alpha testing),
+            then by our Beta-Testing Group, before any full rollout across the
+            entire network. In addition to testing the basic mechanics of the
+            survey methodology, this also serves as a means to acquire all
+            different kinds of potentially valuable feedback, prior to full
+            rollout.
           </p>
           <ol>
             <li>Alice Roberts (Birmingham)</li>
