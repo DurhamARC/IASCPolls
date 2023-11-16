@@ -8,8 +8,8 @@ export default function About() {
         <div className="about">
           <h1>About</h1>
           <p>
-            IASC is a large international hub-and-spoke network, uniquely able to survey the world's scientists on an ongoing basis, providing rich datasets regarding the opinions of scientists and scientific sub-communities, both at a time and also as opinions fluctuate over time. This includes the special case of ascertaining strength of scientific consensus regarding a particular statement of interest. The international reach of IASC’s network also reveals any variation of scientific opinion across countries or geographical regions.
-            Following a successful pilot project running 2022-23 (involving 30 institutions), 80 institutions have now provisionally agreed to be part of the IASC network during the 2024-27 project. The 80 institutions are listed below, together with the 'spoke representative' for each institution.
+            IASC is a large international hub-and-spoke network, uniquely able to survey the world&quot;s scientists on an ongoing basis, providing rich datasets regarding the opinions of scientists and scientific sub-communities, both at a time and also as opinions fluctuate over time. This includes the special case of ascertaining strength of scientific consensus regarding a particular statement of interest. The international reach of IASC&quot;s network also reveals any variation of scientific opinion across countries or geographical regions.
+            Following a successful pilot project running 2022-23 (involving 30 institutions), 80 institutions have now provisionally agreed to be part of the IASC network during the 2024-27 project. The 80 institutions are listed below, together with the &quot;spoke representative&quot; for each institution.
           </p>
 
           <h2>The 2024-27 IASC Network (80 institutions)</h2>
@@ -123,18 +123,18 @@ export default function About() {
           <ol>
             <li>Naomi Oreskes (Professor of the History of Science and Affiliated Professor of Earth and Planetary Sciences, Harvard University, USA)
             Steve Lewandowsky (Chair in Cognitive Psychology, Bristol, UK)</li>
-            <li><ul><li>‘Special Advisor for Methodology’</li></ul></li>
+            <li><ul><li>&quot;Special Advisor for Methodology&quot;</li></ul></li>
             <li>Nick Allum (quantitative social scientist and Professor of Research Methodology, University of Essex, UK)</li>
-            <li><ul><li>‘Special Advisor for Methodology’</li></ul></li>
+            <li><ul><li>&quot;Special Advisor for Methodology&quot;</li></ul></li>
             <li>Brandon Vaidyanathan (Associate Professor and Chair, Department of Sociology, The Catholic University of America, USA)</li>
-            <li><ul><li>‘Special Advisor for Methodology’</li></ul></li>
-            <li>John H. Evans (Tata Chancellor’s Chair in Social Sciences; Associate Dean of Social Sciences; Department of Sociology, UCSD, USA)</li>
-            <li><ul><li>‘Special Advisor for Methodology’</li></ul></li>
+            <li><ul><li>&quot;Special Advisor for Methodology&quot;</li></ul></li>
+            <li>John H. Evans (Tata Chancellor&quot;s Chair in Social Sciences; Associate Dean of Social Sciences; Department of Sociology, UCSD, USA)</li>
+            <li><ul><li>&quot;Special Advisor for Methodology&quot;</li></ul></li>
             <li>Cory Clark (Behavioral Scientist, University of Pennsylvania, USA)</li>
             <li>Henry Taylor (Philosopher of Psychology, Birmingham, UK)</li>
             <li>Angela Woods (Director of the Institute for Medical Humanities, Durham, UK)</li>
             <li>Sanford Goldberg (Chester D. Tripp Professor in the Humanities, Northwestern, USA)</li>
-            <li>Michael O’Rourke (Professor of Philosophy, Michigan State, USA)</li>
+            <li>Michael O&quot;Rourke (Professor of Philosophy, Michigan State, USA)</li>
             <li>Peter Heslin (Professor and Data Science Specialist, Durham, UK)</li>
             <li>Alan Real (Director of Advanced Research Computing, Durham, UK)</li>
             <li>Mariann Hardey (Professor, Durham University Business School, UK)</li>
@@ -142,8 +142,8 @@ export default function About() {
             <li>Kieran Fernandes (Associate Dean for Internationalisation, Durham University Business School, UK)</li>
             <li>Tarun Menon (Azim Premji University, Bangalore, India)</li>
             <li>Wei Wang (Tsinghua University, Beijing, China)</li>
-            <li>Dave Sweet (MD, FRCP(C); ‘Clarity’ Co-President and Co-Founder)</li>
-            <li>Tom Lamb (JD; Entrepreneur; ‘Clarity’ Co-President and Co-Founder) </li>
+            <li>Dave Sweet (MD, FRCP(C); &quot;Clarity&quot; Co-President and Co-Founder)</li>
+            <li>Tom Lamb (JD; Entrepreneur; &quot;Clarity&quot; Co-President and Co-Founder) </li>
           </ol>
 
           <h2>Beta-Testing Group</h2>
