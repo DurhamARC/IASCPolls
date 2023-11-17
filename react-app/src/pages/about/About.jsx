@@ -151,6 +151,9 @@ export default function About() {
               USA) Steve Lewandowsky (Chair in Cognitive Psychology, Bristol,
               UK)
             </li>
+            <li>
+              Steve Lewandowsky (Chair in Cognitive Psychology, Bristol, UK)
+            </li>
             <ul>
               <li>&quot;Special Advisor for Methodology&quot;</li>
             </ul>
