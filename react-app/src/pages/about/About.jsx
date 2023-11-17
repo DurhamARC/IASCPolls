@@ -9,12 +9,12 @@ export default function About() {
           <h1>About</h1>
           <p>
             IASC is a large international hub-and-spoke network, uniquely able
-            to survey the world&quot;s scientists on an ongoing basis, providing
+            to survey the world&apos;s scientists on an ongoing basis, providing
             rich datasets regarding the opinions of scientists and scientific
             sub-communities, both at a time and also as opinions fluctuate over
             time. This includes the special case of ascertaining strength of
             scientific consensus regarding a particular statement of interest.
-            The international reach of IASC&quot;s network also reveals any
+            The international reach of IASC&apos;s network also reveals any
             variation of scientific opinion across countries or geographical
             regions. Following a successful pilot project running 2022-23
             (involving 30 institutions), 80 institutions have now provisionally
@@ -151,39 +151,31 @@ export default function About() {
               USA) Steve Lewandowsky (Chair in Cognitive Psychology, Bristol,
               UK)
             </li>
-            <li>
-              <ul>
-                <li>&quot;Special Advisor for Methodology&quot;</li>
-              </ul>
-            </li>
+            <ul>
+              <li>&quot;Special Advisor for Methodology&quot;</li>
+            </ul>
             <li>
               Nick Allum (quantitative social scientist and Professor of
               Research Methodology, University of Essex, UK)
             </li>
-            <li>
-              <ul>
-                <li>&quot;Special Advisor for Methodology&quot;</li>
-              </ul>
-            </li>
+            <ul>
+              <li>&quot;Special Advisor for Methodology&quot;</li>
+            </ul>
             <li>
               Brandon Vaidyanathan (Associate Professor and Chair, Department of
               Sociology, The Catholic University of America, USA)
             </li>
+            <ul>
+              <li>&quot;Special Advisor for Methodology&quot;</li>
+            </ul>
             <li>
-              <ul>
-                <li>&quot;Special Advisor for Methodology&quot;</li>
-              </ul>
-            </li>
-            <li>
-              John H. Evans (Tata Chancellor&quot;s Chair in Social Sciences;
+              John H. Evans (Tata Chancellor&apos;s Chair in Social Sciences;
               Associate Dean of Social Sciences; Department of Sociology, UCSD,
               USA)
             </li>
-            <li>
-              <ul>
-                <li>&quot;Special Advisor for Methodology&quot;</li>
-              </ul>
-            </li>
+            <ul>
+              <li>&quot;Special Advisor for Methodology&quot;</li>
+            </ul>
             <li>
               Cory Clark (Behavioral Scientist, University of Pennsylvania, USA)
             </li>
