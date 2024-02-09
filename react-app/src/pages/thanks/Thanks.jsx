@@ -9,11 +9,8 @@ export default function Thanks() {
           <h1>Thank you for your participation!</h1>
           <div>
             <p>
-              Thank you for participating in our beta test. Your input and
-              feedback have been invaluable in helping us shape and improve the
-              Institute for Ascertaining Scientific Consensus. We greatly
-              appreciate your time and effort. If you&apos;d like to learn more
-              about the research and development behind IASC,
+              We greatly appreciate your time and effort. If you&apos;d like to
+              learn more about the research and development behind IASC,
               <a href="https://www.durham.ac.uk/research/institutes-and-centres/humanities-engaging-science-society/the-institute-for-ascertaining-scientific-consensus/">
                 {" "}
                 please visit the Institute webpage.{" "}
