@@ -23,8 +23,8 @@ ARG PYTHON_VER 3.8
 #
 # ----------------------------------------------------------------------------
 # Build node / Frontend assets
-FROM node:alpine3.15 as build_node
-MAINTAINER Samantha Finnigan <samantha.finnigan@durham.ac.uk>, ARC Durham University
+FROM node:alpine3.15 AS build_node
+LABEL org.opencontainers.image.authors="Samantha Finnigan <samantha.finnigan@durham.ac.uk>, ARC Durham University"
 
 # Install Python (required for node-gyp)
 RUN apk add --update python3 make g++ && \
@@ -45,7 +45,7 @@ RUN npm run webpack
 
 # ----------------------------------------------------------------------------
 # Create conda environment
-FROM continuumio/miniconda3:4.12.0 as build_python
+FROM continuumio/miniconda3:4.12.0 AS build_python
 
 # This is how I used to do this: it's slower than using conda-lock
 # https://pythonspeed.com/articles/conda-docker-image-size/
@@ -80,8 +80,8 @@ SHELL ["/bin/bash", "--login", "-c"]
 
 # ----------------------------------------------------------------------------
 # Create a python Docker container for running the app with gunicorn and whitenoise
-FROM debian:bullseye-slim as iasc
-MAINTAINER Samantha Finnigan <samantha.finnigan@durham.ac.uk>, ARC Durham University
+FROM debian:bullseye-slim AS iasc
+LABEL org.opencontainers.image.authors="Samantha Finnigan <samantha.finnigan@durham.ac.uk>, ARC Durham University"
 WORKDIR /app
 
 # set environment variables (don't buffer stdout, don't write bytecode)
