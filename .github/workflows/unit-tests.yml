@@ -4,6 +4,7 @@ on:
     paths:
       - 'iasc/**/*'
       - 'frontend/**/*'
+      - '.github/workflows/*'
   pull_request:
     types:
       - opened
@@ -58,7 +59,7 @@ jobs:
         name: Set Up Miniconda
         with:
           python-version: 3.12
-          mamba-version: latest
+          mamba-version: "*"
           channels: conda-forge
           activate-environment: anaconda-client-env
           environment-file: conf/iasc.base.yml
