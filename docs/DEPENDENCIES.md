@@ -64,6 +64,19 @@ cd react-app
 npm run webpack
 ```
 
+### Update Dependencies
+
+```
+# Regenerate conda-lock.yml
+conda-lock -f conf/iasc.base.yml -p osx-arm64 -p osx-64 -p linux-64 -p linux-aarch64 --lockfile conf/conda-lock.yml
+```
+
+```
+# Update package.json and package-lock.json
+npm update --save
+npm audit fix
+```
+
 ### Set up the Database using Django
 
 You will need to use Django to set up the database correctly. `cd` back to the root of the project and:
