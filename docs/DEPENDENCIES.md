@@ -35,11 +35,18 @@ Pip:
 pip install -r requirements.txt
 ```
 
-Conda:
+Conda (requirements.txt):
 ```
-conda create --name IASCPolls
-conda activate IASCPolls
+conda create --name iasc
+conda activate iasc
 conda install -c conda-forge --file requirements.txt
+```
+
+Conda (YAML)
+```
+conda env create -f conf/iasc.base.yml
+conda activate iasc
+conda env update --file conf/iasc.dev.yml
 ```
 
 If you receive the error `django.core.exceptions.ImproperlyConfigured: Error loading psycopg2 module: No module named 'psycopg2'` when running on an M1 Mac, then run the following to correct it:
