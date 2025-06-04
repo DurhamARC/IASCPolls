@@ -100,9 +100,7 @@ class Survey(models.Model):
     kind = models.CharField(
         max_length=2, choices=SurveyKind.choices, default=SurveyKind.LIKERT
     )
-    expiry = models.DateTimeField(
-        null=False, default=datetime(2000, 1, 1, 0, 0, tzinfo=timezone.utc)
-    )
+    expiry = models.DateTimeField(null=False, default=datetime(2000, 1, 1, 0, 0))
     participants = models.IntegerField(null=False, default=0)
     voted = models.IntegerField(null=False, default=0)
 
