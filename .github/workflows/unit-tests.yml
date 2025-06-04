@@ -54,16 +54,14 @@ jobs:
           CONDA_PREFIX: /usr/share/miniconda
         id: cache
 
-      - uses: conda-incubator/setup-miniconda@v2
+      - uses: conda-incubator/setup-miniconda@v3
         name: Set Up Miniconda
         with:
-          miniforge-variant: Mambaforge
-          miniforge-version: latest
-          use-mamba: true
+          python-version: 3.12
+          mamba-version: latest
+          channels: conda-forge
           activate-environment: anaconda-client-env
           environment-file: conf/iasc.base.yml
-          python-version: 3.8
-          channels: conda-forge
           # IMPORTANT! This needs to be set for caching to work properly:
           use-only-tar-bz2: true
           auto-activate-base: false
