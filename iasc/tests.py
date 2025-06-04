@@ -125,7 +125,7 @@ class ViewsTestCase(HTTPTestCase):
         names, input_zip = self.helper_zip_get_files(resp.content)
         filename = slugify(slug, allow_unicode=True)
         expected_filename = f"{prefix}-{self.survey_id}-{filename}.xlsx"
-        self.assertEquals(names[0], expected_filename)
+        self.assertEqual(names[0], expected_filename)
 
         xls = input_zip.read(names[0])
         # Excel files are zip files too:
@@ -137,8 +137,8 @@ class ViewsTestCase(HTTPTestCase):
 
         # Check XLS data:
         data = self.helper_get_xls_data(xls)
-        self.assertEquals(data.pop(0), headers)
-        self.assertEquals(len(data), len(self.flat_test_data))
+        self.assertEqual(data.pop(0), headers)
+        self.assertEqual(len(data), len(self.flat_test_data))
 
     def test_api_routes(self):
         """
@@ -199,10 +199,10 @@ class ViewsTestCase(HTTPTestCase):
                 contains="File uploaded",
             )
 
-            self.assertEquals(Participant.objects.count(), len(self.flat_test_data))
+            self.assertEqual(Participant.objects.count(), len(self.flat_test_data))
 
             for row in self.flat_test_data:
-                self.assertEquals(
+                self.assertEqual(
                     Participant.objects.filter(email=row[1]).get().name,
                     row[0],
                 )
@@ -212,7 +212,7 @@ class ViewsTestCase(HTTPTestCase):
                 "/api/participants/", mimetype=self.mimetypes["json"], startswith=b"{"
             )
 
-            self.assertEquals(resp["count"], len(self.flat_test_data))
+            self.assertEqual(resp["count"], len(self.flat_test_data))
 
         def test_02_create_survey():
             """
@@ -231,10 +231,10 @@ class ViewsTestCase(HTTPTestCase):
                 mimetype=self.mimetypes["json"],
             )
 
-            self.assertEquals(resp["status"], "success")
-            self.assertEquals(resp["message"], "Survey created.")
-            self.assertEquals(Survey.objects.count(), 1)
-            self.assertEquals(ActiveLink.objects.count(), len(self.flat_test_data))
+            self.assertEqual(resp["status"], "success")
+            self.assertEqual(resp["message"], "Survey created.")
+            self.assertEqual(Survey.objects.count(), 1)
+            self.assertEqual(ActiveLink.objects.count(), len(self.flat_test_data))
 
         def test_03_download_links():
             """
@@ -250,9 +250,7 @@ class ViewsTestCase(HTTPTestCase):
                 startswith=b"{",
             )
 
-            self.assertEquals(
-                resp_surveys["results"][0]["question"], self.test_question
-            )
+            self.assertEqual(resp_surveys["results"][0]["question"], self.test_question)
 
             self.survey_id = resp_surveys["results"][0]["id"]
             resp_institutions = self.GET(
@@ -261,7 +259,7 @@ class ViewsTestCase(HTTPTestCase):
                 startswith=b"{",
             )
 
-            self.assertEquals(
+            self.assertEqual(
                 resp_institutions["results"][0]["name"], self.test_institution
             )
 
@@ -286,9 +284,9 @@ class ViewsTestCase(HTTPTestCase):
             data = self.helper_get_xls_data(resp.content)
 
             # Check that the Excel sheet returned contains the correct header
-            self.assertEquals(data.pop(0), self.sheet_header)
+            self.assertEqual(data.pop(0), self.sheet_header)
             # Check that the Excel sheet contains the correct number of rows
-            self.assertEquals(len(data), len(self.flat_test_data))
+            self.assertEqual(len(data), len(self.flat_test_data))
 
             # Store links in variable for later use
             self.links = data
@@ -328,8 +326,8 @@ class ViewsTestCase(HTTPTestCase):
 
                 count += 1
 
-                self.assertEquals(resp["status"], "success")
-                self.assertEquals(resp["message"], "Voted")
+                self.assertEqual(resp["status"], "success")
+                self.assertEqual(resp["message"], "Voted")
 
                 # Verify that voting is incrementing the vote count on the survey
                 result = self.GET(
@@ -340,7 +338,7 @@ class ViewsTestCase(HTTPTestCase):
                     contains="voted",
                 )
 
-                self.assertEquals(result["voted"], count)
+                self.assertEqual(result["voted"], count)
 
             resp = self.GET(
                 "/api/links/",
@@ -351,7 +349,7 @@ class ViewsTestCase(HTTPTestCase):
             )
 
             # Check that all voting links are used up
-            self.assertEquals(resp["count"], 0)
+            self.assertEqual(resp["count"], 0)
 
         def test_06_close():
             """
@@ -384,7 +382,7 @@ class ViewsTestCase(HTTPTestCase):
                 startswith=b"{",
             )
 
-            self.assertEquals(resp["count"], len(self.flat_test_data))
+            self.assertEqual(resp["count"], len(self.flat_test_data))
 
             resp = self.GET(
                 f"/api/result/xls/?survey={self.survey_id}",
@@ -396,10 +394,10 @@ class ViewsTestCase(HTTPTestCase):
             data = self.helper_get_xls_data(resp.content)
 
             # Check that the Excel sheet returned contains the correct header and no. of rows
-            self.assertEquals(
+            self.assertEqual(
                 data.pop(0), ["vote", "institution", "discipline", "added"]
             )
-            self.assertEquals(len(data), len(self.flat_test_data))
+            self.assertEqual(len(data), len(self.flat_test_data))
 
             resp = self.GET(
                 "/api/survey/results/",
@@ -408,12 +406,12 @@ class ViewsTestCase(HTTPTestCase):
                 startswith=b"{",
             )
 
-            self.assertEquals(resp["count"], 1)
+            self.assertEqual(resp["count"], 1)
             results = resp["results"][0]
-            self.assertEquals(results["question"], self.test_question)
-            self.assertEquals(results["count"], len(self.flat_test_data))
-            self.assertEquals(results["kind"], "LI")
-            self.assertEquals(results["active"], "False")
+            self.assertEqual(results["question"], self.test_question)
+            self.assertEqual(results["count"], len(self.flat_test_data))
+            self.assertEqual(results["kind"], "LI")
+            self.assertEqual(results["active"], "False")
 
         def test_08_zip_results():
             """
@@ -460,7 +458,7 @@ class ViewsTestCase(HTTPTestCase):
             )
 
             # Check for the three added disciplines
-            self.assertEquals(len(resp), 3)
+            self.assertEqual(len(resp), 3)
 
         def test_10_user():
             """
@@ -478,7 +476,7 @@ class ViewsTestCase(HTTPTestCase):
 
             self.assertTrue("username" in resp.keys())
             self.assertTrue("first_name" in resp.keys())
-            self.assertEquals(resp["username"], self.username)
+            self.assertEqual(resp["username"], self.username)
 
         def test_11_create_survey_with_institution():
             """
@@ -506,10 +504,10 @@ class ViewsTestCase(HTTPTestCase):
                 mimetype=self.mimetypes["json"],
             )
 
-            self.assertEquals(resp["status"], "success")
-            self.assertEquals(resp["message"], "Survey created.")
-            self.assertEquals(Survey.objects.count(), 2)
-            self.assertEquals(ActiveLink.objects.count(), 1)
+            self.assertEqual(resp["status"], "success")
+            self.assertEqual(resp["message"], "Survey created.")
+            self.assertEqual(Survey.objects.count(), 2)
+            self.assertEqual(ActiveLink.objects.count(), 1)
 
         #
         # Run all the integration tests defined within this function:
@@ -539,7 +537,7 @@ class DatabaseModelTestCase(TestCase):
             question="What is the causative factor in Bovine Lunar Springing (BLS)?",
             active=True,
             kind="LI",
-            expiry=datetime.datetime(2099, 1, 1, 0, 0, tzinfo=timezone.utc),
+            expiry=datetime.datetime(2099, 1, 1, 0, 0),
             participants=1,
             voted=0,
         )
