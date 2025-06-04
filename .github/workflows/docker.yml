@@ -4,13 +4,7 @@ name: Build Docker Images
 on:
   push:
     branches:
-     - 'main'
      - 'release'
-
-#  workflow_run:
-#    workflows: [Unit Tests]
-#    types:
-#      - completed
 
 env:
   DOCKERHUB_REPO: ${{ secrets.AZURE_ACR_REGISTRY }}/arc/iasc
@@ -85,23 +79,5 @@ jobs:
         uses: Azure/pipelines@v1.2
         with:
           azure-pipeline-name: DurhamARC.IASCPolls
-          azure-devops-project-url: ${{ secrets.AZURE_DEVOPS_URL }}
-          azure-devops-token: ${{ secrets.AZURE_DEVOPS_TOKEN }}
-
-  release-dev:
-    name: Release to Azure Pipelines Dev
-    needs: docker
-    runs-on: ubuntu-latest
-
-    # Only run for Main branch, and NOT PRs
-    if: github.ref == 'refs/heads/main'
-#      && github.event.workflow_run.conclusion == 'success'
-#      && github.event_name != 'pull_request'
-
-    steps:
-      - name: Azure Pipelines Action
-        uses: Azure/pipelines@v1.2
-        with:
-          azure-pipeline-name: DurhamARC.IASCPolls.dev
           azure-devops-project-url: ${{ secrets.AZURE_DEVOPS_URL }}
           azure-devops-token: ${{ secrets.AZURE_DEVOPS_TOKEN }}
