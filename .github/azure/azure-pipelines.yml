@@ -70,6 +70,9 @@ stages:
                 -DB_PASS "$(DB_PASS)"
                 -DB_USER "$(DB_USER)"
                 -DB_SSL_ENABLED "$(DB_SSL_ENABLED)"
+                -DOCKER_REGISTRY_SERVER_URL "https://$(dockerRegistryServiceConnection)"
+                -DOCKER_REGISTRY_SERVER_USERNAME "$(DOCKER_REGISTRY_SERVER_USERNAME)"
+                -DOCKER_REGISTRY_SERVER_PASSWORD "$(DOCKER_REGISTRY_SERVER_PASSWORD)"
 
           - task: AzureAppServiceManage@0
             inputs:
