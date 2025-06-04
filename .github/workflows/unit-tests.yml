@@ -58,7 +58,7 @@ jobs:
       - uses: conda-incubator/setup-miniconda@v3
         name: Set Up Miniconda
         with:
-          python-version: 3.12
+          python-version: 3.13
           mamba-version: "*"
           channels: conda-forge
           activate-environment: anaconda-client-env
