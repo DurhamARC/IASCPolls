@@ -1,25 +1,25 @@
-name: IASCPolls
+# Create using conda env create -f conf/iasc.base.yml
+name: iasc
 channels:
-  - defaults
   - conda-forge
 dependencies:
-  - python=3.8
-  - pip
-  - django==4.1
-  - requests
-  - gunicorn
-  - psycopg2
-  - pandas
-  - openpyxl
-  - django-cors-headers
-  - django-environ
-  - django-filter
-  - django-webpack-loader
-  - djangorestframework
-  - djangorestframework-filters
-  - whitenoise
-  - thefuzz
-  - python-levenshtein
+  - python=3.12.10
+  - pip=25.1.1
+  - django=5.2.1
+  - requests=2.32.3
+  - gunicorn=23.0.0
+  - psycopg2=2.9.10
+  - pandas=2.2.3
+  - openpyxl=3.1.5
+  - django-cors-headers=4.7.0
+  - django-environ=0.12.0
+  - django-filter=25.1
+  - django-webpack-loader=3.2.0
+  - djangorestframework=3.16.0
+  - djangorestframework-filters=1.0.0.dev2
+  - whitenoise=6.7.0
+  - thefuzz=0.22.1
+  - levenshtein=0.27.1
   - pip:
-    - drf-excel
-prefix: /home/sam/miniconda3/envs/IASCPolls
+      - drf-excel==2.5.3
+prefix: /opt/miniconda3/envs/iasc
