@@ -32,7 +32,7 @@ variables:
   - name: dockerRegistryServiceConnection
     value: 'duuksawhacr01.azurecr.io'
   - name: imageRepository
-    value: 'arc/iascpolls'
+    value: 'arc/iasc'
 
 stages:
   - stage: Release
