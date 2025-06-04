@@ -28,10 +28,10 @@ class HTTPTestCase(TestCase):
         Make GET request and test response for status, mimetype, start, and content
         """
         response = self.client.get(url)
-        self.assertEquals(response.status_code, status)
+        self.assertEqual(response.status_code, status)
 
         if mimetype:
-            self.failUnless(response.headers["Content-Type"].startswith(mimetype))
+            self.assertTrue(response.headers["Content-Type"].startswith(mimetype))
         if startswith:
             self.assertTrue(response.content.startswith(startswith))
         if contains:
@@ -49,8 +49,8 @@ class HTTPTestCase(TestCase):
         response = self.client.post(url, params)
 
         try:
-            self.assertEquals(response.status_code, status)
-            self.failUnless(response.headers["Content-Type"].startswith(mimetype))
+            self.assertEqual(response.status_code, status)
+            self.assertTrue(response.headers["Content-Type"].startswith(mimetype))
             if contains:
                 self.assertContains(response, contains)
 

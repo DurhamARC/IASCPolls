@@ -4,6 +4,7 @@ on:
     paths:
       - 'iasc/**/*'
       - 'frontend/**/*'
+      - '.github/workflows/*'
   pull_request:
     types:
       - opened
@@ -55,13 +56,11 @@ jobs:
         id: cache
 
       - uses: conda-incubator/setup-miniconda@v3
-        name: Set Up Miniconda
+        name: Set Up Miniforge
         with:
-          python-version: 3.12
-          mamba-version: latest
-          channels: conda-forge
           activate-environment: anaconda-client-env
           environment-file: conf/iasc.base.yml
+          miniforge-version: latest
           # IMPORTANT! This needs to be set for caching to work properly:
           use-only-tar-bz2: true
           auto-activate-base: false
