@@ -35,11 +35,18 @@ Pip:
 pip install -r requirements.txt
 ```
 
-Conda:
+Conda (requirements.txt):
 ```
-conda create --name IASCPolls
-conda activate IASCPolls
+conda create --name iasc
+conda activate iasc
 conda install -c conda-forge --file requirements.txt
+```
+
+Conda (YAML)
+```
+conda env create -f conf/iasc.base.yml
+conda activate iasc
+conda env update --file conf/iasc.dev.yml
 ```
 
 If you receive the error `django.core.exceptions.ImproperlyConfigured: Error loading psycopg2 module: No module named 'psycopg2'` when running on an M1 Mac, then run the following to correct it:
@@ -55,6 +62,19 @@ Use npm to build the React app statically with webpack, into the correct directo
 ```shell
 cd react-app
 npm run webpack
+```
+
+### Update Dependencies
+
+```
+# Regenerate conda-lock.yml
+conda-lock -f conf/iasc.base.yml -p osx-arm64 -p osx-64 -p linux-64 -p linux-aarch64 --lockfile conf/conda-lock.yml
+```
+
+```
+# Update package.json and package-lock.json
+npm update --save
+npm audit fix
 ```
 
 ### Set up the Database using Django

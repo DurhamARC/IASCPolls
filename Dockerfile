@@ -1,3 +1,5 @@
+# syntax=docker/dockerfile:1
+# check=skip=SecretsUsedInArgOrEnv
 #
 # Dockerfile: Build containers for the IASC polling site
 #
@@ -19,12 +21,12 @@
 #
 # See: https://docs.docker.com/build/building/multi-stage/ for more info.
 #
-ARG PYTHON_VER 3.8
+ARG PYTHON_VER 3.12
 #
 # ----------------------------------------------------------------------------
 # Build node / Frontend assets
-FROM node:alpine3.15 as build_node
-MAINTAINER Samantha Finnigan <samantha.finnigan@durham.ac.uk>, ARC Durham University
+FROM node:lts-alpine3.22 AS build_node
+LABEL org.opencontainers.image.authors="Samantha Finnigan <samantha.finnigan@durham.ac.uk>, ARC Durham University"
 
 # Install Python (required for node-gyp)
 RUN apk add --update python3 make g++ && \
@@ -45,7 +47,7 @@ RUN npm run webpack
 
 # ----------------------------------------------------------------------------
 # Create conda environment
-FROM continuumio/miniconda3:4.12.0 as build_python
+FROM continuumio/miniconda3:25.3.1-1 AS build_python
 
 # This is how I used to do this: it's slower than using conda-lock
 # https://pythonspeed.com/articles/conda-docker-image-size/
@@ -54,19 +56,19 @@ FROM continuumio/miniconda3:4.12.0 as build_python
 #RUN --mount=type=cache,target=/opt/conda/pkgs \
 #    conda env create -f iasc.base.yml
 
-RUN conda create --name IASCPolls python=$PYTHON_VER
+RUN conda create --name iasc python=$PYTHON_VER
 RUN --mount=type=cache,target=/opt/conda/pkgs \
     conda install -c conda-forge conda-lock conda-pack
 
 # Install environment from conda-lock file
 # Generate using:
-# conda-lock -f conf/iasc.base.yml -p osx-64 -p linux-64 -p linux-aarch64 --lockfile conf/conda-lock.yml
+# conda-lock -f conf/iasc.base.yml -p osx-arm64 -p osx-64 -p linux-64 -p linux-aarch64 --lockfile conf/conda-lock.yml
 COPY conf/conda-lock.yml .
-RUN conda-lock install -n IASCPolls
+RUN conda-lock install -n iasc
 
 # Use conda-pack to create a standalone enviornment
 # in /venv:
-RUN conda-pack -n IASCPolls -o /tmp/env.tar && \
+RUN conda-pack -n iasc -o /tmp/env.tar && \
   mkdir /venv && cd /venv && tar xf /tmp/env.tar && \
   rm /tmp/env.tar
 
@@ -80,16 +82,16 @@ SHELL ["/bin/bash", "--login", "-c"]
 
 # ----------------------------------------------------------------------------
 # Create a python Docker container for running the app with gunicorn and whitenoise
-FROM debian:bullseye-slim as iasc
-MAINTAINER Samantha Finnigan <samantha.finnigan@durham.ac.uk>, ARC Durham University
+FROM debian:bullseye-slim AS iasc
+LABEL org.opencontainers.image.authors="Samantha Finnigan <samantha.finnigan@durham.ac.uk>, ARC Durham University"
 WORKDIR /app
 
 # set environment variables (don't buffer stdout, don't write bytecode)
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-ENV BASH_ENV "~/.bashrc"
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV BASH_ENV="~/.bashrc"
 # Avoid <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1129)>
-ENV SSL_CERT_FILE /etc/ssl/certs/ca-certificates.crt
+ENV SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
 
 # Replicate environment from miniconda image
 RUN apt-get update -q && \
@@ -102,19 +104,18 @@ RUN apt-get update -q && \
 COPY --from=build_node /app/frontend/static/dist /app/frontend/static/dist
 COPY --from=build_node /app/react-app/webpack-stats.json /app/react-app/webpack-stats.json
 COPY --from=build_python /venv /venv
-ENV PATH /opt/conda/bin:$PATH
+ENV PATH=/opt/conda/bin:$PATH
 
 # Make RUN commands use the new environment:
 RUN echo "source /venv/bin/activate" >> ${HOME}/.bashrc
 SHELL ["/bin/bash", "--login", "-c"]
-ENTRYPOINT ["/bin/bash", "--login", "-c"]
 
 # Demonstrate the environment is activated:
 RUN echo "Make sure django is installed:" && \
     python -c "import django"
 
 # ssh
-ENV SSH_PASSWD "root:Docker!"
+ENV SSH_PASSWD="root:Docker!"
 RUN echo "$SSH_PASSWD" | chpasswd
 COPY conf/sshd_config /etc/ssh/
 

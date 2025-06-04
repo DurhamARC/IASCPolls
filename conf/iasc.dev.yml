@@ -1,10 +1,10 @@
-name: IASCPolls
+# Install using: conda env update --file conf/iasc.dev.yml
+name: iasc
 channels:
-  - defaults
   - conda-forge
 dependencies:
   - black
   - pre-commit
   - conda-lock
   - coverage>=6.5.0
-prefix: /home/sam/miniconda3/envs/IASCPolls
+prefix: /home/sam/miniconda3/envs/iasc
