@@ -11,10 +11,7 @@ export default function Thanks() {
             <p>
               We greatly appreciate your time and effort. If you&apos;d like to
               learn more about the research and development behind IASC,
-              <a href="/">
-                {" "}
-                please visit the Institute webpage.{" "}
-              </a>
+              <a href="/"> please visit the Institute webpage. </a>
             </p>
             <p>Once again, thank you for your support.</p>
             <p>
