@@ -11,7 +11,7 @@ export default function Thanks() {
             <p>
               We greatly appreciate your time and effort. If you&apos;d like to
               learn more about the research and development behind IASC,
-              <a href="https://www.durham.ac.uk/research/institutes-and-centres/humanities-engaging-science-society/the-institute-for-ascertaining-scientific-consensus/">
+              <a href="/">
                 {" "}
                 please visit the Institute webpage.{" "}
               </a>
