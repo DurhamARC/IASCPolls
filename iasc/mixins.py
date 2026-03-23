@@ -25,7 +25,7 @@ def get_survey_detail(request):
 
 
 class IASCZipFileMixin(object):
-    filename = "IASC-{}-{}-export.zip"
+    filename = "CSCOPE-{}-{}-export.zip"
     renderer_classes = (renderers.ZipXLSRenderer,)
     pagination_class = None
     xlsx_ignore_headers = ["filename"]
@@ -70,7 +70,7 @@ class IASCXLSXFileMixin(XLSXFileMixin):
     defaults for renderer_classes, column_header, body, and column_data_styles
     """
 
-    filename_string = "IASC-{}-{}-{}.xlsx"
+    filename_string = "CSCOPE-{}-{}-{}.xlsx"
     renderer_classes = (XLSXRenderer,)
     pagination_class = None
 

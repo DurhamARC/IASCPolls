@@ -10,14 +10,15 @@ export default function Thanks() {
           <div>
             <p>
               We greatly appreciate your time and effort. If you&apos;d like to
-              learn more about the research and development behind IASC,
-              <a href="/"> please visit the Institute webpage. </a>
+              learn more about the research and development behind C-SCOPE,
+              <a href="/"> please visit the C-SCOPE webpage. </a>
             </p>
             <p>Once again, thank you for your support.</p>
             <p>
               For enquiries, comments and feedback, please contact{" "}
-              <a href="mailto:Institute for Ascertaining Scientific Consensus <iasc@durham.ac.uk>">
-                The Institute for Ascertaining Scientific Consensus
+              <a href="mailto:The Centre for Scientific Community Opinion Polling and Evaluation <iasc@durham.ac.uk>">
+                The Centre for Scientific Community Opinion Polling and
+                Evaluation
               </a>
             </p>
           </div>

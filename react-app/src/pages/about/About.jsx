@@ -8,22 +8,30 @@ export default function About() {
         <div className="about">
           <h1>About</h1>
           <p>
-            IASC is a large international hub-and-spoke network, uniquely able
-            to survey the world&apos;s scientists on an ongoing basis, providing
-            rich datasets regarding the opinions of scientists and scientific
-            sub-communities, both at a time and also as opinions fluctuate over
-            time. This includes the special case of ascertaining strength of
-            scientific consensus regarding a particular statement of interest.
-            The international reach of IASC&apos;s network also reveals any
-            variation of scientific opinion across countries or geographical
-            regions. Following a successful pilot project running 2022-23
-            (involving 30 institutions), 80 institutions have now provisionally
-            agreed to be part of the IASC network during the 2024-27 project.
-            The 80 institutions are listed below, together with the &quot;spoke
-            representative&quot; for each institution.
+            C-SCOPE is a large international hub-and-spoke network, uniquely
+            positioned to survey scientific communities on an ongoing basis. It
+            is designed to generate systematic datasets on the distribution of
+            scientific opinion, both at particular points in time and
+            longitudinally, as views evolve. This includes, as a special case,
+            the measurement of the strength and structure of scientific
+            agreement regarding specific statements of interest.
+          </p>
+          <p>
+            The international reach of the network also enables analysis of
+            variation across disciplines, institutions, and geographical
+            regions, allowing patterns of agreement and disagreement to be
+            mapped at multiple levels.
+          </p>
+          <p>
+            Following a successful pilot phase in 2022&ndash;23 (involving 30
+            institutions), the network has expanded substantially. More than 80
+            institutions have provisionally agreed to participate in the
+            2024&ndash;27 phase, each with a designated spoke representative
+            responsible for local coordination. The institutions are listed
+            below.
           </p>
 
-          <h2>The 2024-27 IASC Network (80 institutions)</h2>
+          <h2>The 2024-27 C-SCOPE Network (80 institutions)</h2>
           <h3>Europe (24 institutions) </h3>
           <ul>
             <li>Durham University (Peter Vickers)</li>
@@ -143,7 +151,7 @@ export default function About() {
             <li>University of Queensland (Andrew Crowden)</li>
           </ul>
 
-          <h2>IASC Advisory Board</h2>
+          <h2>C-SCOPE Advisory Board</h2>
           <ol>
             <li>
               Naomi Oreskes (Professor of the History of Science and Affiliated
@@ -226,7 +234,7 @@ export default function About() {
 
           <h2>Beta-Testing Group</h2>
           <p>
-            IASC has a beta-testing group of 116 scientists, as listed below.
+            C-SCOPE has a beta-testing group of 116 scientists, as listed below.
             Every survey is initially tested by the core team (alpha testing),
             then by our Beta-Testing Group, before any full rollout across the
             entire network. In addition to testing the basic mechanics of the

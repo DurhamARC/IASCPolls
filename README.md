@@ -7,15 +7,15 @@
 [![DOI: 10.5281/zenodo.8155054](https://zenodo.org/badge/DOI/10.5281/zenodo.8155054.svg)](https://doi.org/10.5281/zenodo.8155054)
 
 
-Polling System developed for the Institute for Ascertaining Scientific Consensus 
-(IASC). This platform provides a tailored architecture for surveying consensus 
-across the scientific community, and is hosted at https://iasc.awh.durham.ac.uk/
+Polling System developed for C-SCOPE: The Centre for Scientific Community Opinion
+Polling and Evaluation. This platform provides a tailored architecture for surveying
+consensus across the scientific community, and is hosted at https://c-scope.awh.durham.ac.uk/
 
 ## Durham University Project Team
 
 | Project Member                                       | Contact address                                                   | Role                             | Unit                                                                                |
 |------------------------------------------------------|-------------------------------------------------------------------|----------------------------------|-------------------------------------------------------------------------------------|
-| Dr. [Samantha Finnigan](github.com/sjmf)             | [samantha.finnigan@dur.ac.uk](mailto:samantha.finnigan@dur.ac.uk) | Research Software Engineer (RSE) | [Advanced Research Computing](https://www.dur.ac.uk/arc/rse/)                       |
+| Dr. [Samantha Finnigan](github.com/sjmf)             | [samantha.finnigan@dur.ac.uk](mailto:samantha.finnigan@dur.ac.uk) | Senior Research Software Engineer (SRSE) | [Advanced Research Computing](https://www.dur.ac.uk/arc/rse/)                       |
 | [Joanne Sheppard](github.com/joannercsheppard)       | [joanne.r.sheppard@dur.ac.uk](mailto:joanne.r.sheppard@dur.ac.uk) | Research Software Engineer (RSE) | [Advanced Research Computing](https://www.dur.ac.uk/arc/rse/)                       |
 | Prof. [Peter Vickers](dur.ac.uk/staff/peter-vickers) | [peter.vickers@dur.ac.uk](mailto:peter.vickers@dur.ac.uk)         | IASC Principal Investigator      | [Department of Philosophy](https://www.durham.ac.uk/departments/academic/philosophy/) |
 
