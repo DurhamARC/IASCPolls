@@ -7,10 +7,9 @@ The recommended way to run Postgres is in a Docker container:
 
 ```shell
 docker run --name postgres \
-    -e POSTGRES_PASSWORD=root \
     -e POSTGRES_USER=arc_iasc \
     -e POSTGRES_PASSWORD=1234 \
-    -p"5432:5432/tcp" \
+    -p "5432:5432/tcp" \
     -d postgres:15.2-alpine
 ```
 
