@@ -62,6 +62,7 @@ jobs:
           activate-environment: anaconda-client-env
           environment-file: conf/iasc.base.yml
           miniforge-version: latest
+          channel-priority: strict
           # IMPORTANT! This needs to be set for caching to work properly:
           use-only-tar-bz2: true
           auto-activate-base: false
