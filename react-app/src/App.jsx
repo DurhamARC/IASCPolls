@@ -11,34 +11,36 @@ import Alert from "./components/Alert";
 
 // The below configuration allows webpack to pack each page of the site separately.
 // These are then lazy-loaded into the application.
-const Home = lazy(() =>
-  import(/* webpackChunkName: "home" */ "./pages/home/Home")
+const Home = lazy(
+  () => import(/* webpackChunkName: "home" */ "./pages/home/Home")
 );
-const About = lazy(() =>
-  import(/* webpackChunkName: "about" */ "./pages/about/About")
+const About = lazy(
+  () => import(/* webpackChunkName: "about" */ "./pages/about/About")
 );
-const Ethics = lazy(() =>
-  import(/* webpackChunkName: "ethics" */ "./pages/ethics/Ethics")
+const Ethics = lazy(
+  () => import(/* webpackChunkName: "ethics" */ "./pages/ethics/Ethics")
 );
-const Poll = lazy(() =>
-  import(/* webpackChunkName: "poll" */ "./pages/survey/Survey")
+const Poll = lazy(
+  () => import(/* webpackChunkName: "poll" */ "./pages/survey/Survey")
 );
-const Thanks = lazy(() =>
-  import(/* webpackChunkName: "poll" */ "./pages/thanks/Thanks")
+const Thanks = lazy(
+  () => import(/* webpackChunkName: "poll" */ "./pages/thanks/Thanks")
 );
-const Error = lazy(() =>
-  import(/* webpackChunkName: "error" */ "./pages/error/Error")
+const Error = lazy(
+  () => import(/* webpackChunkName: "error" */ "./pages/error/Error")
 );
-const Login = lazy(() =>
-  import(/* webpackChunkName: "login" */ "./pages/login/Login")
+const Login = lazy(
+  () => import(/* webpackChunkName: "login" */ "./pages/login/Login")
 );
-const Dashboard = lazy(() =>
-  import(/* webpackChunkName: "dashboard" */ "./pages/dashboard/Dashboard")
+const Dashboard = lazy(
+  () =>
+    import(/* webpackChunkName: "dashboard" */ "./pages/dashboard/Dashboard")
 );
-const DownloadParticipants = lazy(() =>
-  import(
-    /* webpackChunkName: "dashboard" */ "./pages/download/DownloadParticipants"
-  )
+const DownloadParticipants = lazy(
+  () =>
+    import(
+      /* webpackChunkName: "dashboard" */ "./pages/download/DownloadParticipants"
+    )
 );
 
 /**
