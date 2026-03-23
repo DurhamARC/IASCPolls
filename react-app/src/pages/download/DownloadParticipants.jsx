@@ -55,7 +55,7 @@ function DownloadParticipants() {
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `IASC-${pollId}.zip`);
+      link.setAttribute("download", `CSCOPE-${pollId}.zip`);
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -79,7 +79,10 @@ function DownloadParticipants() {
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `IASC-${pollId}-${institution.name}.xlsx`);
+      link.setAttribute(
+        "download",
+        `CSCOPE-${pollId}-${institution.name}.xlsx`
+      );
       document.body.appendChild(link);
       link.click();
       link.remove();

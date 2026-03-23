@@ -34,7 +34,10 @@ function Home() {
           }}
         />
         <div>
-          <h1 className="home--title">C-SCOPE</h1>
+          <h1 className="home--title">
+            C-SCOPE: <br />
+            The Centre for Scientific Community Opinion Polling and Evaluation
+          </h1>
         </div>
       </div>
 
