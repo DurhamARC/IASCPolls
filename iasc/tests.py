@@ -300,7 +300,7 @@ class ViewsTestCase(HTTPTestCase):
             self.helper_test_zipped_sheets(
                 f"/links/zip/?survey={self.survey_id}",
                 self.test_institution,
-                "IASC",
+                "CSCOPE",
                 self.sheet_header,
             )
 
