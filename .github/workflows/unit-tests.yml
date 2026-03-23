@@ -48,7 +48,7 @@ jobs:
           path: |
             ${{ env.CONDA_PREFIX }}/envs/
             /home/runner/conda_pkgs_dir/
-          key: conda-${{ runner.os }}-${{ runner.arch }}-${{ steps.date.outputs.date }}-${{ hashFiles('conf/iasc.base.yml') }}-${{ env.CACHE_NUMBER }}
+          key: conda-${{ runner.os }}-${{ runner.arch }}-${{ steps.date.outputs.date }}-${{ hashFiles('conf/iasc.base.yml', 'conf/iasc.dev.yml') }}-${{ env.CACHE_NUMBER }}
         env:
           # Increase this to manually invalidate the cache
           CACHE_NUMBER: 0 +
