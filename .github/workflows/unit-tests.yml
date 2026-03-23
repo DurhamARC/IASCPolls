@@ -67,14 +67,8 @@ jobs:
           use-only-tar-bz2: true
           auto-activate-base: false
 
-      # https://github.com/conda-incubator/setup-miniconda/issues/105#issuecomment-730243912
-      -
-        name: Install dev dependencies and list packages
-        run: |
-          conda env update -n anaconda-client-env -f conf/iasc.dev.yml
-          echo $CONDA_PREFIX
-          conda info
-          conda list
+      - name: Install coverage
+        run: pip install "coverage>=6.5.0"
 
       - name: Run Django tests
         env:
