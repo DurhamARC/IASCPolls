@@ -1,5 +1,17 @@
 name: Lint
-on: [push, pull_request]
+on:
+  push:
+    paths:
+      - 'iasc/**'
+      - 'frontend/**'
+      - 'react-app/**'
+      - '.github/workflows/**'
+  pull_request:
+    paths:
+      - 'iasc/**'
+      - 'frontend/**'
+      - 'react-app/**'
+      - '.github/workflows/**'
 
 jobs:
   lint:

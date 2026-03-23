@@ -8,6 +8,7 @@ on:
   pull_request:
     types:
       - opened
+      - synchronize
 
 jobs:
   test:
@@ -48,7 +49,7 @@ jobs:
           path: |
             ${{ env.CONDA_PREFIX }}/envs/
             /home/runner/conda_pkgs_dir/
-          key: conda-${{ runner.os }}-${{ runner.arch }}-${{ steps.date.outputs.date }}-${{ hashFiles('conf/iasc.base.yml') }}-${{ env.CACHE_NUMBER }}
+          key: conda-${{ runner.os }}-${{ runner.arch }}-${{ steps.date.outputs.date }}-${{ hashFiles('conf/iasc.base.yml', 'conf/iasc.dev.yml') }}-${{ env.CACHE_NUMBER }}
         env:
           # Increase this to manually invalidate the cache
           CACHE_NUMBER: 0 +
@@ -61,18 +62,13 @@ jobs:
           activate-environment: anaconda-client-env
           environment-file: conf/iasc.base.yml
           miniforge-version: latest
+          channel-priority: strict
           # IMPORTANT! This needs to be set for caching to work properly:
           use-only-tar-bz2: true
           auto-activate-base: false
 
-      # https://github.com/conda-incubator/setup-miniconda/issues/105#issuecomment-730243912
-      -
-        name: Install dev dependencies and list packages
-        run: |
-          conda env update -n anaconda-client-env -f conf/iasc.dev.yml
-          echo $CONDA_PREFIX
-          conda info
-          conda list
+      - name: Install coverage
+        run: pip install "coverage>=6.5.0"
 
       - name: Run Django tests
         env:
