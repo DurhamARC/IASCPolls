@@ -87,6 +87,12 @@ npm run webpack
 
 ### Update Dependencies
 
+> **Note:** `conda-lock` is not in `iasc.dev.yml` because it conflicts with Python 3.12 on conda-forge, which breaks CI. Install it separately when you need to regenerate the lock file:
+> ```shell
+> pip install conda-lock
+> 
+```
+
 ```
 # Regenerate conda-lock.yml
 conda-lock -f conf/iasc.base.yml -p osx-arm64 -p osx-64 -p linux-64 -p linux-aarch64 --lockfile conf/conda-lock.yml
