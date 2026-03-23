@@ -145,3 +145,7 @@ webpack-stats.json
 
 # OSX
 .DS_Store
+
+# Claude Code
+.claude/
+CLAUDE.md
