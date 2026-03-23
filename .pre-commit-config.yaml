@@ -19,5 +19,5 @@ repos:
         name: prettier
         language: node
         entry: react-app/node_modules/.bin/prettier --write
-        types_or: [javascript, jsx, ts, tsx, css, json]
+        types_or: [javascript, jsx, ts, tsx, css, json, html]
         additional_dependencies: []

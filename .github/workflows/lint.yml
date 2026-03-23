@@ -25,4 +25,4 @@ jobs:
 
       - name: Check against prettier rules
         working-directory: ./react-app
-        run: npx prettier --check '**/*.{js,jsx,css}' .
+        run: npx prettier --check '**/*.{js,jsx,css,html}'
