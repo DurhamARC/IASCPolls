@@ -54,12 +54,34 @@ If you receive the error `django.core.exceptions.ImproperlyConfigured: Error loa
 pip install psycopg2-binary
 ```
 
+### Install Node.js
+
+Node.js and npm are required to build the React frontend. The project targets **Node 22 LTS (lts/jod)**, which matches the Docker production build (`node:lts-alpine3.22`). An `.nvmrc` file is provided; if you use nvm:
+
+```shell
+nvm install   # installs the version in .nvmrc
+nvm use       # switches to it
+```
+
+Or via conda (installs into the active environment):
+
+```shell
+conda install -c conda-forge nodejs
+```
+
+Or via Homebrew on macOS:
+
+```shell
+brew install node
+```
+
 ### Build React App
 
 Use npm to build the React app statically with webpack, into the correct directory:
 
 ```shell
 cd react-app
+npm install
 npm run webpack
 ```
 
