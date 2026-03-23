@@ -44,17 +44,17 @@ export default function Ethics() {
                 even to a unique voting token.
               </h3>
               <p>
-                C-SCOPE's polling platform ensures that each targeted scientist
-                can only vote once, by linking each vote to a unique voting
-                token. As each token is used (a targeted participant votes), the
-                C-SCOPE server deletes that token from its storage. If anyone
-                tries to vote a second time, using that same token, the absence
-                of that token from the server is used to block the attempt. When
-                a vote takes place, the vote itself is recorded in one place (a
-                spreadsheet), whilst the fact that a given targeted scientist
-                has voted is recorded in another place, in effect, by the fact
-                that the unique voting token assigned to that scientist is
-                erased from the server.
+                C-SCOPE&apos;s polling platform ensures that each targeted
+                scientist can only vote once, by linking each vote to a unique
+                voting token. As each token is used (a targeted participant
+                votes), the C-SCOPE server deletes that token from its storage.
+                If anyone tries to vote a second time, using that same token,
+                the absence of that token from the server is used to block the
+                attempt. When a vote takes place, the vote itself is recorded in
+                one place (a spreadsheet), whilst the fact that a given targeted
+                scientist has voted is recorded in another place, in effect, by
+                the fact that the unique voting token assigned to that scientist
+                is erased from the server.
               </p>
               <p>
                 Thus, during the two weeks that the survey is open (but not

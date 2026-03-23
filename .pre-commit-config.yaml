@@ -3,28 +3,18 @@ repos:
     rev: 24.10.0
     hooks:
       - id: black
-        # It is recommended to specify the latest version of Python
-        # supported by your project here, or alternatively use
-        # pre-commit's default_language_version, see
-        # https://pre-commit.com/#top_level-default_language_version
-        language_version: python3.9
-
-  - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: "v8.41.0"
-    hooks:
-      - id: eslint
-        additional_dependencies:
-          - eslint@8.22.0
-          - eslint-config-airbnb@19.0.4
-          - eslint-config-prettier@8.8.0
-          - eslint-plugin-react@7.32.2
-        files: \.[jt]sx?$ # *.js, *.jsx, *.ts and *.tsx
-        types: [file]
-        entry: bash -c 'cd frontend && eslint --fix'
-        pass_filenames: false
 
   - repo: local
     hooks:
+      - id: eslint
+        name: eslint
+        language: node
+        entry: react-app/node_modules/.bin/eslint --ext .js,.jsx react-app/src
+        types: [file]
+        files: \.[jt]sx?$
+        pass_filenames: false
+        additional_dependencies: []
+
       - id: prettier
         name: prettier
         language: node
