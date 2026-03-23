@@ -32,7 +32,6 @@ from iasc.utils import (
     to_boolean,
 )
 
-
 #
 # User management and login functionality
 
