@@ -44,16 +44,17 @@ export default function Ethics() {
                 even to a unique voting token.
               </h3>
               <p>
-                IASC ensures that each targeted scientist can only vote once, by
-                linking each vote to a unique voting token. As each token is
-                used (a targeted participant votes), the IASC server deletes
-                that token from its storage. If anyone tries to vote a second
-                time, using that same token, the absence of that token from the
-                server is used to block the attempt. When a vote takes place,
-                the vote itself is recorded in one place (a spreadsheet), whilst
-                the fact that a given targeted scientist has voted is recorded
-                in another place, in effect, by the fact that the unique voting
-                token assigned to that scientist is erased from the IASC server.
+                C-SCOPE's polling platform ensures that each targeted scientist
+                can only vote once, by linking each vote to a unique voting
+                token. As each token is used (a targeted participant votes), the
+                C-SCOPE server deletes that token from its storage. If anyone
+                tries to vote a second time, using that same token, the absence
+                of that token from the server is used to block the attempt. When
+                a vote takes place, the vote itself is recorded in one place (a
+                spreadsheet), whilst the fact that a given targeted scientist
+                has voted is recorded in another place, in effect, by the fact
+                that the unique voting token assigned to that scientist is
+                erased from the server.
               </p>
               <p>
                 Thus, during the two weeks that the survey is open (but not
@@ -70,7 +71,7 @@ export default function Ethics() {
                 </li>
                 <li>
                   After two weeks, when the survey closes, all voting tokens are
-                  erased from the IASC server, whether they have been used or
+                  erased from the C-SCOPE server, whether they have been used or
                   not.
                 </li>
               </ol>
@@ -86,8 +87,8 @@ export default function Ethics() {
                 we include it here only because it is logically possible.
               </p>
               <p>
-                Concerning the data collected, IASC records and retain some key
-                pieces of demographic information for research purposes.
+                Concerning the data collected, C-SCOPE records and retain some
+                key pieces of demographic information for research purposes.
                 Responses are tagged with type of scientist (broadly construed),
                 and institution, for example that the vote-caster was a chemist
                 residing at Durham University (UK). For the purposes of this
@@ -111,12 +112,12 @@ export default function Ethics() {
                 each targeted scientist, and the server records which links have
                 been used by deleting them as they are used. (N.B. Even during
                 these two weeks there is no way to link a participant with their
-                vote, since this information isn’t recorded by IASC. A possible
-                edge-case exception is when all participants respond in the same
-                way. In that case, knowing if a scientist voted is sufficient to
-                know how they voted. However, with our expected response rate
-                and the number of targeted scientists, this is an unlikely
-                scenario).
+                vote, since this information isn’t recorded by C-SCOPE. A
+                possible edge-case exception is when all participants respond in
+                the same way. In that case, knowing if a scientist voted is
+                sufficient to know how they voted. However, with our expected
+                response rate and the number of targeted scientists, this is an
+                unlikely scenario).
               </p>
               <p>
                 However, various exemptions are listed in the Freedom of
@@ -158,14 +159,14 @@ export default function Ethics() {
                 reasons for the court summons, warrant, or order.
               </p>
               <p>
-                In the case of an IASC survey, an attempted subpoena or witness
-                summons would be highly unlikely to be an effective way to
-                extract information on survey participants and votes cast. After
-                two weeks, when the survey closes, nobody could possibly
+                In the case of a C-SCOPE survey, an attempted subpoena or
+                witness summons would be highly unlikely to be an effective way
+                to extract information on survey participants and votes cast.
+                After two weeks, when the survey closes, nobody could possibly
                 identify whether or not a targeted scientist voted, never mind
                 how they voted. (Data is deleted automatically by the polling
                 software.) And before two weeks, when the survey is still
-                ‘live’, IASC would have a duty of confidentiality to its
+                ‘live’, C-SCOPE would have a duty of confidentiality to its
                 participants which would outweigh any reason for the court
                 summons, warrant, or order.
               </p>
@@ -177,7 +178,7 @@ export default function Ethics() {
                 Although the survey invitation emails are sent from various
                 different local institutions, the data itself goes directly to
                 the project hub (Durham, UK). The spoke representatives in the
-                IASC hub-and-spoke network, who send the emails, necessarily
+                C-SCOPE hub-and-spoke network, who send the emails, necessarily
                 have access to a list of scientists at their own institution,
                 collected from their publicly available profiles.
               </p>

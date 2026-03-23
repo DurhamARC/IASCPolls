@@ -128,7 +128,7 @@ class MultiLinkSerializer(ActiveLinkSerializer):
         filename = (
             f"{obj.participant.institution.id}-{obj.participant.institution.name}"
         )
-        return f"IASC-{slugify(filename, allow_unicode=True)}.xlsx"
+        return f"CSCOPE-{slugify(filename, allow_unicode=True)}.xlsx"
 
     class Meta:
         model = models.ActiveLink
