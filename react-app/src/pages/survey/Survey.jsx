@@ -64,9 +64,7 @@ export default function Poll() {
             Please respond to the following statement
             {surveyKind === "L3C" ? "s" : ""}:
           </div>
-          {surveyKind !== "L3C" && (
-            <div className="poll--question">{pollQuestion}</div>
-          )}
+          <div className="poll--question">{pollQuestion}</div>
           <PollForm
             uniqueId={uniqueId}
             kind={surveyKind}
