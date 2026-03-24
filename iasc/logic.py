@@ -1,4 +1,5 @@
 from datetime import datetime
+import io
 
 import pandas as pd
 import logging
@@ -90,6 +91,8 @@ def parse_excel_sheet_to_db(sheet, **kwargs):
     try:
         institution_name = kwargs["institution"]
         participants = []
+        if isinstance(sheet, bytes):
+            sheet = io.BytesIO(sheet)
         xls = pd.ExcelFile(sheet, engine="openpyxl")
         disciplines_db = Discipline.objects.all()
         disciplines_xl = xls.sheet_names
