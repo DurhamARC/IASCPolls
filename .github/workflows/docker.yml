@@ -46,7 +46,7 @@ jobs:
       - name: Add SHORT_SHA and BRANCH to env
         run: |
           echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV \
-          && echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
+          && echo "BRANCH=${{ github.event.workflow_run.head_branch }}" >> $GITHUB_ENV
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
