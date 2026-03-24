@@ -335,6 +335,15 @@
   min-width: 100%;
 }
 
+.create--select {
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  width: 100%;
+}
+
 .create-container input[type="text"],
 .create-container input[type="date"],
 .create-container input[type="file"] {
