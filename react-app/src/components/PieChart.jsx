@@ -23,6 +23,60 @@ const COLORS = [
   "#1A5276",
 ];
 
+const PIE_OPTIONS = {
+  plugins: {
+    legend: { position: "bottom" },
+  },
+};
+
+function buildLikertChartData(counts) {
+  const sortedKeys = Object.keys(counts).sort();
+  return {
+    labels: sortedKeys.map((k) => `${VOTE_LABELS[k] ?? k} (${counts[k]})`),
+    datasets: [
+      {
+        data: sortedKeys.map((k) => counts[k]),
+        backgroundColor: sortedKeys.map(
+          (k) => COLORS[parseInt(k, 10)] ?? "#999"
+        ),
+      },
+    ],
+  };
+}
+
+function buildExpertiseChartData(counts) {
+  const yes = counts.True ?? counts.true ?? 0;
+  const no = counts.False ?? counts.false ?? 0;
+  return {
+    labels: [`Yes (${yes})`, `No (${no})`],
+    datasets: [
+      {
+        data: [yes, no],
+        backgroundColor: ["#27AE60", "#E74C3C"],
+      },
+    ],
+  };
+}
+
+function SinglePie({ title, chartData }) {
+  return (
+    <div
+      style={{ width: "300px", textAlign: "center", marginBottom: "1.5rem" }}
+    >
+      <p
+        style={{
+          fontWeight: "600",
+          fontSize: "0.95rem",
+          marginBottom: "0.5rem",
+        }}
+      >
+        {title}
+      </p>
+      <Pie data={chartData} options={PIE_OPTIONS} />
+    </div>
+  );
+}
+
 function PieChart({ surveyId, fallbackQuestion }) {
   const [survey, setSurvey] = useState(null);
   const [loaded, setLoaded] = useState(false);
@@ -58,13 +112,12 @@ function PieChart({ surveyId, fallbackQuestion }) {
 
   const voteCounts = survey ? survey.vote_counts : null;
   const hasResults = voteCounts && Object.keys(voteCounts).length > 0;
+  const title = survey ? survey.question : fallbackQuestion;
 
   if (!hasResults) {
     return (
       <div style={{ width: "300px", textAlign: "center", padding: "1rem" }}>
-        <p style={{ fontWeight: "bold", marginBottom: "0.5rem" }}>
-          {survey ? survey.question : fallbackQuestion}
-        </p>
+        <p style={{ fontWeight: "bold", marginBottom: "0.5rem" }}>{title}</p>
         <p style={{ color: "#999" }}>No results yet</p>
         <p style={{ color: "#999", fontSize: "0.8rem", marginTop: "0.5rem" }}>
           Survey ID: #{surveyId}
@@ -73,33 +126,48 @@ function PieChart({ surveyId, fallbackQuestion }) {
     );
   }
 
-  const sortedKeys = Object.keys(voteCounts).sort();
-  const chartData = {
-    labels: sortedKeys.map((k) => `${VOTE_LABELS[k] ?? k} (${voteCounts[k]})`),
-    datasets: [
-      {
-        data: sortedKeys.map((k) => voteCounts[k]),
-        backgroundColor: sortedKeys.map(
-          (k) => COLORS[parseInt(k, 10)] ?? "#999"
-        ),
-      },
-    ],
-  };
+  // Detect L3C: values are objects rather than numbers
+  const isL3C = typeof Object.values(voteCounts)[0] === "object";
 
-  const options = {
-    plugins: {
-      legend: {
-        position: "bottom",
-      },
-    },
-  };
+  if (isL3C) {
+    const statements = survey.questions ?? [
+      "Statement 1",
+      "Statement 2",
+      "Statement 3",
+    ];
+    const subKeys = ["0", "1", "2"];
+    return (
+      <div style={{ width: "300px", textAlign: "center", padding: "0.5rem" }}>
+        <p style={{ fontWeight: "bold", marginBottom: "1rem" }}>{title}</p>
+        {subKeys.map((k) =>
+          voteCounts[k] && Object.keys(voteCounts[k]).length > 0 ? (
+            <SinglePie
+              key={k}
+              title={
+                statements[parseInt(k, 10)] ??
+                `Statement ${parseInt(k, 10) + 1}`
+              }
+              chartData={buildLikertChartData(voteCounts[k])}
+            />
+          ) : null
+        )}
+        {voteCounts.expertise && (
+          <SinglePie
+            title="I have relevant expertise"
+            chartData={buildExpertiseChartData(voteCounts.expertise)}
+          />
+        )}
+        <p style={{ color: "#999", fontSize: "0.8rem", marginTop: "0.5rem" }}>
+          Survey ID: #{surveyId}
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div style={{ width: "300px", textAlign: "center" }}>
-      <p style={{ fontWeight: "bold", marginBottom: "0.5rem" }}>
-        {survey.question}
-      </p>
-      <Pie data={chartData} options={options} />
+      <p style={{ fontWeight: "bold", marginBottom: "0.5rem" }}>{title}</p>
+      <Pie data={buildLikertChartData(voteCounts)} options={PIE_OPTIONS} />
       <p style={{ color: "#999", fontSize: "0.8rem", marginTop: "0.5rem" }}>
         Survey ID: #{surveyId}
       </p>
