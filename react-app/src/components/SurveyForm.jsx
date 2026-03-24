@@ -1,22 +1,22 @@
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { client } from "../Api";
-
 import { MessageContext } from "./MessageHandler";
+import Likert3ExpertiseForm from "./Likert3ExpertiseForm";
 
-export default function PollForm({ uniqueId }) {
+const LIKERT_OPTIONS = [
+  { value: "5", label: "Strongly Disagree" },
+  { value: "4", label: "Disagree" },
+  { value: "3", label: "Neutral" },
+  { value: "2", label: "Agree" },
+  { value: "1", label: "Strongly Agree" },
+];
+
+function LikertForm({ uniqueId }) {
   const navigate = useNavigate();
   const [selectedOption, setSelectedOption] = useState("");
   const [optionSelected, setOptionSelected] = useState(false);
   const { pushError } = useContext(MessageContext);
-
-  const options = [
-    { value: "5", label: "Strongly Disagree" },
-    { value: "4", label: "Disagree" },
-    { value: "3", label: "Neutral" },
-    { value: "2", label: "Agree" },
-    { value: "1", label: "Strongly Agree" },
-  ];
 
   function handleOptionChange(event) {
     setSelectedOption(event.target.value);
@@ -37,7 +37,6 @@ export default function PollForm({ uniqueId }) {
           navigate("/thankyou");
         })
         .catch((error) => {
-          console.error("Error submitting answer:", error);
           pushError(error);
         });
     } else {
@@ -50,7 +49,7 @@ export default function PollForm({ uniqueId }) {
       <div className="poll--options-wrapper">
         <form onSubmit={handleSubmit}>
           <ul className="poll--options">
-            {options.map((option) => (
+            {LIKERT_OPTIONS.map((option) => (
               <li key={option.value}>
                 <input
                   type="radio"
@@ -77,4 +76,11 @@ export default function PollForm({ uniqueId }) {
       </div>
     </div>
   );
+}
+
+export default function PollForm({ uniqueId, kind, questions }) {
+  if (kind === "L3C") {
+    return <Likert3ExpertiseForm uniqueId={uniqueId} questions={questions} />;
+  }
+  return <LikertForm uniqueId={uniqueId} />;
 }
