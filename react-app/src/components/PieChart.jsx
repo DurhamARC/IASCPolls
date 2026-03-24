@@ -1,48 +1,56 @@
 import React, { useEffect, useState } from "react";
 import { Pie } from "react-chartjs-2";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { client } from "../Api";
+
+ChartJS.register(ArcElement, Tooltip, Legend);
+
+const VOTE_LABELS = {
+  0: "Strongly Disagree",
+  1: "Disagree",
+  2: "Slightly Disagree",
+  3: "Slightly Agree",
+  4: "Agree",
+  5: "Strongly Agree",
+};
+
+const COLORS = [
+  "#C0392B",
+  "#E74C3C",
+  "#E59866",
+  "#82E0AA",
+  "#27AE60",
+  "#1A5276",
+];
 
 function PieChart({ surveyId }) {
-  const [voteData, setVoteData] = useState([]);
+  const [voteCounts, setVoteCounts] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("/api/result/");
-        const result = await response.json();
-        const filteredData = result.filter(
-          (item) => item.fields.survey === surveyId
-        );
-        setVoteData(filteredData);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchData();
+    client
+      .get("/api/survey/results/")
+      .then((response) => {
+        const survey = response.data.results.find((s) => s.id === surveyId);
+        if (survey) {
+          setVoteCounts(survey.vote_counts);
+        }
+      })
+      .catch(() => {});
   }, [surveyId]);
 
-  if (voteData.length === 0) {
+  if (!voteCounts || Object.keys(voteCounts).length === 0) {
     return null;
   }
 
-  const voteCounts = voteData.reduce((acc, item) => {
-    const { vote } = item.fields;
-    acc[vote] = (acc[vote] || 0) + 1;
-    return acc;
-  }, {});
-
+  const sortedKeys = Object.keys(voteCounts).sort();
   const chartData = {
-    labels: Object.keys(voteCounts),
+    labels: sortedKeys.map((k) => VOTE_LABELS[k] ?? k),
     datasets: [
       {
-        data: Object.values(voteCounts),
-        backgroundColor: [
-          "#FF6384",
-          "#36A2EB",
-          "#FFCE56",
-          "#FF8F40",
-          "#386FA4",
-        ],
+        data: sortedKeys.map((k) => voteCounts[k]),
+        backgroundColor: sortedKeys.map(
+          (k) => COLORS[parseInt(k, 10)] ?? "#999"
+        ),
       },
     ],
   };
