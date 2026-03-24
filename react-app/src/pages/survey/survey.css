@@ -218,6 +218,50 @@
   padding-left: 5rem !important;
 }
 
+/* L3C (3 Likert + Expertise) layout */
+
+.poll--box-l3c {
+  height: auto;
+  min-height: 600px;
+  padding-bottom: 2rem;
+}
+
+.l3c--row {
+  width: 100%;
+  padding: 0.75rem 2rem;
+  border-bottom: 1px solid rgba(51, 51, 51, 0.15);
+}
+
+.l3c--row:last-of-type {
+  border-bottom: none;
+}
+
+.l3c--statement {
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: #14213d;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.l3c--expertise {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #14213d;
+}
+
+.l3c--expertise label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+}
+
 @media screen and (max-width: 768px) {
   .poll--box {
     width: 95%;
