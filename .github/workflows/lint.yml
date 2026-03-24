@@ -1,6 +1,8 @@
 name: Lint
 on:
   push:
+    branches-ignore:
+      - release
     paths:
       - 'iasc/**'
       - 'frontend/**'
