@@ -91,6 +91,13 @@ class UserLogoutView(APIView):
         logout(request)
         return HttpResponseRedirect("/")
 
+    def handle_exception(self, exc):
+        from rest_framework.exceptions import NotAuthenticated
+
+        if isinstance(exc, NotAuthenticated):
+            return HttpResponseRedirect("/")
+        return super().handle_exception(exc)
+
 
 class UserViewSet(viewsets.ModelViewSet):
     UserModel = get_user_model()
