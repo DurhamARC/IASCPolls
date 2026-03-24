@@ -1,0 +1,3 @@
+## What is C-SCOPE?
+
+C-SCOPE (The Centre for Scientific Community Opinion Polling and Evaluation) is a global network that can email thousands of scientists with a specific statement of interest, such as "Covid is caused by a virus", and request an agree/disagree response within two minutes. The responses will be instantly and anonymously recorded in a database, allowing for the calculation of the strength of consensus. This network will be a valuable resource for policymakers and the general public in discerning the level of agreement among scientists on various issues and combating misinformation. It will also provide insight into cross-cultural differences in scientific opinions.
