@@ -18,10 +18,7 @@ variables:
   - group: arc_iasc
 
   - name: appName
-    ${{ if eq( variables['Build.SourceBranchName'], 'release' ) }}:
-      value: 'duuksawharciasc01'
-    ${{ if ne( variables['Build.SourceBranchName'], 'release' ) }}:
-      value: 'duuksawharciascdevel01'
+    value: 'duuksawharciasc01'
     
   - name: azureSubscription
     value: 'svc-con-awh-01'
