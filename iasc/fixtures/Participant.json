@@ -1,32 +1,152 @@
 [
-{
-    "model": "iasc.participant",
-    "pk": "joanne.r.shepherd@dur.ac.uk",
-    "fields": {
-        "name": "Joanne Sheppard",
-        "title": null,
-        "institution": 1,
-        "discipline": 1
+    {
+        "model": "iasc.participant",
+        "pk": "joanne.r.shepherd@dur.ac.uk",
+        "fields": {
+            "name": "Joanne Sheppard",
+            "title": null,
+            "institution": 1,
+            "discipline": 1
+        }
+    },
+    {
+        "model": "iasc.participant",
+        "pk": "peter.vickers@durham.ac.uk",
+        "fields": {
+            "name": "Peter Vickers",
+            "title": "Prof",
+            "institution": 1,
+            "discipline": 2
+        }
+    },
+    {
+        "model": "iasc.participant",
+        "pk": "samantha.finnigan@durham.ac.uk",
+        "fields": {
+            "name": "Samantha Finnigan",
+            "title": "Dr",
+            "institution": 1,
+            "discipline": 1
+        }
+    },
+    {
+        "model": "iasc.participant",
+        "pk": "a.smith@ox.ac.uk",
+        "fields": {
+            "name": "Alice Smith",
+            "title": "Dr",
+            "institution": 2,
+            "discipline": 3
+        }
+    },
+    {
+        "model": "iasc.participant",
+        "pk": "b.jones@ox.ac.uk",
+        "fields": {
+            "name": "Bob Jones",
+            "title": "Prof",
+            "institution": 2,
+            "discipline": 4
+        }
+    },
+    {
+        "model": "iasc.participant",
+        "pk": "c.davis@ox.ac.uk",
+        "fields": {
+            "name": "Charlie Davis",
+            "title": null,
+            "institution": 2,
+            "discipline": 5
+        }
+    },
+    {
+        "model": "iasc.participant",
+        "pk": "d.evans@mit.edu",
+        "fields": {
+            "name": "Dave Evans",
+            "title": "Dr",
+            "institution": 3,
+            "discipline": 1
+        }
+    },
+    {
+        "model": "iasc.participant",
+        "pk": "e.frank@mit.edu",
+        "fields": {
+            "name": "Eve Frank",
+            "title": "Prof",
+            "institution": 3,
+            "discipline": 6
+        }
+    },
+    {
+        "model": "iasc.participant",
+        "pk": "f.green@mit.edu",
+        "fields": {
+            "name": "Frank Green",
+            "title": null,
+            "institution": 3,
+            "discipline": 7
+        }
+    },
+    {
+        "model": "iasc.participant",
+        "pk": "g.harris@mit.edu",
+        "fields": {
+            "name": "Grace Harris",
+            "title": "Dr",
+            "institution": 3,
+            "discipline": 2
+        }
+    },
+    {
+        "model": "iasc.participant",
+        "pk": "h.irving@stanford.edu",
+        "fields": {
+            "name": "Hank Irving",
+            "title": "Prof",
+            "institution": 4,
+            "discipline": 3
+        }
+    },
+    {
+        "model": "iasc.participant",
+        "pk": "i.jackson@stanford.edu",
+        "fields": {
+            "name": "Ivy Jackson",
+            "title": "Dr",
+            "institution": 4,
+            "discipline": 4
+        }
+    },
+    {
+        "model": "iasc.participant",
+        "pk": "j.king@stanford.edu",
+        "fields": {
+            "name": "Jack King",
+            "title": null,
+            "institution": 4,
+            "discipline": 5
+        }
+    },
+    {
+        "model": "iasc.participant",
+        "pk": "k.lee@stanford.edu",
+        "fields": {
+            "name": "Karen Lee",
+            "title": "Dr",
+            "institution": 4,
+            "discipline": 6
+        }
+    },
+    {
+        "model": "iasc.participant",
+        "pk": "l.miller@stanford.edu",
+        "fields": {
+            "name": "Leo Miller",
+            "title": "Prof",
+            "institution": 4,
+            "discipline": 7
+        }
     }
-},
-{
-    "model": "iasc.participant",
-    "pk": "peter.vickers@durham.ac.uk",
-    "fields": {
-        "name": "Peter Vickers",
-        "title": "Prof",
-        "institution": 1,
-        "discipline": 2
-    }
-},
-{
-    "model": "iasc.participant",
-    "pk": "samantha.finnigan@durham.ac.uk",
-    "fields": {
-        "name": "Samantha Finnigan",
-        "title": "Dr",
-        "institution": 1,
-        "discipline": 1
-    }
-}
 ]

@@ -18,6 +18,8 @@ export default function Poll() {
   const uniqueId = searchParams.get("unique_id");
 
   const [pollQuestion, setPollQuestion] = useState("");
+  const [surveyKind, setSurveyKind] = useState("LI");
+  const [surveyQuestions, setSurveyQuestions] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,16 +36,16 @@ export default function Poll() {
         const surveyData = response.data;
 
         if (surveyData) {
-          // Survey exists, set the poll question
           setPollQuestion(surveyData.question);
+          setSurveyKind(surveyData.kind);
+          setSurveyQuestions(surveyData.questions);
         } else {
           // Survey does not exist, redirect to the error page
-          history.push("/error");
+          history("/error");
         }
       } catch (error) {
-        console.error("Error fetching survey data:", error);
         // Handle error and redirect to the error page
-        history.push("/error");
+        history("/error");
       }
     };
 
@@ -55,12 +57,19 @@ export default function Poll() {
       <div className="background-blur" />
       <div className="background-blur mirror" />
       <div className="poll">
-        <div className="poll--box">
+        <div
+          className={`poll--box${surveyKind === "L3C" ? " poll--box-l3c" : ""}`}
+        >
           <div className="poll--blurb">
-            Please respond to the following statement:
+            Please respond to the following statement
+            {surveyKind === "L3C" ? "s" : ""}:
           </div>
           <div className="poll--question">{pollQuestion}</div>
-          <PollForm uniqueId={uniqueId} />
+          <PollForm
+            uniqueId={uniqueId}
+            kind={surveyKind}
+            questions={surveyQuestions}
+          />
         </div>
       </div>
     </div>

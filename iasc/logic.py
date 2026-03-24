@@ -1,4 +1,5 @@
 from datetime import datetime
+import io
 
 import pandas as pd
 import logging
@@ -19,13 +20,14 @@ def create_survey_in_db(question, expiry, **kwargs):
     active = kwargs.get("active", True)
     create_active_links = kwargs.get("create_active_links", True)
     institution = kwargs.get("institution", None)
+    questions = kwargs.get("questions", None)
 
     # Avoid error "unconverted data remains: :00.000" by taking
     # only the first 16 characters of the expected datetime string:
     expiry = make_aware(datetime.strptime(expiry[:16], "%Y-%m-%dT%H:%M"))
 
     survey = Survey.objects.create(
-        question=question, active=active, kind=kind, expiry=expiry
+        question=question, questions=questions, active=active, kind=kind, expiry=expiry
     )
 
     if create_active_links:
@@ -89,6 +91,8 @@ def parse_excel_sheet_to_db(sheet, **kwargs):
     try:
         institution_name = kwargs["institution"]
         participants = []
+        if isinstance(sheet, bytes):
+            sheet = io.BytesIO(sheet)
         xls = pd.ExcelFile(sheet, engine="openpyxl")
         disciplines_db = Discipline.objects.all()
         disciplines_xl = xls.sheet_names

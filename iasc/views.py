@@ -1,5 +1,7 @@
 import copy
 
+import json
+
 from django.contrib.auth import login, logout, get_user_model
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.core.files.uploadedfile import InMemoryUploadedFile
@@ -89,6 +91,13 @@ class UserLogoutView(APIView):
         logout(request)
         return HttpResponseRedirect("/")
 
+    def handle_exception(self, exc):
+        from rest_framework.exceptions import NotAuthenticated
+
+        if isinstance(exc, NotAuthenticated):
+            return HttpResponseRedirect("/")
+        return super().handle_exception(exc)
+
 
 class UserViewSet(viewsets.ModelViewSet):
     UserModel = get_user_model()
@@ -135,6 +144,11 @@ class CreateSurveyView(ViewSet):
                 kind=request.data.get("kind", "LI"),
                 active=request.data.get("active", True),
                 create_active_links=request.data.get("create_active_links", True),
+                questions=(
+                    json.loads(request.data["questions"])
+                    if "questions" in request.data
+                    else None
+                ),
             )
 
             return Response(
@@ -220,7 +234,16 @@ class SubmitVoteView(ViewSet):
 
             uid = request.data["unique_id"].strip()
             link = ActiveLink.objects.filter(unique_link=uid).get()
-            vote = int(request.data["vote"])
+            raw_vote = request.data["vote"]
+            if isinstance(raw_vote, str):
+                try:
+                    vote = json.loads(raw_vote)
+                    if not isinstance(vote, dict):
+                        vote = int(vote)
+                except (json.JSONDecodeError, ValueError):
+                    vote = int(raw_vote)
+            else:
+                vote = raw_vote
             link.vote(vote)
 
             return Response(

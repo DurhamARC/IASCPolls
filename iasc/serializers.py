@@ -70,7 +70,16 @@ class InstitutionSerializer(serializers.ModelSerializer):
 class SurveySerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Survey
-        fields = ["id", "question", "active", "kind", "expiry", "participants", "voted"]
+        fields = [
+            "id",
+            "question",
+            "questions",
+            "active",
+            "kind",
+            "expiry",
+            "participants",
+            "voted",
+        ]
 
 
 class SurveyInstitutionSerializer(serializers.ModelSerializer):
@@ -85,16 +94,43 @@ class SurveyInstitutionSerializer(serializers.ModelSerializer):
 class SurveyResultSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(source="survey.id")
     count = serializers.SerializerMethodField()
+    vote_counts = serializers.SerializerMethodField()
     question = serializers.CharField(source="survey.question")
+    questions = serializers.JSONField(source="survey.questions")
     kind = serializers.CharField(source="survey.kind")
     active = serializers.CharField(source="survey.active")
 
     def get_count(self, obj):
         return models.Result.objects.filter(survey_id=obj.survey.id).count()
 
+    def get_vote_counts(self, obj):
+        results = models.Result.objects.filter(survey_id=obj.survey.id)
+        counts = {}
+        for result in results:
+            if isinstance(result.vote, dict):
+                # L3C: vote is {"0": 3, "1": 2, "2": 4, "expertise": true}
+                for sub_key, sub_val in result.vote.items():
+                    if sub_key not in counts:
+                        counts[sub_key] = {}
+                    val_key = str(sub_val)
+                    counts[sub_key][val_key] = counts[sub_key].get(val_key, 0) + 1
+            else:
+                # LI: vote is a plain integer
+                key = str(result.vote)
+                counts[key] = counts.get(key, 0) + 1
+        return counts
+
     class Meta:
         model = models.Result
-        fields = ["id", "kind", "active", "question", "count"]
+        fields = [
+            "id",
+            "kind",
+            "active",
+            "question",
+            "questions",
+            "count",
+            "vote_counts",
+        ]
 
 
 class ActiveLinkSerializer(serializers.ModelSerializer):

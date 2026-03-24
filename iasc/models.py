@@ -94,11 +94,17 @@ class Survey(models.Model):
         """
 
         LIKERT = "LI", gettext_lazy("Likert")
+        LIKERT_3_EXPERTISE = "L3C", gettext_lazy("Likert (3 + Expertise)")
 
     question = models.TextField()
+    questions = models.JSONField(
+        null=True,
+        blank=True,
+        help_text="List of statement strings for multi-question templates (e.g. L3C)",
+    )
     active = models.BooleanField()
     kind = models.CharField(
-        max_length=2, choices=SurveyKind.choices, default=SurveyKind.LIKERT
+        max_length=3, choices=SurveyKind.choices, default=SurveyKind.LIKERT
     )
     expiry = models.DateTimeField(null=False, default=datetime(2000, 1, 1, 0, 0))
     participants = models.IntegerField(null=False, default=0)

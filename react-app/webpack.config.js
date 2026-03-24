@@ -31,6 +31,10 @@ module.exports = {
         use: ["style-loader", "css-loader"],
       },
       {
+        test: /\.md$/,
+        type: "asset/source",
+      },
+      {
         test: /\.(jpe?g|png|gif|svg|webp)$/i,
         type: "asset/resource",
         generator: {

@@ -286,6 +286,27 @@
   white-space: nowrap; /* Prevent table cell content from wrapping */
 }
 
+.survey-row {
+  cursor: pointer;
+  transition: background-color 0.15s ease-in-out;
+}
+
+.survey-row:hover {
+  background-color: #e8f0fe;
+}
+
+.survey-row:active {
+  background-color: #c3d7fa;
+}
+
+.survey-row.selected {
+  background-color: #d0e4ff;
+}
+
+.survey-row.selected:hover {
+  background-color: #b8d4ff;
+}
+
 .dashboard--next--page {
   width: 100%;
   display: flex;
@@ -312,6 +333,15 @@
   margin-top: 1rem;
   width: 100%;
   min-width: 100%;
+}
+
+.create--select {
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  width: 100%;
 }
 
 .create-container input[type="text"],

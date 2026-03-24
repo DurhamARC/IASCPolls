@@ -1,4 +1,7 @@
 import React, { useLayoutEffect, useState } from "react";
+import ReactMarkdown from "react-markdown";
+import homeWhatIsContent from "../../content/home-what-is.md";
+import homeEthicsContent from "../../content/home-ethics.md";
 import "./home.css";
 import mobileFrontPage from "../../imgs/min/mobile-front-page.webp";
 import frontPageComp from "../../imgs/min/balance.svg";
@@ -48,20 +51,7 @@ function Home() {
         />
         <div className="home--about--overlay">
           <div className="home--about--text">
-            <h2>What is C-SCOPE?</h2>
-            <p>
-              C-SCOPE (The Centre for Scientific Community Opinion Polling and
-              Evaluation) is a global network that can email thousands of
-              scientists with a specific statement of interest, such as
-              &ldquo;Covid is caused by a virus&rdquo;, and request an
-              agree/disagree response within two minutes. The responses will be
-              instantly and anonymously recorded in a database, allowing for the
-              calculation of the strength of consensus. This network will be a
-              valuable resource for policymakers and the general public in
-              discerning the level of agreement among scientists on various
-              issues and combating misinformation. It will also provide insight
-              into cross-cultural differences in scientific opinions.
-            </p>
+            <ReactMarkdown>{homeWhatIsContent}</ReactMarkdown>
             <a href="./about">
               <button type="button" className="button home--button">
                 Find Out More
@@ -77,11 +67,7 @@ function Home() {
           style={{ backgroundImage: `url(${frontPageComp})` }}
         />
         <div className="home--ethics--text">
-          <h2>Ethics and Anonymisation</h2>
-          <p>
-            We are committed to guaranteeing the anonymity of all survey
-            participants to ensure their safety in expressing their opinions.
-          </p>
+          <ReactMarkdown>{homeEthicsContent}</ReactMarkdown>
           <a href="./ethics">
             <button type="button" className="button home--button">
               Explore
