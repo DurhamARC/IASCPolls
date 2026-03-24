@@ -63,6 +63,8 @@ class ViewsTestCase(HTTPTestCase):
 
         self.links = None
         self.survey_id = None
+        self.l3c_survey_id = None
+        self.institution_id = None
 
         self.username = "testuser"
         self.password = "12345"
@@ -113,7 +115,7 @@ class ViewsTestCase(HTTPTestCase):
         return input_zip.namelist(), input_zip
 
     def helper_test_zipped_sheets(
-        self, route: str, slug: str, prefix: str, headers: []
+        self, route: str, slug: str, prefix: str, headers: [], file_id: int = None
     ):
         resp = self.GET(
             f"/api{route}",
@@ -124,7 +126,8 @@ class ViewsTestCase(HTTPTestCase):
 
         names, input_zip = self.helper_zip_get_files(resp.content)
         filename = slugify(slug, allow_unicode=True)
-        expected_filename = f"{prefix}-{self.survey_id}-{filename}.xlsx"
+        id_part = file_id if file_id is not None else self.survey_id
+        expected_filename = f"{prefix}-{id_part}-{filename}.xlsx"
         self.assertEqual(names[0], expected_filename)
 
         xls = input_zip.read(names[0])
@@ -199,6 +202,7 @@ class ViewsTestCase(HTTPTestCase):
                 contains="File uploaded",
             )
 
+            self.institution_id = Institution.objects.get(name=self.test_institution).id
             self.assertEqual(Participant.objects.count(), len(self.flat_test_data))
 
             for row in self.flat_test_data:
@@ -302,6 +306,7 @@ class ViewsTestCase(HTTPTestCase):
                 self.test_institution,
                 "CSCOPE",
                 self.sheet_header,
+                file_id=self.institution_id,
             )
 
         def test_05_vote():
@@ -509,6 +514,101 @@ class ViewsTestCase(HTTPTestCase):
             self.assertEqual(Survey.objects.count(), 2)
             self.assertEqual(ActiveLink.objects.count(), 1)
 
+        def test_12_create_l3c_survey():
+            """
+            Test creating an L3C (3 Likert + expertise) survey
+            /survey/create/
+            /survey/
+            """
+            import json
+
+            questions = [
+                "Statement one for L3C survey",
+                "Statement two for L3C survey",
+                "Statement three for L3C survey",
+            ]
+
+            resp = self.POST(
+                "/api/survey/create/",
+                {
+                    "question": "L3C parent question",
+                    "questions": json.dumps(questions),
+                    "expiry": "2030-01-01T00:00",
+                    "active": "True",
+                    "kind": "L3C",
+                    "create_active_links": "True",
+                },
+                mimetype=self.mimetypes["json"],
+            )
+
+            self.assertEqual(resp["status"], "success")
+            survey = Survey.objects.filter(kind="L3C").get()
+            self.assertEqual(survey.kind, "L3C")
+            self.assertEqual(survey.questions, questions)
+
+            # Verify questions are returned by the survey list endpoint
+            resp_survey = self.GET(
+                f"/api/survey/{survey.id}/",
+                status=200,
+                mimetype=self.mimetypes["json"],
+                startswith=b"{",
+            )
+            self.assertEqual(resp_survey["kind"], "L3C")
+            self.assertEqual(resp_survey["questions"], questions)
+
+            self.l3c_survey_id = survey.id
+
+        def test_13_vote_l3c():
+            """
+            Test submitting a dict vote for an L3C survey, and verify vote_counts aggregation
+            /vote/
+            /survey/results/
+            """
+            import json
+
+            # Get a voting link for the L3C survey
+            resp_links = self.GET(
+                f"/api/links/?survey={self.l3c_survey_id}",
+                status=200,
+                mimetype=self.mimetypes["json"],
+                startswith=b"{",
+            )
+            self.assertGreater(resp_links["count"], 0)
+
+            link_url = resp_links["results"][0]["hyperlink"]
+            params = parse.parse_qs(parse.urlparse(link_url).query)
+            unique_id = params["unique_id"][0]
+
+            vote = {"0": 3, "1": 4, "2": 2, "expertise": True}
+
+            resp = self.POST(
+                "/api/vote/",
+                {"unique_id": unique_id, "vote": json.dumps(vote)},
+                status=200,
+                mimetype=self.mimetypes["json"],
+                contains="success",
+            )
+            self.assertEqual(resp["status"], "success")
+
+            # Verify the result was stored as a dict
+            result = Result.objects.filter(survey_id=self.l3c_survey_id).get()
+            self.assertIsInstance(result.vote, dict)
+            self.assertEqual(result.vote["0"], 3)
+            self.assertEqual(result.vote["expertise"], True)
+
+            # Verify vote_counts aggregation is nested for L3C
+            resp_results = self.GET(
+                "/api/survey/results/",
+                status=200,
+                mimetype=self.mimetypes["json"],
+                startswith=b"{",
+            )
+            l3c_result = next(r for r in resp_results["results"] if r["kind"] == "L3C")
+            self.assertIn("0", l3c_result["vote_counts"])
+            self.assertIsInstance(l3c_result["vote_counts"]["0"], dict)
+            self.assertEqual(l3c_result["vote_counts"]["0"]["3"], 1)
+            self.assertEqual(l3c_result["vote_counts"]["expertise"]["True"], 1)
+
         #
         # Run all the integration tests defined within this function:
         print(f"\n{len(dir())-1} Integration tests found")
@@ -523,17 +623,19 @@ class ViewsTestCase(HTTPTestCase):
 class DatabaseModelTestCase(TestCase):
     def setUp(self):
         super().setUp()
-        institution = Institution.objects.create(name="Durham University", country="GB")
-        discipline = Discipline.objects.create(name="Research Software Engineer")
-        participant = Participant.objects.create(
+        self.institution = Institution.objects.create(
+            name="Durham University", country="GB"
+        )
+        self.discipline = Discipline.objects.create(name="Research Software Engineer")
+        self.participant = Participant.objects.create(
             name="Jane Doe",
             title="Dr",
             email="jane.doe@example.invalid",
-            institution=institution,
-            discipline=discipline,
+            institution=self.institution,
+            discipline=self.discipline,
         )
 
-        survey = Survey.objects.create(
+        self.survey = Survey.objects.create(
             question="What is the causative factor in Bovine Lunar Springing (BLS)?",
             active=True,
             kind="LI",
@@ -542,7 +644,7 @@ class DatabaseModelTestCase(TestCase):
             voted=0,
         )
 
-        ActiveLink.objects.create(participant=participant, survey=survey)
+        ActiveLink.objects.create(participant=self.participant, survey=self.survey)
 
     def test_database_models(self):
         link = ActiveLink.objects.get()
@@ -553,3 +655,42 @@ class DatabaseModelTestCase(TestCase):
         # After voting, the unique link *must not exist* in the database
         # Check that we raise ObjectDoesNotExist looking up the uid:
         self.assertRaises(ObjectDoesNotExist, ActiveLink.objects.get, unique_link=uid)
+
+    def test_l3c_survey_creation(self):
+        """L3C survey stores questions list and correct kind."""
+        questions = ["Statement A", "Statement B", "Statement C"]
+        survey = Survey.objects.create(
+            question="L3C parent",
+            questions=questions,
+            active=True,
+            kind="L3C",
+            expiry=datetime.datetime(2099, 1, 1, 0, 0),
+            participants=1,
+            voted=0,
+        )
+        saved = Survey.objects.get(pk=survey.pk)
+        self.assertEqual(saved.kind, "L3C")
+        self.assertEqual(saved.questions, questions)
+
+    def test_l3c_vote_stored_as_dict(self):
+        """Voting on an L3C survey stores a dict in Result.vote."""
+        survey = Survey.objects.create(
+            question="L3C vote test",
+            questions=["S1", "S2", "S3"],
+            active=True,
+            kind="L3C",
+            expiry=datetime.datetime(2099, 1, 1, 0, 0),
+            participants=1,
+            voted=0,
+        )
+        link = ActiveLink.objects.create(participant=self.participant, survey=survey)
+        vote = {"0": 3, "1": 4, "2": 2, "expertise": True}
+        link.vote(vote)
+
+        result = Result.objects.get(survey=survey)
+        self.assertIsInstance(result.vote, dict)
+        self.assertEqual(result.vote["0"], 3)
+        self.assertEqual(result.vote["expertise"], True)
+
+        # ActiveLink must be destroyed after voting
+        self.assertRaises(ObjectDoesNotExist, ActiveLink.objects.get, survey=survey)
