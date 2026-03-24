@@ -132,6 +132,10 @@ dmypy.json
 .idea/
 .ideavimrc
 
+# VSCode
+.vscode/
+*.code-workspace
+
 # Node
 node_modules/
 webpack-stats.json
