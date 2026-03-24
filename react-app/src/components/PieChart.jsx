@@ -23,28 +23,59 @@ const COLORS = [
   "#1A5276",
 ];
 
-function PieChart({ surveyId }) {
-  const [voteCounts, setVoteCounts] = useState(null);
+function PieChart({ surveyId, fallbackQuestion }) {
+  const [survey, setSurvey] = useState(null);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
+    if (surveyId === null) {
+      setSurvey(null);
+      setLoaded(false);
+      return;
+    }
+    setSurvey(null);
+    setLoaded(false);
     client
       .get("/api/survey/results/")
       .then((response) => {
-        const survey = response.data.results.find((s) => s.id === surveyId);
-        if (survey) {
-          setVoteCounts(survey.vote_counts);
-        }
+        const found = response.data.results.find((s) => s.id === surveyId);
+        setSurvey(found ?? null);
+        setLoaded(true);
       })
-      .catch(() => {});
+      .catch(() => {
+        setSurvey(null);
+        setLoaded(true);
+      });
   }, [surveyId]);
 
-  if (!voteCounts || Object.keys(voteCounts).length === 0) {
+  if (surveyId === null) {
     return null;
+  }
+
+  if (!loaded) {
+    return null;
+  }
+
+  const voteCounts = survey ? survey.vote_counts : null;
+  const hasResults = voteCounts && Object.keys(voteCounts).length > 0;
+
+  if (!hasResults) {
+    return (
+      <div style={{ width: "300px", textAlign: "center", padding: "1rem" }}>
+        <p style={{ fontWeight: "bold", marginBottom: "0.5rem" }}>
+          {survey ? survey.question : fallbackQuestion}
+        </p>
+        <p style={{ color: "#999" }}>No results yet</p>
+        <p style={{ color: "#999", fontSize: "0.8rem", marginTop: "0.5rem" }}>
+          Survey ID: #{surveyId}
+        </p>
+      </div>
+    );
   }
 
   const sortedKeys = Object.keys(voteCounts).sort();
   const chartData = {
-    labels: sortedKeys.map((k) => VOTE_LABELS[k] ?? k),
+    labels: sortedKeys.map((k) => `${VOTE_LABELS[k] ?? k} (${voteCounts[k]})`),
     datasets: [
       {
         data: sortedKeys.map((k) => voteCounts[k]),
@@ -55,9 +86,23 @@ function PieChart({ surveyId }) {
     ],
   };
 
+  const options = {
+    plugins: {
+      legend: {
+        position: "bottom",
+      },
+    },
+  };
+
   return (
-    <div style={{ width: "300px" }}>
-      <Pie data={chartData} />
+    <div style={{ width: "300px", textAlign: "center" }}>
+      <p style={{ fontWeight: "bold", marginBottom: "0.5rem" }}>
+        {survey.question}
+      </p>
+      <Pie data={chartData} options={options} />
+      <p style={{ color: "#999", fontSize: "0.8rem", marginTop: "0.5rem" }}>
+        Survey ID: #{surveyId}
+      </p>
     </div>
   );
 }
