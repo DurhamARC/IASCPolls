@@ -38,7 +38,7 @@ nav a:hover,
 
 .nav-logo {
   display: inline-block;
-  max-width: 20vw;
+  width: 20vw;
   min-height: 3rem;
   background-image: url("../../imgs/min/logo.svg");
   background-repeat: no-repeat;
