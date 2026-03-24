@@ -4,7 +4,7 @@ import "./dashboard.css";
 import DashboardTable from "../../components/DashboardTable";
 import CreateContainer from "../../components/CreateContainer";
 import AddParticipants from "../../components/addparticipants/AddParticipants";
-// import PieChart from "../../components/PieChart";
+import PieChart from "../../components/PieChart";
 import { AuthContext } from "../../components/AuthContext";
 
 /**
@@ -16,6 +16,13 @@ export default function Dashboard() {
   const [showCreateContainer, setShowCreateContainer] = useState(false);
   const [showAddParticipants, setShowAddParticipants] = useState(false);
   const [reloadCtr, setReloadCtr] = useState(0);
+  const [selectedSurveyId, setSelectedSurveyId] = useState(null);
+  const [selectedSurveyQuestion, setSelectedSurveyQuestion] = useState(null);
+
+  const handleSelect = (id, question) => {
+    setSelectedSurveyId(id);
+    setSelectedSurveyQuestion(question);
+  };
   const dashboardRef = useRef(null);
 
   const { isAuth } = useContext(AuthContext);
@@ -76,7 +83,12 @@ export default function Dashboard() {
               </button>
             </div>
           </div>
-          <div className="pie-chart">{/* <PieChart surveyId={1} /> */}</div>
+          <div className="pie-chart">
+            <PieChart
+              surveyId={selectedSurveyId}
+              fallbackQuestion={selectedSurveyQuestion}
+            />
+          </div>
         </div>
         <div className="dashboard--projects">
           {showCreateContainer && (
@@ -96,7 +108,11 @@ export default function Dashboard() {
               }}
             />
           )}
-          <DashboardTable reload={reloadCtr} />
+          <DashboardTable
+            reload={reloadCtr}
+            selectedSurveyId={selectedSurveyId}
+            onSelect={handleSelect}
+          />
         </div>
       </div>
     </div>

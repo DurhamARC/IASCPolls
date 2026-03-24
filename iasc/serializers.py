@@ -85,6 +85,7 @@ class SurveyInstitutionSerializer(serializers.ModelSerializer):
 class SurveyResultSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(source="survey.id")
     count = serializers.SerializerMethodField()
+    vote_counts = serializers.SerializerMethodField()
     question = serializers.CharField(source="survey.question")
     kind = serializers.CharField(source="survey.kind")
     active = serializers.CharField(source="survey.active")
@@ -92,9 +93,17 @@ class SurveyResultSerializer(serializers.ModelSerializer):
     def get_count(self, obj):
         return models.Result.objects.filter(survey_id=obj.survey.id).count()
 
+    def get_vote_counts(self, obj):
+        results = models.Result.objects.filter(survey_id=obj.survey.id)
+        counts = {}
+        for result in results:
+            key = str(result.vote)
+            counts[key] = counts.get(key, 0) + 1
+        return counts
+
     class Meta:
         model = models.Result
-        fields = ["id", "kind", "active", "question", "count"]
+        fields = ["id", "kind", "active", "question", "count", "vote_counts"]
 
 
 class ActiveLinkSerializer(serializers.ModelSerializer):

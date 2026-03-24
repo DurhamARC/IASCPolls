@@ -9,7 +9,7 @@ import { MessageContext } from "./MessageHandler";
  * @returns {JSX.Element}
  * @constructor
  */
-function DashboardTable({ reload }) {
+function DashboardTable({ reload, selectedSurveyId, onSelect }) {
   const itemsPerPage = 10;
 
   /* MessageContext allows raising errors and messages */
@@ -137,7 +137,16 @@ function DashboardTable({ reload }) {
         </thead>
         <tbody>
           {questionDatabase.map((row) => (
-            <tr key={row.id}>
+            <tr
+              key={row.id}
+              className={`survey-row${selectedSurveyId === row.id ? " selected" : ""}`}
+              onClick={() =>
+                onSelect(
+                  row.id === selectedSurveyId ? null : row.id,
+                  row.id === selectedSurveyId ? null : row.question
+                )
+              }
+            >
               <td className="no-mobile">
                 {row.question.substring(0, 50)}
                 {row.question.length > 50 && "..."}
