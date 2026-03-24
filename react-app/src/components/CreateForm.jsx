@@ -4,6 +4,11 @@ import { client } from "../Api";
 import { MessageContext } from "./MessageHandler";
 import { Institution } from "./Institution";
 
+const SURVEY_KINDS = [
+  { value: "LI", label: "Single Likert" },
+  { value: "L3C", label: "3 Likert + Expertise" },
+];
+
 function getDatePlusMonth() {
   const date = new Date();
   const tzoffset = new Date().getTimezoneOffset() * 60000; // make timezone aware
@@ -18,15 +23,21 @@ function CreateForm({
   setSubmitting,
   setCompleted,
 }) {
+  const [kind, setKind] = useState("LI");
   const [statement, setStatement] = useState("");
+  const [questions, setQuestions] = useState(["", "", ""]);
   const [active, setActive] = useState(true);
   const [endDate, setEndDate] = useState(getDatePlusMonth());
   const [displayInst, setDisplayInst] = useState(false);
   const [institution, setInstitution] = useState(null);
   const { pushError } = useContext(MessageContext);
 
-  const handleStatementChange = (event) => {
-    setStatement(event.target.value);
+  const handleQuestionChange = (index, value) => {
+    setQuestions((prev) => {
+      const updated = [...prev];
+      updated[index] = value;
+      return updated;
+    });
   };
 
   const handleActiveChange = (event) => {
@@ -46,11 +57,15 @@ function CreateForm({
     setSubmitting(true);
 
     const data = {
-      question: statement,
+      question: kind === "L3C" ? questions[0] : statement,
       active,
-      kind: "LI",
+      kind,
       expiry: endDate,
     };
+
+    if (kind === "L3C") {
+      data.questions = JSON.stringify(questions);
+    }
 
     // If an institution is selected, append it to the data
     if (displayInst && institution !== null && institution !== "") {
@@ -63,7 +78,7 @@ function CreateForm({
       .then(() => {
         setSurveyDetails({
           ...data,
-          institution: institution.label,
+          institution: institution ? institution.label : null,
         });
         setSubmitting(false);
         setCompleted(true);
@@ -82,16 +97,52 @@ function CreateForm({
     <form onSubmit={handleSubmit}>
       <h1>Create a Survey</h1>
 
-      <label htmlFor="statement">
-        <p>Statement</p>
-        <textarea
-          id="statement"
-          value={statement}
-          onChange={handleStatementChange}
-          className="create--statement"
-          placeholder="Enter the statement the participants will see"
-        />
+      <label htmlFor="kind">
+        <p>Template</p>
+        <select
+          id="kind"
+          value={kind}
+          onChange={(e) => setKind(e.target.value)}
+          className="create--select"
+        >
+          {SURVEY_KINDS.map((k) => (
+            <option key={k.value} value={k.value}>
+              {k.label}
+            </option>
+          ))}
+        </select>
       </label>
+
+      {kind === "LI" && (
+        <label htmlFor="statement">
+          <p>Statement</p>
+          <textarea
+            id="statement"
+            value={statement}
+            onChange={(e) => setStatement(e.target.value)}
+            className="create--statement"
+            placeholder="Enter the statement the participants will see"
+          />
+        </label>
+      )}
+
+      {kind === "L3C" && (
+        <div>
+          <p>Statements</p>
+          {[1, 2, 3].map((n) => (
+            <label key={`statement-${n}`} htmlFor={`statement-${n}`}>
+              <p>Statement {n}</p>
+              <textarea
+                id={`statement-${n}`}
+                value={questions[n - 1]}
+                onChange={(e) => handleQuestionChange(n - 1, e.target.value)}
+                className="create--statement"
+                placeholder={`Enter statement ${n}`}
+              />
+            </label>
+          ))}
+        </div>
+      )}
 
       <div className="checkbox">
         <p>Active</p>
