@@ -286,6 +286,27 @@
   white-space: nowrap; /* Prevent table cell content from wrapping */
 }
 
+.survey-row {
+  cursor: pointer;
+  transition: background-color 0.15s ease-in-out;
+}
+
+.survey-row:hover {
+  background-color: #e8f0fe;
+}
+
+.survey-row:active {
+  background-color: #c3d7fa;
+}
+
+.survey-row.selected {
+  background-color: #d0e4ff;
+}
+
+.survey-row.selected:hover {
+  background-color: #b8d4ff;
+}
+
 .dashboard--next--page {
   width: 100%;
   display: flex;
