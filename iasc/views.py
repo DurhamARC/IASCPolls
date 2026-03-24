@@ -135,6 +135,7 @@ class CreateSurveyView(ViewSet):
                 kind=request.data.get("kind", "LI"),
                 active=request.data.get("active", True),
                 create_active_links=request.data.get("create_active_links", True),
+                questions=request.data.get("questions", None),
             )
 
             return Response(
