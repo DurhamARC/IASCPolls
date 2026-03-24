@@ -17,6 +17,12 @@ export default function Dashboard() {
   const [showAddParticipants, setShowAddParticipants] = useState(false);
   const [reloadCtr, setReloadCtr] = useState(0);
   const [selectedSurveyId, setSelectedSurveyId] = useState(null);
+  const [selectedSurveyQuestion, setSelectedSurveyQuestion] = useState(null);
+
+  const handleSelect = (id, question) => {
+    setSelectedSurveyId(id);
+    setSelectedSurveyQuestion(question);
+  };
   const dashboardRef = useRef(null);
 
   const { isAuth } = useContext(AuthContext);
@@ -78,7 +84,10 @@ export default function Dashboard() {
             </div>
           </div>
           <div className="pie-chart">
-            <PieChart surveyId={selectedSurveyId} />
+            <PieChart
+              surveyId={selectedSurveyId}
+              fallbackQuestion={selectedSurveyQuestion}
+            />
           </div>
         </div>
         <div className="dashboard--projects">
@@ -102,7 +111,7 @@ export default function Dashboard() {
           <DashboardTable
             reload={reloadCtr}
             selectedSurveyId={selectedSurveyId}
-            onSelect={setSelectedSurveyId}
+            onSelect={handleSelect}
           />
         </div>
       </div>

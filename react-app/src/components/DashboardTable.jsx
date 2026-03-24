@@ -141,7 +141,10 @@ function DashboardTable({ reload, selectedSurveyId, onSelect }) {
               key={row.id}
               className={`survey-row${selectedSurveyId === row.id ? " selected" : ""}`}
               onClick={() =>
-                onSelect(row.id === selectedSurveyId ? null : row.id)
+                onSelect(
+                  row.id === selectedSurveyId ? null : row.id,
+                  row.id === selectedSurveyId ? null : row.question
+                )
               }
             >
               <td className="no-mobile">
