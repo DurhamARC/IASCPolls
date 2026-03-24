@@ -226,6 +226,11 @@
   padding-bottom: 2rem;
 }
 
+.poll--box-l3c .poll--question {
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+}
+
 .l3c--row {
   width: 100%;
   padding: 0.75rem 2rem;

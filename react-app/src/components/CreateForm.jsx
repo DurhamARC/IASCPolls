@@ -25,6 +25,7 @@ function CreateForm({
 }) {
   const [kind, setKind] = useState("LI");
   const [statement, setStatement] = useState("");
+  const [title, setTitle] = useState("");
   const [questions, setQuestions] = useState(["", "", ""]);
   const [active, setActive] = useState(true);
   const [endDate, setEndDate] = useState(getDatePlusMonth());
@@ -57,7 +58,7 @@ function CreateForm({
     setSubmitting(true);
 
     const data = {
-      question: kind === "L3C" ? questions[0] : statement,
+      question: kind === "L3C" ? title : statement,
       active,
       kind,
       expiry: endDate,
@@ -128,6 +129,16 @@ function CreateForm({
 
       {kind === "L3C" && (
         <div>
+          <label htmlFor="title">
+            <p>Title</p>
+            <textarea
+              id="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="create--statement"
+              placeholder="Enter a title for this survey (shown to participants)"
+            />
+          </label>
           <p>Statements</p>
           {[1, 2, 3].map((n) => (
             <label key={`statement-${n}`} htmlFor={`statement-${n}`}>
