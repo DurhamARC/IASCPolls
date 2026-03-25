@@ -4,7 +4,7 @@ on:
     paths:
       - 'iasc/**/*'
       - 'frontend/**/*'
-      - '.github/workflows/*'
+      - '.github/*'
       - 'Dockerfile'
       - 'conf/**/*'
   pull_request:
