@@ -1,12 +1,12 @@
 name: Unit Tests
 on:
   push:
+    branches-ignore:
+      - release
     paths:
       - 'iasc/**/*'
       - 'frontend/**/*'
-      - '.github/*'
-      - 'Dockerfile'
-      - 'conf/**/*'
+      - '.github/workflows/*'
   pull_request:
     types:
       - opened
