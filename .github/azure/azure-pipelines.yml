@@ -25,6 +25,10 @@ variables:
   - name: resourceGroupName
     value: 'du-uks-awh-arc-iasc01'
 
+  # Passed at runtime by docker.yml via Azure/pipelines action
+  - name: commitHash
+    value: ''
+
   # Azure container registry connection details
   - name: dockerRegistryServiceConnection
     value: 'duuksawhacr01.azurecr.io'
