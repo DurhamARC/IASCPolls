@@ -129,6 +129,13 @@
   border: 2px solid #e0e0e0;
 }
 
+.pie-chart--placeholder {
+  color: #999;
+  font-size: 0.95rem;
+  text-align: center;
+  padding: 1rem;
+}
+
 .dashboard--button {
   height: 9rem;
   width: 12vw;

@@ -104,7 +104,11 @@ function PieChart({ surveyId, fallbackQuestion }) {
   }, [surveyId]);
 
   if (surveyId === null) {
-    return null;
+    return (
+      <p className="pie-chart--placeholder">
+        Pick a survey from the list to view details
+      </p>
+    );
   }
 
   if (!loaded) {
