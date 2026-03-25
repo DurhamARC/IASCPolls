@@ -59,8 +59,8 @@ jobs:
             ${{ env.DOCKERHUB_REPO }}:latest , 
             ${{ env.DOCKERHUB_REPO }}:${{ env.SHORT_SHA }} ,
             ${{ env.DOCKERHUB_REPO }}:${{ env.BRANCH }}
-          cache-from: type=gha,scope=${{ github.workflow }}
-          cache-to: type=gha,scope=${{ github.workflow }},mode=max
+          cache-from: type=registry,ref=${{ env.DOCKERHUB_REPO }}:cache
+          cache-to: type=registry,ref=${{ env.DOCKERHUB_REPO }}:cache,mode=max
 
   release-prod:
     name: Release to Azure Pipelines Production
@@ -76,5 +76,4 @@ jobs:
           azure-pipeline-name: DurhamARC.IASCPolls
           azure-devops-project-url: ${{ secrets.AZURE_DEVOPS_URL }}
           azure-devops-token: ${{ secrets.AZURE_DEVOPS_TOKEN }}
-          variables: |
-            commitHash=${{ needs.docker.outputs.short_sha }}
+          azure-pipeline-variables: '{"commitHash": "${{ needs.docker.outputs.short_sha }}"}'
