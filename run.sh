@@ -89,7 +89,10 @@ divider
 
 # ── PostgreSQL ─────────────────────────────────────────────────────────────────
 header "3 / 5  PostgreSQL"
-if docker ps --format '{{.Names}}' | grep -q '^postgres$'; then
+POSTGRES_STARTED=false
+if nc -z 127.0.0.1 5432 2>/dev/null; then
+    warn "Port 5432 already in use — skipping docker run"
+elif docker ps --format '{{.Names}}' | grep -q '^postgres$'; then
     warn "Container 'postgres' already running — skipping docker run"
 else
     info "Starting postgres:15.2-alpine container…"
@@ -101,6 +104,7 @@ else
     info "Waiting for PostgreSQL to become ready…"
     until docker exec postgres pg_isready -q 2>/dev/null; do sleep 0.5; done
     success "PostgreSQL is ready"
+    POSTGRES_STARTED=true
 fi
 
 divider
@@ -136,9 +140,12 @@ python manage.py runserver || true
 # ── Teardown ───────────────────────────────────────────────────────────────────
 divider
 warn "Dev server stopped."
-echo -e "${YELLOW}  Press Ctrl+C within 3 s to leave PostgreSQL running, or wait to stop it.${RESET}"
-sleep 3
-
-info "Stopping postgres container…"
-docker stop postgres
-success "PostgreSQL stopped. Goodbye!"
+if [ "${POSTGRES_STARTED}" = true ]; then
+    echo -e "${YELLOW}  Press Ctrl+C within 3 s to leave PostgreSQL running, or wait to stop it.${RESET}"
+    sleep 3
+    info "Stopping postgres container…"
+    docker stop postgres
+    success "PostgreSQL stopped. Goodbye!"
+else
+    success "Goodbye!"
+fi
