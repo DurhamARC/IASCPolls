@@ -57,7 +57,7 @@ export default function Dashboard() {
                 onClick={() => {
                   setShowAddParticipants(true);
                 }}
-                className="button dashboard--button"
+                className="dashboard--button"
               >
                 <div>
                   <span className="material-symbols-outlined">
@@ -74,7 +74,7 @@ export default function Dashboard() {
                 onClick={() => {
                   setShowCreateContainer(true);
                 }}
-                className="button dashboard--button"
+                className="dashboard--button"
               >
                 <div>
                   <span className="material-symbols-outlined">edit_square</span>

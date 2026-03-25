@@ -39,12 +39,12 @@ nav a:hover,
 .nav-logo {
   display: inline-block;
   width: 20vw;
-  min-height: 3rem;
+  min-height: 3.5rem;
   background-image: url("../../imgs/min/logo.svg");
   background-repeat: no-repeat;
   z-index: 999;
   background-size: contain;
-  background-position: center;
+  background-position: left;
 }
 
 .nav-logo.active {
