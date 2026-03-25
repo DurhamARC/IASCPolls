@@ -1,3 +1,3 @@
-import definitions from "../../survey_definitions.json";
+import definitions from "../../conf/survey_definitions.json";
 
 export default definitions;

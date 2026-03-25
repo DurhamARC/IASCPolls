@@ -6,6 +6,7 @@ on:
       - 'frontend/**/*'
       - '.github/workflows/*'
       - 'Dockerfile'
+      - 'conf/**/*'
   pull_request:
     types:
       - opened
