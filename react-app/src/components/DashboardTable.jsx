@@ -128,6 +128,7 @@ function DashboardTable({ reload, selectedSurveyId, onSelect }) {
           <tr>
             <th className="no-mobile">Statement</th>
             <th>ID</th>
+            <th className="no-mobile">Type</th>
             <th>Completed</th>
             <th className="no-mobile">Links</th>
             <th>Expiry</th>
@@ -152,6 +153,7 @@ function DashboardTable({ reload, selectedSurveyId, onSelect }) {
                 {row.question.length > 50 && "..."}
               </td>
               <td>{row.id}</td>
+              <td className="no-mobile">{row.kind}</td>
               <td>{Math.round((row.voted * 100) / row.participants)}%</td>
               <td className="no-mobile">
                 <a href={`/download?pollId=${row.id}`}>
