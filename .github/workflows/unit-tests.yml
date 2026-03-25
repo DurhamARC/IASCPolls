@@ -5,6 +5,7 @@ on:
       - 'iasc/**/*'
       - 'frontend/**/*'
       - '.github/workflows/*'
+      - 'Dockerfile'
   pull_request:
     types:
       - opened
