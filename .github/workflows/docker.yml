@@ -18,6 +18,8 @@ jobs:
     if: github.event.workflow_run.conclusion == 'success'
 
     runs-on: ubuntu-latest
+    outputs:
+      short_sha: ${{ steps.sha.outputs.short_sha }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -37,8 +39,10 @@ jobs:
       # https://stackoverflow.com/questions/59810838/how-to-get-the-short-sha-for-the-github-workflow
       # https://stackoverflow.com/questions/58033366/how-to-get-the-current-branch-within-github-actions
       - name: Add SHORT_SHA and BRANCH to env
+        id: sha
         run: |
           echo "SHORT_SHA=$(git rev-parse --short=8 HEAD)" >> $GITHUB_ENV \
+          && echo "short_sha=$(git rev-parse --short=8 HEAD)" >> $GITHUB_OUTPUT \
           && echo "BRANCH=${{ github.event.workflow_run.head_branch }}" >> $GITHUB_ENV
 
       - name: Set up Docker Buildx
@@ -72,3 +76,5 @@ jobs:
           azure-pipeline-name: DurhamARC.IASCPolls
           azure-devops-project-url: ${{ secrets.AZURE_DEVOPS_URL }}
           azure-devops-token: ${{ secrets.AZURE_DEVOPS_TOKEN }}
+          variables: |
+            commitHash=${{ needs.docker.outputs.short_sha }}
