@@ -1,5 +1,3 @@
-version: '3.6'
-
 services:
   iasc:
 #    image: durhamarc/iasc:latest
