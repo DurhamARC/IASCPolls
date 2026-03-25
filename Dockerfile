@@ -41,6 +41,7 @@ RUN npm install
 
 # Copy files and build app
 ADD react-app /app/react-app
+COPY survey_definitions.json /app/survey_definitions.json
 WORKDIR /app/react-app
 RUN npm run webpack
 
