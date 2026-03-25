@@ -108,7 +108,7 @@ class SurveyResultSerializer(serializers.ModelSerializer):
         counts = {}
         for result in results:
             if isinstance(result.vote, dict):
-                # L3C: vote is {"0": 3, "1": 2, "2": 4, "expertise": true}
+                # multi-question vote: {"0": 3, "1": 2, ..., "expertise": true}
                 for sub_key, sub_val in result.vote.items():
                     if sub_key not in counts:
                         counts[sub_key] = {}

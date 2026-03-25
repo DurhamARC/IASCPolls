@@ -1,11 +1,19 @@
 import secrets
 
+from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.db import models, transaction
-from django.utils.translation import gettext_lazy
 from datetime import datetime
 
 from iasc import settings
+from iasc.survey_defs import VALID_KINDS
+
+
+def validate_survey_kind(value):
+    if value not in VALID_KINDS:
+        raise ValidationError(
+            f"Invalid survey kind '{value}'. Valid kinds: {VALID_KINDS}"
+        )
 
 
 class Institution(models.Model):
@@ -87,32 +95,19 @@ class Survey(models.Model):
     There may be more than one survey at any given time
     """
 
-    class SurveyKind(models.TextChoices):
-        """
-        Survey kinds. Provided to extend tool to different kinds of survey. Just add options to list
-        https://stackoverflow.com/questions/54802616/how-can-one-use-enums-as-a-choice-field-in-a-django-model
-        """
-
-        LIKERT = "LI", gettext_lazy("Likert")
-        LIKERT_3_EXPERTISE = "L3C", gettext_lazy("Likert (3 + Expertise)")
-
     question = models.TextField()
     questions = models.JSONField(
         null=True,
         blank=True,
-        help_text="List of statement strings for multi-question templates (e.g. L3C)",
+        help_text="List of statement strings for multi-question templates",
     )
     active = models.BooleanField()
     kind = models.CharField(
-        max_length=3, choices=SurveyKind.choices, default=SurveyKind.LIKERT
+        max_length=10, default="LI", validators=[validate_survey_kind]
     )
     expiry = models.DateTimeField(null=False, default=datetime(2000, 1, 1, 0, 0))
     participants = models.IntegerField(null=False, default=0)
     voted = models.IntegerField(null=False, default=0)
-
-    def get_survey_kind(self) -> SurveyKind:
-        # Get value from choices enum
-        return self.SurveyKind[self.kind]
 
     def __str__(self):
         return f"{self.id}: {self.question[:75] if len(self.question) > 75 else self.question}"

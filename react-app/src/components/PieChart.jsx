@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { client } from "../Api";
+import definitions from "../surveyDefinitions";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -44,7 +45,7 @@ function buildLikertChartData(counts) {
   };
 }
 
-function buildExpertiseChartData(counts) {
+function buildCheckboxChartData(counts) {
   const yes = counts.True ?? counts.true ?? 0;
   const no = counts.False ?? counts.false ?? 0;
   return {
@@ -126,37 +127,43 @@ function PieChart({ surveyId, fallbackQuestion }) {
     );
   }
 
-  // Detect L3C: values are objects rather than numbers
-  const isL3C = typeof Object.values(voteCounts)[0] === "object";
+  const kind = survey?.kind ?? "LI";
+  const definition = definitions[kind] ?? definitions.LI;
+  const slots = definition.questions;
+  const isMulti = slots.length > 1;
 
-  if (isL3C) {
-    const statements = survey.questions ?? [
-      "Statement 1",
-      "Statement 2",
-      "Statement 3",
-    ];
-    const subKeys = ["0", "1", "2"];
+  if (isMulti) {
+    const dbStatements = survey.questions ?? [];
+    let likertIdx = 0;
     return (
       <div style={{ width: "300px", textAlign: "center", padding: "0.5rem" }}>
         <p style={{ fontWeight: "bold", marginBottom: "1rem" }}>{title}</p>
-        {subKeys.map((k) =>
-          voteCounts[k] && Object.keys(voteCounts[k]).length > 0 ? (
-            <SinglePie
-              key={k}
-              title={
-                statements[parseInt(k, 10)] ??
-                `Statement ${parseInt(k, 10) + 1}`
-              }
-              chartData={buildLikertChartData(voteCounts[k])}
-            />
-          ) : null
-        )}
-        {voteCounts.expertise && (
-          <SinglePie
-            title="I have relevant expertise"
-            chartData={buildExpertiseChartData(voteCounts.expertise)}
-          />
-        )}
+        {slots.map((slot) => {
+          if (slot.type === "likert") {
+            const key = String(likertIdx);
+            const slotTitle =
+              dbStatements[likertIdx] ?? `Statement ${likertIdx + 1}`;
+            likertIdx += 1;
+            return voteCounts[key] &&
+              Object.keys(voteCounts[key]).length > 0 ? (
+              <SinglePie
+                key={slot.id}
+                title={slotTitle}
+                chartData={buildLikertChartData(voteCounts[key])}
+              />
+            ) : null;
+          }
+          if (slot.type === "checkbox") {
+            return voteCounts.expertise ? (
+              <SinglePie
+                key={slot.id}
+                title={slot.label}
+                chartData={buildCheckboxChartData(voteCounts.expertise)}
+              />
+            ) : null;
+          }
+          return null;
+        })}
         <p style={{ color: "#999", fontSize: "0.8rem", marginTop: "0.5rem" }}>
           Survey ID: #{surveyId}
         </p>
