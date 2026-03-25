@@ -50,37 +50,43 @@ export default function Dashboard() {
     <div className="container">
       <div className="dashboard" ref={dashboardRef}>
         <div className="dashboard--overview">
-          <div className="create-add-container">
-            <div>
-              <button
-                type="button"
-                onClick={() => {
-                  setShowAddParticipants(true);
-                }}
-                className="button dashboard--button"
-              >
-                <div>
-                  <span className="material-symbols-outlined">
-                    contact_page
-                  </span>
-                </div>
-                <div>Add Participants</div>
-              </button>
-            </div>
+          <div className="dashboard--tools">
+            <p className="dashboard--section-header">Survey tools</p>
+            <hr />
+            <div className="create-add-container">
+              <div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowAddParticipants(true);
+                  }}
+                  className="dashboard--button"
+                >
+                  <div>
+                    <span className="material-symbols-outlined">
+                      contact_page
+                    </span>
+                  </div>
+                  <div>Add Participants</div>
+                </button>
+              </div>
 
-            <div>
-              <button
-                type="button"
-                onClick={() => {
-                  setShowCreateContainer(true);
-                }}
-                className="button dashboard--button"
-              >
-                <div>
-                  <span className="material-symbols-outlined">edit_square</span>
-                </div>
-                <div>Create</div>
-              </button>
+              <div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowCreateContainer(true);
+                  }}
+                  className="dashboard--button"
+                >
+                  <div>
+                    <span className="material-symbols-outlined">
+                      edit_square
+                    </span>
+                  </div>
+                  <div>Create</div>
+                </button>
+              </div>
             </div>
           </div>
           <div className="pie-chart">

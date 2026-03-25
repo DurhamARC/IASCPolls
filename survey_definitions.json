@@ -1,0 +1,37 @@
+{
+  "LI": {
+    "label": "Single Likert",
+    "questions": [
+      {
+        "id": "q0",
+        "type": "likert",
+        "placeholder": "Enter the statement participants will see"
+      }
+    ]
+  },
+  "L2E": {
+    "label": "2 Likert + Expertise",
+    "questions": [
+      { "id": "q0", "type": "likert", "placeholder": "Enter statement 1" },
+      { "id": "q1", "type": "likert", "placeholder": "Enter statement 2" },
+      {
+        "id": "expertise",
+        "type": "checkbox",
+        "label": "I have relevant expertise"
+      }
+    ]
+  },
+  "L3C": {
+    "label": "3 Likert + Expertise",
+    "questions": [
+      { "id": "q0", "type": "likert", "placeholder": "Enter statement 1" },
+      { "id": "q1", "type": "likert", "placeholder": "Enter statement 2" },
+      { "id": "q2", "type": "likert", "placeholder": "Enter statement 3" },
+      {
+        "id": "expertise",
+        "type": "checkbox",
+        "label": "I have relevant expertise"
+      }
+    ]
+  }
+}

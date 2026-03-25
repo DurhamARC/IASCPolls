@@ -3,11 +3,7 @@ import React, { useContext, useState } from "react";
 import { client } from "../Api";
 import { MessageContext } from "./MessageHandler";
 import { Institution } from "./Institution";
-
-const SURVEY_KINDS = [
-  { value: "LI", label: "Single Likert" },
-  { value: "L3C", label: "3 Likert + Expertise" },
-];
+import definitions from "../surveyDefinitions";
 
 function getDatePlusMonth() {
   const date = new Date();
@@ -17,16 +13,32 @@ function getDatePlusMonth() {
   return new Date(date - tzoffset).toISOString().slice(0, -1);
 }
 
+function likertSlots(kind) {
+  return definitions[kind].questions.filter((q) => q.type === "likert");
+}
+
+function isMultiQuestion(kind) {
+  return definitions[kind].questions.length > 1;
+}
+
 function CreateForm({
   onSubmit,
   setSurveyDetails,
   setSubmitting,
   setCompleted,
 }) {
-  const [kind, setKind] = useState("LI");
+  const [kind, setKind] = useState(Object.keys(definitions)[0]);
   const [statement, setStatement] = useState("");
   const [title, setTitle] = useState("");
-  const [questions, setQuestions] = useState(["", "", ""]);
+  // Per-kind statement arrays, initialised from the definition
+  const [questionsByKind, setQuestionsByKind] = useState(() =>
+    Object.fromEntries(
+      Object.keys(definitions).map((k) => [
+        k,
+        Array(likertSlots(k).length).fill(""),
+      ])
+    )
+  );
   const [active, setActive] = useState(true);
   const [endDate, setEndDate] = useState(getDatePlusMonth());
   const [displayInst, setDisplayInst] = useState(false);
@@ -34,10 +46,10 @@ function CreateForm({
   const { pushError } = useContext(MessageContext);
 
   const handleQuestionChange = (index, value) => {
-    setQuestions((prev) => {
-      const updated = [...prev];
+    setQuestionsByKind((prev) => {
+      const updated = [...prev[kind]];
       updated[index] = value;
-      return updated;
+      return { ...prev, [kind]: updated };
     });
   };
 
@@ -57,15 +69,16 @@ function CreateForm({
     event.preventDefault();
     setSubmitting(true);
 
+    const multi = isMultiQuestion(kind);
     const data = {
-      question: kind === "L3C" ? title : statement,
+      question: multi ? title : statement,
       active,
       kind,
       expiry: endDate,
     };
 
-    if (kind === "L3C") {
-      data.questions = JSON.stringify(questions);
+    if (multi) {
+      data.questions = JSON.stringify(questionsByKind[kind]);
     }
 
     // If an institution is selected, append it to the data
@@ -94,6 +107,9 @@ function CreateForm({
       });
   };
 
+  const slots = likertSlots(kind);
+  const multi = isMultiQuestion(kind);
+
   return (
     <form onSubmit={handleSubmit}>
       <h1>Create a Survey</h1>
@@ -106,15 +122,15 @@ function CreateForm({
           onChange={(e) => setKind(e.target.value)}
           className="create--select"
         >
-          {SURVEY_KINDS.map((k) => (
-            <option key={k.value} value={k.value}>
-              {k.label}
+          {Object.entries(definitions).map(([value, def]) => (
+            <option key={value} value={value}>
+              {def.label}
             </option>
           ))}
         </select>
       </label>
 
-      {kind === "LI" && (
+      {!multi && (
         <label htmlFor="statement">
           <p>Statement</p>
           <textarea
@@ -122,12 +138,12 @@ function CreateForm({
             value={statement}
             onChange={(e) => setStatement(e.target.value)}
             className="create--statement"
-            placeholder="Enter the statement the participants will see"
+            placeholder={definitions[kind].questions[0].placeholder}
           />
         </label>
       )}
 
-      {kind === "L3C" && (
+      {multi && (
         <div>
           <label htmlFor="title">
             <p>Title</p>
@@ -140,15 +156,15 @@ function CreateForm({
             />
           </label>
           <p>Statements</p>
-          {[1, 2, 3].map((n) => (
-            <label key={`statement-${n}`} htmlFor={`statement-${n}`}>
-              <p>Statement {n}</p>
+          {slots.map((slot, i) => (
+            <label key={`statement-${i + 1}`} htmlFor={`statement-${i + 1}`}>
+              <p>Statement {i + 1}</p>
               <textarea
-                id={`statement-${n}`}
-                value={questions[n - 1]}
-                onChange={(e) => handleQuestionChange(n - 1, e.target.value)}
+                id={`statement-${i + 1}`}
+                value={questionsByKind[kind][i]}
+                onChange={(e) => handleQuestionChange(i, e.target.value)}
                 className="create--statement"
-                placeholder={`Enter statement ${n}`}
+                placeholder={slot.placeholder}
               />
             </label>
           ))}

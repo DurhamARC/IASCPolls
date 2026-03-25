@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { client } from "../../Api";
 import PollForm from "../../components/SurveyForm";
+import definitions from "../../surveyDefinitions";
 import "./survey.css";
 
 /**
@@ -58,11 +59,11 @@ export default function Poll() {
       <div className="background-blur mirror" />
       <div className="poll">
         <div
-          className={`poll--box${surveyKind === "L3C" ? " poll--box-l3c" : ""}`}
+          className={`poll--box${(definitions[surveyKind]?.questions.length ?? 1) > 1 ? " poll--box-l3c" : ""}`}
         >
           <div className="poll--blurb">
             Please respond to the following statement
-            {surveyKind === "L3C" ? "s" : ""}:
+            {(definitions[surveyKind]?.questions.length ?? 1) > 1 ? "s" : ""}:
           </div>
           <div className="poll--question">{pollQuestion}</div>
           <PollForm

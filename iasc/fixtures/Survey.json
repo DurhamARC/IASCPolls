@@ -101,5 +101,37 @@
             "participants": 15,
             "voted": 5
         }
+    },
+    {
+        "model": "iasc.survey",
+        "pk": 8,
+        "fields": {
+            "question": "Rate your views on research software and state your expertise.",
+            "questions": [
+                "Research software should be treated as a first-class research output",
+                "Current training for research software development is adequate"
+            ],
+            "active": true,
+            "kind": "L2E",
+            "expiry": "2027-03-31T23:59:59Z",
+            "participants": 15,
+            "voted": 8
+        }
+    },
+    {
+        "model": "iasc.survey",
+        "pk": 9,
+        "fields": {
+            "question": "Rate your views on data management and state your expertise.",
+            "questions": [
+                "FAIR data principles are well understood in my field",
+                "Institutional data management support is sufficient"
+            ],
+            "active": false,
+            "kind": "L2E",
+            "expiry": "2025-12-31T23:59:59Z",
+            "participants": 15,
+            "voted": 15
+        }
     }
 ]

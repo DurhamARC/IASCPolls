@@ -609,6 +609,96 @@ class ViewsTestCase(HTTPTestCase):
             self.assertEqual(l3c_result["vote_counts"]["0"]["3"], 1)
             self.assertEqual(l3c_result["vote_counts"]["expertise"]["True"], 1)
 
+        def test_14_create_l2e_survey():
+            """
+            Test creating an L2E (2 Likert + expertise) survey
+            /survey/create/
+            /survey/
+            """
+            import json
+
+            questions = [
+                "Statement one for L2E survey",
+                "Statement two for L2E survey",
+            ]
+
+            resp = self.POST(
+                "/api/survey/create/",
+                {
+                    "question": "L2E parent question",
+                    "questions": json.dumps(questions),
+                    "expiry": "2030-01-01T00:00",
+                    "active": "True",
+                    "kind": "L2E",
+                    "create_active_links": "True",
+                },
+                mimetype=self.mimetypes["json"],
+            )
+
+            self.assertEqual(resp["status"], "success")
+            survey = Survey.objects.filter(kind="L2E").get()
+            self.assertEqual(survey.kind, "L2E")
+            self.assertEqual(survey.questions, questions)
+
+            resp_survey = self.GET(
+                f"/api/survey/{survey.id}/",
+                status=200,
+                mimetype=self.mimetypes["json"],
+                startswith=b"{",
+            )
+            self.assertEqual(resp_survey["kind"], "L2E")
+            self.assertEqual(resp_survey["questions"], questions)
+
+            self.l2e_survey_id = survey.id
+
+        def test_15_vote_l2e():
+            """
+            Test submitting a dict vote for an L2E survey, and verify vote_counts aggregation
+            /vote/
+            /survey/results/
+            """
+            import json
+
+            resp_links = self.GET(
+                f"/api/links/?survey={self.l2e_survey_id}",
+                status=200,
+                mimetype=self.mimetypes["json"],
+                startswith=b"{",
+            )
+            self.assertGreater(resp_links["count"], 0)
+
+            link_url = resp_links["results"][0]["hyperlink"]
+            params = parse.parse_qs(parse.urlparse(link_url).query)
+            unique_id = params["unique_id"][0]
+
+            vote = {"0": 2, "1": 4, "expertise": False}
+
+            resp = self.POST(
+                "/api/vote/",
+                {"unique_id": unique_id, "vote": json.dumps(vote)},
+                status=200,
+                mimetype=self.mimetypes["json"],
+                contains="success",
+            )
+            self.assertEqual(resp["status"], "success")
+
+            result = Result.objects.filter(survey_id=self.l2e_survey_id).get()
+            self.assertIsInstance(result.vote, dict)
+            self.assertEqual(result.vote["0"], 2)
+            self.assertEqual(result.vote["expertise"], False)
+
+            resp_results = self.GET(
+                "/api/survey/results/",
+                status=200,
+                mimetype=self.mimetypes["json"],
+                startswith=b"{",
+            )
+            l2e_result = next(r for r in resp_results["results"] if r["kind"] == "L2E")
+            self.assertIn("0", l2e_result["vote_counts"])
+            self.assertIsInstance(l2e_result["vote_counts"]["0"], dict)
+            self.assertEqual(l2e_result["vote_counts"]["0"]["2"], 1)
+            self.assertEqual(l2e_result["vote_counts"]["expertise"]["False"], 1)
+
         #
         # Run all the integration tests defined within this function:
         print(f"\n{len(dir())-1} Integration tests found")
@@ -694,3 +784,55 @@ class DatabaseModelTestCase(TestCase):
 
         # ActiveLink must be destroyed after voting
         self.assertRaises(ObjectDoesNotExist, ActiveLink.objects.get, survey=survey)
+
+    def test_l2e_survey_creation(self):
+        """L2E survey stores questions list and correct kind."""
+        questions = ["Statement A", "Statement B"]
+        survey = Survey.objects.create(
+            question="L2E parent",
+            questions=questions,
+            active=True,
+            kind="L2E",
+            expiry=datetime.datetime(2099, 1, 1, 0, 0),
+            participants=1,
+            voted=0,
+        )
+        saved = Survey.objects.get(pk=survey.pk)
+        self.assertEqual(saved.kind, "L2E")
+        self.assertEqual(saved.questions, questions)
+
+    def test_l2e_vote_stored_as_dict(self):
+        """Voting on an L2E survey stores a dict in Result.vote."""
+        survey = Survey.objects.create(
+            question="L2E vote test",
+            questions=["S1", "S2"],
+            active=True,
+            kind="L2E",
+            expiry=datetime.datetime(2099, 1, 1, 0, 0),
+            participants=1,
+            voted=0,
+        )
+        link = ActiveLink.objects.create(participant=self.participant, survey=survey)
+        vote = {"0": 2, "1": 5, "expertise": False}
+        link.vote(vote)
+
+        result = Result.objects.get(survey=survey)
+        self.assertIsInstance(result.vote, dict)
+        self.assertEqual(result.vote["0"], 2)
+        self.assertEqual(result.vote["expertise"], False)
+
+        # ActiveLink must be destroyed after voting
+        self.assertRaises(ObjectDoesNotExist, ActiveLink.objects.get, survey=survey)
+
+    def test_invalid_kind_rejected(self):
+        """Survey.full_clean() raises ValidationError for an unrecognised kind."""
+        from django.core.exceptions import ValidationError as DjangoValidationError
+
+        survey = Survey(
+            question="Bad kind test",
+            active=True,
+            kind="INVALID",
+            expiry=datetime.datetime(2099, 1, 1, 0, 0),
+        )
+        with self.assertRaises(DjangoValidationError):
+            survey.full_clean()

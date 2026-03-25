@@ -2,6 +2,7 @@ import React, { useEffect, useContext, useState } from "react";
 import Symbol from "./Symbol";
 import { client } from "../Api";
 import { MessageContext } from "./MessageHandler";
+import definitions from "../surveyDefinitions";
 
 /**
  * Display the survey table in the dashboard and manage the data returned
@@ -95,8 +96,9 @@ function DashboardTable({ reload, selectedSurveyId, onSelect }) {
   /* Render the component */
   return (
     <div className="dashboard--overview--questions">
-      {/* Change filter mode */}
-      <div className="dashboard--overview-active">
+      {/* Table header row: title left, filter right */}
+      <div className="dashboard--table-header">
+        <p className="dashboard--section-header">Surveys</p>
         <div className="dashboard--overview-active-box">
           <button
             type="button"
@@ -128,6 +130,7 @@ function DashboardTable({ reload, selectedSurveyId, onSelect }) {
           <tr>
             <th className="no-mobile">Statement</th>
             <th>ID</th>
+            <th className="no-mobile">Type</th>
             <th>Completed</th>
             <th className="no-mobile">Links</th>
             <th>Expiry</th>
@@ -152,6 +155,9 @@ function DashboardTable({ reload, selectedSurveyId, onSelect }) {
                 {row.question.length > 50 && "..."}
               </td>
               <td>{row.id}</td>
+              <td className="no-mobile">
+                {definitions[row.kind]?.label ?? row.kind}
+              </td>
               <td>{Math.round((row.voted * 100) / row.participants)}%</td>
               <td className="no-mobile">
                 <a href={`/download?pollId=${row.id}`}>

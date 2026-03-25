@@ -79,17 +79,27 @@ elif [ "${CURRENT_NODE_MAJOR}" -ne "${REQUIRED_NODE_MAJOR}" ]; then
     warn "Node ${CURRENT_NODE_MAJOR} active, expected ${REQUIRED_NODE_MAJOR} — run: nvm use"
 fi
 
-info "Running webpack…"
+info "Running initial webpack build…"
 pushd ./react-app/ > /dev/null
 npm run webpack
 popd > /dev/null
 success "Webpack build complete"
 
+info "Starting webpack in watch mode…"
+pushd ./react-app/ > /dev/null
+npm run dev &
+WEBPACK_PID=$!
+popd > /dev/null
+success "Webpack watching for changes (pid ${WEBPACK_PID})"
+
 divider
 
 # ── PostgreSQL ─────────────────────────────────────────────────────────────────
 header "3 / 5  PostgreSQL"
-if docker ps --format '{{.Names}}' | grep -q '^postgres$'; then
+POSTGRES_STARTED=false
+if nc -z 127.0.0.1 5432 2>/dev/null; then
+    warn "Port 5432 already in use — skipping docker run"
+elif docker ps --format '{{.Names}}' | grep -q '^postgres$'; then
     warn "Container 'postgres' already running — skipping docker run"
 else
     info "Starting postgres:15.2-alpine container…"
@@ -101,6 +111,7 @@ else
     info "Waiting for PostgreSQL to become ready…"
     until docker exec postgres pg_isready -q 2>/dev/null; do sleep 0.5; done
     success "PostgreSQL is ready"
+    POSTGRES_STARTED=true
 fi
 
 divider
@@ -136,9 +147,14 @@ python manage.py runserver || true
 # ── Teardown ───────────────────────────────────────────────────────────────────
 divider
 warn "Dev server stopped."
-echo -e "${YELLOW}  Press Ctrl+C within 3 s to leave PostgreSQL running, or wait to stop it.${RESET}"
-sleep 3
-
-info "Stopping postgres container…"
-docker stop postgres
-success "PostgreSQL stopped. Goodbye!"
+info "Stopping webpack watcher (pid ${WEBPACK_PID})…"
+kill "${WEBPACK_PID}" 2>/dev/null && success "Webpack stopped" || true
+if [ "${POSTGRES_STARTED}" = true ]; then
+    echo -e "${YELLOW}  Press Ctrl+C within 3 s to leave PostgreSQL running, or wait to stop it.${RESET}"
+    sleep 3
+    info "Stopping postgres container…"
+    docker stop postgres
+    success "PostgreSQL stopped. Goodbye!"
+else
+    success "Goodbye!"
+fi
