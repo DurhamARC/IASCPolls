@@ -96,8 +96,9 @@ function DashboardTable({ reload, selectedSurveyId, onSelect }) {
   /* Render the component */
   return (
     <div className="dashboard--overview--questions">
-      {/* Change filter mode */}
-      <div className="dashboard--overview-active">
+      {/* Table header row: title left, filter right */}
+      <div className="dashboard--table-header">
+        <p className="dashboard--section-header">Surveys</p>
         <div className="dashboard--overview-active-box">
           <button
             type="button"

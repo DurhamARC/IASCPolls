@@ -1,7 +1,7 @@
 .dashboard {
   display: flex;
   width: 100%;
-  padding: 1rem 2rem 0 2rem;
+  padding: 1rem 4rem 0 4rem;
 }
 
 .dashboard--overview {
@@ -15,6 +15,26 @@
   box-sizing: border-box;
 }
 
+.dashboard--tools {
+  padding: 0;
+}
+
+.dashboard--tools hr {
+  border: none;
+  border-top: 2px solid #e0e0e0;
+  margin-top: 2.3rem;
+  margin-bottom: 1rem;
+}
+
+.dashboard--section-header {
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0 0 0.5rem 0;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
 .create-add-container {
   display: flex;
   flex-direction: row;
@@ -26,10 +46,6 @@
   flex: 1 1 0;
   padding: 0;
   min-width: 0;
-}
-
-.dashboard--overview div {
-  padding: 0;
 }
 
 .dashboard--projects {
@@ -52,12 +68,13 @@
   border-radius: 2px;
 }
 
-.dashboard--overview-active {
+.dashboard--table-header {
   display: flex;
   flex-direction: row;
-  justify-content: center;
-  align-items: center;
+  justify-content: space-between;
+  align-items: flex-start;
   width: 100%;
+  margin-bottom: 1rem;
 }
 
 .dashboard--overview-active-box {
@@ -65,11 +82,8 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  width: 30vw;
   height: 3rem;
   background-color: #f5f5f5;
-  margin-bottom: 1rem;
-
   border: 2px solid #e0e0e0;
 }
 
@@ -122,7 +136,6 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  padding: 1rem;
 }
 
 .pie-chart {
