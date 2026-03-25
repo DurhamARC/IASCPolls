@@ -79,11 +79,18 @@ elif [ "${CURRENT_NODE_MAJOR}" -ne "${REQUIRED_NODE_MAJOR}" ]; then
     warn "Node ${CURRENT_NODE_MAJOR} active, expected ${REQUIRED_NODE_MAJOR} — run: nvm use"
 fi
 
-info "Running webpack…"
+info "Running initial webpack build…"
 pushd ./react-app/ > /dev/null
 npm run webpack
 popd > /dev/null
 success "Webpack build complete"
+
+info "Starting webpack in watch mode…"
+pushd ./react-app/ > /dev/null
+npm run dev &
+WEBPACK_PID=$!
+popd > /dev/null
+success "Webpack watching for changes (pid ${WEBPACK_PID})"
 
 divider
 
@@ -140,6 +147,8 @@ python manage.py runserver || true
 # ── Teardown ───────────────────────────────────────────────────────────────────
 divider
 warn "Dev server stopped."
+info "Stopping webpack watcher (pid ${WEBPACK_PID})…"
+kill "${WEBPACK_PID}" 2>/dev/null && success "Webpack stopped" || true
 if [ "${POSTGRES_STARTED}" = true ]; then
     echo -e "${YELLOW}  Press Ctrl+C within 3 s to leave PostgreSQL running, or wait to stop it.${RESET}"
     sleep 3
