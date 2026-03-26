@@ -128,6 +128,7 @@ RUN mkdir -p /data/nginx/cache
 COPY iasc ./iasc
 COPY frontend ./frontend
 COPY manage.py .
+COPY conf/survey_definitions.json ./conf/survey_definitions.json
 COPY conf/init.sh /usr/local/bin/
 RUN chmod u+x /usr/local/bin/init.sh
 
