@@ -4,107 +4,57 @@ C-SCOPE is a large international hub-and-spoke network, uniquely positioned to s
 
 The international reach of the network also enables analysis of variation across disciplines, institutions, and geographical regions, allowing patterns of agreement and disagreement to be mapped at multiple levels.
 
-Following a successful pilot phase in 2022–23 (involving 30 institutions), the network has expanded substantially. More than 80 institutions have provisionally agreed to participate in the 2024–27 phase, each with a designated spoke representative responsible for local coordination. The institutions are listed below.
+Following a successful pilot phase in 2022–23 (involving 30 institutions), the network has expanded substantially. More than 80 institutions have provisionally agreed to participate in the 2024–27 phase, each with a designated spoke representative responsible for local coordination.
 
 ## The 2024-27 C-SCOPE Network (80 institutions)
 
-### Europe (24 institutions)
+### Europe: 24 institutions including:
 
-- Durham University (Peter Vickers)
-- University of Oxford (Neil Levy)
-- Cambridge University (Jacob Stegenga)
-- University of Exeter (Stephan Guttinger)
-- University of Birmingham (Henry Taylor)
-- University of Leeds (Simon Graf and Ludovica Adamo)
-- University College London (Rory Jubber)
-- Edinburgh University (Nathalie Dupin and Kaja Horn)
-- University of Lancaster (Sam Fellowes)
-- University of Iceland (Finnur Dellsen)
-- Linköping University (Harald Wiltsche)
-- Stockholm University (Henning Strandin)
-- Uppsala University (Rebecca Wallbank)
-- University of Amsterdam (Paula Helm)
-- University of Helsinki (Petri Ylikoski)
-- University of Glasgow (Mike Townsen Hicks)
-- University of Bristol (Lena Zuchowski)
-- University of Vienna (Martin Kusch)
-- University of Cologne (Thomas Blanchard)
-- University of Bonn (Dennis Lehmkuhl)
-- Ludwig Maximillian University (Christian List)
-- Sorbonne University (Cédric Paternotte)
-- KU Leuven (Andreas Deblock)
-- University of Zurich (Francis Cheneval and Elisabeth Stark)
+- Durham University
+- University of Iceland
+- Linköping University
+- University of Bonn
+- University of Zurich
 
-### North America (12 institutions)
+### North America: 12 institutions including:
 
-- University of Guelph (Maya Goldenberg)
-- Stanford University (Anncy Thresher)
-- Purdue University (Dana Tulodziecki)
-- University of Nebraska Omaha (Haixin Dang)
-- University of California, Irvine (Kyle Stanford)
-- University of California, San Diego (Gabriel Nyberg)
-- University of Pittsburgh (Edouard Machery and Laura Gradowski)
-- Bucknell University (Matthew Slater)
-- University of Pennsylvania (Cory Clark and Jesse Hamilton)
-- University of British Columbia (Heidi Tworek and Chris Tenove)
-- University of Toronto (Mark Hallap)
-- UNAM, Mexico (Aline Guevara)
+- Purdue University
+- University of Pittsburgh
+- Bucknell University
+- University of Pennsylvania
+- University of Toronto
+- UNAM, Mexico
 
-### South America (6 institutions)
+### South America: 6 institutions including:
 
 - CONICET, Argentina (Eleanora Cresto)
 - UFRJ, Rio de Janeiro (Carolina Araujo)
-- Universidade Federal de Minas Gerais (Maria Cecília de Miranda N. Coelho)
-- Unicamp (Brazil) (Cristiano Torezzan)
 - University of Buenos Aires (Santiago Ginnobili)
 - Universidad de los Andes (Manuela Fernández Pinto)
 
-### Asia (17 institutions)
+### Asia: 17 institutions including:
 
-- University of Hong Kong (Tong King Lee)
-- Hokkaido University (Kengo Miyazono)
-- University of Calcutta (Dilipkumar Mohanta)
-- Annamalai University (J. Thirumal)
-- Ateneo de Manila University (Guss Rodriguez)
-- Nanyang Technological University (Grace Boey)
-- National University of Singapore (Isaac Wilhelm)
-- University of the Philippines (Liza Ocampo and K.C. Abalos-Orendain)
-- Kathmandu University (Uddhab Pyakurel)
-- Universitas Airlangga (Unair) (Prof. Dr. Purnawan Basundoro)
-- University of Malaya (Azizan Baharuddin)
-- University of Tokyo (Kohji Ishihara)
-- Universiti Brunei Darussalam (Daniel Wee and Abby Tan)
-- NYCU Taiwan (Mike T. Stuart)
-- University of Hyderabad (Shinod N. K.)
-- Bogazici University (Lucas Thorpe)
-- Hebrew University of Jerusalem (Arnon Levy)
+- University of Hong Kong
+- Hokkaido University
+- Nanyang Technological University
+- National University of Singapore
+- University of Hyderabad
 
-### Africa (9 institutions)
+### Africa: 9 institutions including:
 
-- University of Ibadan (Adeshina Afolayan)
-- The University of Western Cape (Simon Beck)
-- University of Ghana (Hasskei Mohammed Majeed)
-- North West University (Ananka Loubser)
-- Addis Ababa (Jonathan Trigg and Professor Bekele Gutema)
-- University of KwaZulu-Natal (David Spurrett)
-- Assiut University (Mahmoud Ali)
-- University of Johannesburg (Sean Muller)
-- Pretoria (Emma Ruttkamp-Bloem)
+- University of KwaZulu-Natal
+- Assiut University
+- University of Johannesburg
+- Pretoria
 
-### Australasia (12 institutions)
+### Australasia: 12 institutions including:
 
-- Macquarie University (Mark Alfano)
-- University of Otago (Zach Weber)
-- Monash University (Toby Handfield)
-- University of Sydney (Richard North and Kathy Belov)
-- University of Melbourne (Howard Sankey and Fiona Fidler)
-- University of Adelaide (Antony Eagle)
-- University of Canterbury (Elizabeth Hopkins, Ian Wright, and Jack Copeland)
-- Victoria University of Wellington (Richard Joyce)
-- University of Western Australia (Chris Letheby)
-- University of New South Wales (Michaelis Michael)
-- University of Auckland (Emily Parke)
-- University of Queensland (Andrew Crowden)
+- Macquarie University
+- University of Otago
+- Monash University
+- University of Sydney
+- University of Auckland
+- University of Queensland
 
 ## C-SCOPE Advisory Board
 
