@@ -1,6 +1,9 @@
 ## What is C-SCOPE?
 
 C-SCOPE (the Centre for Scientific Community Opinion Polling and Evaluation) is a global network designed to survey scientific communities on key questions of interest. It enables thousands of scientists to be contacted with a carefully formulated statement and to provide a rapid agree/disagree response, typically within seconds.
+
 Responses are recorded anonymously and analysed to map the distribution of scientific opinion. This includes, as a special case, measuring the degree of agreement on a given statement, but more broadly aims to capture how views are distributed across a field and how they change over time.
+
 C-SCOPE’s international network also makes it possible to examine variation across disciplines, institutions, and geographical regions. By providing transparent, systematic snapshots of scientific community judgement, C-SCOPE contributes to a clearer understanding of where scientific communities converge, where they do not, and how expert views evolve.
+
 These data can serve as a valuable resource for researchers, policymakers, journalists, and the public, offering structured insight into scientific opinion whilst avoiding oversimplified claims about “the science” speaking with a single voice.
