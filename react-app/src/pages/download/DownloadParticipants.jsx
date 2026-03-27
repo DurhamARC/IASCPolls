@@ -132,12 +132,18 @@ function DownloadParticipants() {
                     <h4>Institution</h4>
                   </div>
                   <div>
+                    <h4>Remaining</h4>
+                  </div>
+                  <div>
                     <h4>Download</h4>
                   </div>
                 </div>
                 {institutions.map((institution) => (
                   <div key={institution.id}>
                     <div>{institution.name}</div>
+                    <div>
+                      {institution.link_count} / {institution.total_count}
+                    </div>
                     <div>
                       <button
                         type="button"

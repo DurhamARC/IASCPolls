@@ -84,12 +84,15 @@ class SurveySerializer(serializers.ModelSerializer):
 
 
 class SurveyInstitutionSerializer(serializers.ModelSerializer):
-    name = serializers.ReadOnlyField(source="participant.institution.name")
-    id = serializers.ReadOnlyField(source="participant.institution.id")
+    link_count = serializers.IntegerField()
+    total_count = serializers.SerializerMethodField()
+
+    def get_total_count(self, obj):
+        return obj["link_count"] + obj["voted_count"]
 
     class Meta:
-        model = models.ActiveLink
-        fields = ["id", "name"]
+        model = models.Institution
+        fields = ["id", "name", "link_count", "total_count"]
 
 
 class SurveyResultSerializer(serializers.ModelSerializer):

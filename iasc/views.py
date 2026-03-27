@@ -6,6 +6,7 @@ from django.contrib.auth import login, logout, get_user_model
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import transaction, IntegrityError
+from django.db.models import Count, Q
 from django.http import HttpResponseRedirect
 from django_filters import rest_framework as filters
 from rest_framework import viewsets, permissions, status
@@ -402,13 +403,10 @@ class SurveyResultsViewSet(viewsets.ReadOnlyModelViewSet):
 
 class SurveyInstitutionViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    queryset = ActiveLink.objects.select_related("participant").distinct(
-        "survey_id", "participant__institution_id"
-    )
+    queryset = ActiveLink.objects.none()
     pagination_class = None
     serializer_class = serializers.SurveyInstitutionSerializer
-    filter_backends = (filters.DjangoFilterBackend,)
-    filterset_class = InstitutionFilter
+    filter_backends = ()
 
     def list(self, request, *args, **kwargs):
         """
@@ -420,7 +418,17 @@ class SurveyInstitutionViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         sid = self.kwargs["survey_id"]
-        return self.queryset.filter(survey_id=sid)
+        return (
+            Institution.objects.filter(participant__activelink__survey_id=sid)
+            .annotate(link_count=Count("participant__activelink", distinct=True))
+            .annotate(
+                voted_count=Count(
+                    "result", filter=Q(result__survey_id=sid), distinct=True
+                )
+            )
+            .values("id", "name", "link_count", "voted_count")
+            .order_by("name")
+        )
 
 
 class ActiveLinkViewSet(viewsets.ReadOnlyModelViewSet):
