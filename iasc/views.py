@@ -405,7 +405,7 @@ class SurveyViewSet(viewsets.ReadOnlyModelViewSet):
 
 class SurveyResultsViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    queryset = Result.objects.distinct("survey_id")
+    queryset = Result.objects.filter(survey__isnull=False).distinct("survey_id")
 
     pagination_class = None
     serializer_class = serializers.SurveyResultSerializer
