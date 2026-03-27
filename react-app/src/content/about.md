@@ -4,107 +4,65 @@ C-SCOPE is a large international hub-and-spoke network, uniquely positioned to s
 
 The international reach of the network also enables analysis of variation across disciplines, institutions, and geographical regions, allowing patterns of agreement and disagreement to be mapped at multiple levels.
 
-Following a successful pilot phase in 2022–23 (involving 30 institutions), the network has expanded substantially. More than 80 institutions have provisionally agreed to participate in the 2024–27 phase, each with a designated spoke representative responsible for local coordination. The institutions are listed below.
+Following a successful pilot phase in 2022–23 (involving 30 institutions), the network has expanded substantially. More than 80 institutions have provisionally agreed to participate in the 2024–27 phase, each with a designated spoke representative responsible for local coordination.
 
-## The 2024-27 C-SCOPE Network (80 institutions)
+## Published work
 
-### Europe (24 institutions)
+### COVID-19 proof-of-concept pilot study (2023)
+- Our first pilot study established a hub-and-spoke network across 30 universities in 12 countries, coordinated from Durham University. This work was [published in PLOS ONE](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0313541).
 
-- Durham University (Peter Vickers)
-- University of Oxford (Neil Levy)
-- Cambridge University (Jacob Stegenga)
-- University of Exeter (Stephan Guttinger)
-- University of Birmingham (Henry Taylor)
-- University of Leeds (Simon Graf and Ludovica Adamo)
-- University College London (Rory Jubber)
-- Edinburgh University (Nathalie Dupin and Kaja Horn)
-- University of Lancaster (Sam Fellowes)
-- University of Iceland (Finnur Dellsen)
-- Linköping University (Harald Wiltsche)
-- Stockholm University (Henning Strandin)
-- Uppsala University (Rebecca Wallbank)
-- University of Amsterdam (Paula Helm)
-- University of Helsinki (Petri Ylikoski)
-- University of Glasgow (Mike Townsen Hicks)
-- University of Bristol (Lena Zuchowski)
-- University of Vienna (Martin Kusch)
-- University of Cologne (Thomas Blanchard)
-- University of Bonn (Dennis Lehmkuhl)
-- Ludwig Maximillian University (Christian List)
-- Sorbonne University (Cédric Paternotte)
-- KU Leuven (Andreas Deblock)
-- University of Zurich (Francis Cheneval and Elisabeth Stark)
+### Astrobiology surveys (2024)
+- The second pilot applied a refined methodology to the global astrobiology community, alongside a comparison group of non-astrobiologists. Three statements probed views on the likely existence of basic, complex, and intelligent extraterrestrial life. This work was [published in Nature Astronomy](https://www.nature.com/articles/s41550-024-02451-0).
 
-### North America (12 institutions)
+## The 2024-27 C-SCOPE Network
 
-- University of Guelph (Maya Goldenberg)
-- Stanford University (Anncy Thresher)
-- Purdue University (Dana Tulodziecki)
-- University of Nebraska Omaha (Haixin Dang)
-- University of California, Irvine (Kyle Stanford)
-- University of California, San Diego (Gabriel Nyberg)
-- University of Pittsburgh (Edouard Machery and Laura Gradowski)
-- Bucknell University (Matthew Slater)
-- University of Pennsylvania (Cory Clark and Jesse Hamilton)
-- University of British Columbia (Heidi Tworek and Chris Tenove)
-- University of Toronto (Mark Hallap)
-- UNAM, Mexico (Aline Guevara)
+### Europe: 24 institutions including:
 
-### South America (6 institutions)
+- Durham University
+- University of Iceland
+- Linköping University
+- University of Bonn
+- University of Zurich
+
+### North America: 12 institutions including:
+
+- Purdue University
+- University of Pittsburgh
+- Bucknell University
+- University of Pennsylvania
+- University of Toronto
+- UNAM, Mexico
+
+### South America: 6 institutions including:
 
 - CONICET, Argentina (Eleanora Cresto)
 - UFRJ, Rio de Janeiro (Carolina Araujo)
-- Universidade Federal de Minas Gerais (Maria Cecília de Miranda N. Coelho)
-- Unicamp (Brazil) (Cristiano Torezzan)
 - University of Buenos Aires (Santiago Ginnobili)
 - Universidad de los Andes (Manuela Fernández Pinto)
 
-### Asia (17 institutions)
+### Asia: 17 institutions including:
 
-- University of Hong Kong (Tong King Lee)
-- Hokkaido University (Kengo Miyazono)
-- University of Calcutta (Dilipkumar Mohanta)
-- Annamalai University (J. Thirumal)
-- Ateneo de Manila University (Guss Rodriguez)
-- Nanyang Technological University (Grace Boey)
-- National University of Singapore (Isaac Wilhelm)
-- University of the Philippines (Liza Ocampo and K.C. Abalos-Orendain)
-- Kathmandu University (Uddhab Pyakurel)
-- Universitas Airlangga (Unair) (Prof. Dr. Purnawan Basundoro)
-- University of Malaya (Azizan Baharuddin)
-- University of Tokyo (Kohji Ishihara)
-- Universiti Brunei Darussalam (Daniel Wee and Abby Tan)
-- NYCU Taiwan (Mike T. Stuart)
-- University of Hyderabad (Shinod N. K.)
-- Bogazici University (Lucas Thorpe)
-- Hebrew University of Jerusalem (Arnon Levy)
+- University of Hong Kong
+- Hokkaido University
+- Nanyang Technological University
+- National University of Singapore
+- University of Hyderabad
 
-### Africa (9 institutions)
+### Africa: 9 institutions including:
 
-- University of Ibadan (Adeshina Afolayan)
-- The University of Western Cape (Simon Beck)
-- University of Ghana (Hasskei Mohammed Majeed)
-- North West University (Ananka Loubser)
-- Addis Ababa (Jonathan Trigg and Professor Bekele Gutema)
-- University of KwaZulu-Natal (David Spurrett)
-- Assiut University (Mahmoud Ali)
-- University of Johannesburg (Sean Muller)
-- Pretoria (Emma Ruttkamp-Bloem)
+- University of KwaZulu-Natal
+- Assiut University
+- University of Johannesburg
+- Pretoria
 
-### Australasia (12 institutions)
+### Australasia: 12 institutions including:
 
-- Macquarie University (Mark Alfano)
-- University of Otago (Zach Weber)
-- Monash University (Toby Handfield)
-- University of Sydney (Richard North and Kathy Belov)
-- University of Melbourne (Howard Sankey and Fiona Fidler)
-- University of Adelaide (Antony Eagle)
-- University of Canterbury (Elizabeth Hopkins, Ian Wright, and Jack Copeland)
-- Victoria University of Wellington (Richard Joyce)
-- University of Western Australia (Chris Letheby)
-- University of New South Wales (Michaelis Michael)
-- University of Auckland (Emily Parke)
-- University of Queensland (Andrew Crowden)
+- Macquarie University
+- University of Otago
+- Monash University
+- University of Sydney
+- University of Auckland
+- University of Queensland
 
 ## C-SCOPE Advisory Board
 
@@ -130,121 +88,4 @@ Following a successful pilot phase in 2022–23 (involving 30 institutions), the
 
 ## Beta-Testing Group
 
-C-SCOPE has a beta-testing group of 116 scientists, as listed below. Every survey is initially tested by the core team (alpha testing), then by our Beta-Testing Group, before any full rollout across the entire network. In addition to testing the basic mechanics of the survey methodology, this also serves as a means to acquire all different kinds of potentially valuable feedback, prior to full rollout.
-
-1. Alice Roberts (Birmingham)
-2. Jim Al-Khalili (Surrey)
-3. Avi Loeb (Harvard)
-4. Jane Hutton (Warwick)
-5. Tim Downing (Pirbright)
-6. Tim Bedding (Sydney)
-7. Þröstur Þorsteinsson (Iceland)
-8. Jens Svenning (Aarhus)
-9. Steve Brusatte (Edinburgh)
-10. Soazig Casteau (Durham)
-11. Sean McMahon (Edinburgh)
-12. Anantha Murthy Sharath (Hyderabad)
-13. Bob Kentridge (Durham)
-14. Rajeev Gupta (Delhi)
-15. Ravi Kopparapu (NASA)
-16. Nadia Jacobo (Mexico)
-17. Marc Knight (Durham)
-18. Melanie Davies (NHS, UK)
-19. Carina Hoorn (Amsterdam)
-20. Madeleine Humphreys (Durham)
-21. Luke Drury (Dublin)
-22. Juan Carlos Letelier (Chile)
-23. Lars-Olof Palsson (Durham)
-24. Jose Villadangos (Melbourne)
-25. Joss Bland-Hawthorn (Sydney)
-26. John Hammond (Pirbright)
-27. Joby Joseph (Hyderabad)
-28. James Baldini (Durham)
-29. Julio Alcayaga (Chile)
-30. Sören Holst (Stockholm)
-31. Henrik Mouritsen (Oldenburg)
-32. Göran Kecklund (Stockholm)
-33. Felix Riede (Aarhus)
-34. Evy Vanberlo (Amsterdam)
-35. Erik Svensson (Lund)
-36. Kristine Engemann (Aarhus)
-37. Liza Eleroux (Aarhus)
-38. Ehmke Pohl (Durham)
-39. Beth Bromley (Durham)
-40. Martijn Egas (Amsterdam)
-41. Dorothy Cowie (Durham)
-42. David Dryden (Durham)
-43. Casimir Ludwig (Bristol)
-44. Axel Maas (Graz)
-45. Arto Maatta (Durham)
-46. Alejandro Ordonez (Aarhus)
-47. Anil Seth (Sussex)
-48. Alejandro Heredia (Mexico)
-49. Aakash Basu (Durham)
-50. Stephanie Burton (Pretoria)
-51. Wolf-Dieter Schubert (Pretoria)
-52. Emanuela Carleschi (Johannesburg)
-53. Meng-Xiang Lin (Pennsylvania)
-54. Kriveshini Pillay (Johannesburg)
-55. Gijsbert Hoogendoorn (Johannesburg)
-56. Rocco Duvenhage (Pretoria)
-57. Wlady Altermann (Johannesburg)
-58. Angus Buckling (Exeter)
-59. Michael Kolios (Toronto)
-60. Philip Heron (Toronto)
-61. Ellen Warner (Toronto)
-62. Josh Darr (Nebraska-Omaha)
-63. David Weinkove (Durham)
-64. Fabian Wadsworth (Durham)
-65. Keith Lindsey (Durham)
-66. Thomas Fauchez (NASA)
-67. Jacob Haqq Misra (Blue Marble Space Institute of Science)
-68. Marc Choisy (OUCRU)
-69. Ina Anreiter (Toronto)
-70. Mohamad Ali (Uppsala)
-71. Paul Denny (Durham)
-72. Brian Suarez-Mantilla (Durham)
-73. Jon Warren (Warwick)
-74. Katie Allen (Durham)
-75. Colin Davis (Bristol)
-76. L Glaser (Vienna)
-77. Biagio Lucini (Swansea)
-78. Aayush Saxena (Oxford)
-79. Christophe Corso (France)
-80. Tom Lane (UCI)
-81. Harinder Singh (Pittsburgh)
-82. Huw Davies (UCI)
-83. Ed Burton (Pittsburgh)
-84. Haitao Liu (Pittsburgh)
-85. Burhan Gharaibeh (Pittsburgh)
-86. Yaacov Barak (Magee)
-87. Jim Faeder (Pittsburgh)
-88. Diego Szczupak (Pittsburgh)
-89. Michael Shurin (UPMC)
-90. Maisha Reza (Exeter)
-91. Pablo Laragon (UCI)
-92. Jonas Larson (Stockholm)
-93. Jolanta Piszczek (Vancouver/Clarity)
-94. Juan Ronco (UBC)
-95. Erik Vu (UBC)
-96. Will Panenka (UBC)
-97. Don Griesdale (UBC)
-98. Hafiza Parkar (Pretoria)
-99. Dan Brierley (UCL)
-100. Sandip Patel (UCL)
-101. Chamkaur Ghag (UCL)
-102. Alasdair MacLullich (Edinburgh)
-103. Bastien Grosso (Birmingham)
-104. Walter Federle (Cambridge)
-105. Pete Rawson (UCL Emeritus)
-106. Steve Fossey (UCL)
-107. Nick Barber (UCL)
-108. Ben Bose (Edinburgh)
-109. John Ellis (Cambridge)
-110. Tuan Duong (Pretoria)
-111. Natalie Schellack (Pretoria)
-112. John Finney (UCL)
-113. Miguel Anaya (Cambridge)
-114. Liezel van der Merwe (Pretoria)
-115. Kali Romano (UBC)
-116. Devin Harris (Health Quality B.C.)
+C-SCOPE has a beta-testing group of 116 scientists. Every survey is initially tested by the core team (alpha testing), then by our Beta-Testing Group, before any full rollout across the entire network. In addition to testing the basic mechanics of the survey methodology, this also serves as a means to acquire all different kinds of potentially valuable feedback, prior to full rollout.
