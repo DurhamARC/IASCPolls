@@ -13,8 +13,8 @@ function getDatePlusMonth() {
   return new Date(date - tzoffset).toISOString().slice(0, -1);
 }
 
-function likertSlots(kind) {
-  return definitions[kind].questions.filter((q) => q.type === "likert");
+function inputSlots(kind) {
+  return definitions[kind].questions;
 }
 
 function isMultiQuestion(kind) {
@@ -35,7 +35,7 @@ function CreateForm({
     Object.fromEntries(
       Object.keys(definitions).map((k) => [
         k,
-        Array(likertSlots(k).length).fill(""),
+        Array(inputSlots(k).length).fill(""),
       ])
     )
   );
@@ -109,7 +109,7 @@ function CreateForm({
       });
   };
 
-  const slots = likertSlots(kind);
+  const slots = inputSlots(kind);
   const multi = isMultiQuestion(kind);
 
   return (
@@ -137,6 +137,7 @@ function CreateForm({
           <p>Statement</p>
           <textarea
             id="statement"
+            rows={1}
             value={statement}
             onChange={(e) => setStatement(e.target.value)}
             className="create--statement"
@@ -151,6 +152,7 @@ function CreateForm({
             <p>Title</p>
             <textarea
               id="title"
+              rows={1}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="create--statement"
@@ -169,19 +171,35 @@ function CreateForm({
               />
             </label>
           </div>
-          <p>Statements</p>
-          {slots.map((slot, i) => (
-            <label key={`statement-${i + 1}`} htmlFor={`statement-${i + 1}`}>
-              <p>Statement {i + 1}</p>
-              <textarea
-                id={`statement-${i + 1}`}
-                value={questionsByKind[kind][i]}
-                onChange={(e) => handleQuestionChange(i, e.target.value)}
-                className="create--statement"
-                placeholder={slot.placeholder}
-              />
-            </label>
-          ))}
+          <div className="create--statements">
+            <p>Statements</p>
+            {slots.map((slot, i) => {
+              const likertIndex =
+                slots.slice(0, i).filter((s) => s.type === "likert").length + 1;
+              const slotLabel =
+                slot.type === "checkbox"
+                  ? "Checkbox statement"
+                  : `Statement ${likertIndex}`;
+              return (
+                <div key={`statement-${i + 1}`} className="create--slot">
+                  <label
+                    className="create--slot-label"
+                    htmlFor={`statement-${i + 1}`}
+                  >
+                    {slotLabel} ({slot.type})
+                  </label>
+                  <textarea
+                    id={`statement-${i + 1}`}
+                    rows={1}
+                    value={questionsByKind[kind][i]}
+                    onChange={(e) => handleQuestionChange(i, e.target.value)}
+                    className="create--statement"
+                    placeholder={slot.placeholder}
+                  />
+                </div>
+              );
+            })}
+          </div>
         </div>
       )}
 

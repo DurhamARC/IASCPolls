@@ -4,4 +4,4 @@ We greatly appreciate your time and effort. If you'd like to learn more about th
 
 Once again, thank you for your support.
 
-For enquiries, comments and feedback, please contact [The Centre for Scientific Community Opinion Polling and Evaluation](mailto:The Centre for Scientific Community Opinion Polling and Evaluation <iasc@durham.ac.uk>).
+For enquiries, comments and feedback, please contact [The Centre for Scientific Community Opinion Polling and Evaluation](mailto:iasc@durham.ac.uk).

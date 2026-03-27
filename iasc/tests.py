@@ -526,6 +526,7 @@ class ViewsTestCase(HTTPTestCase):
                 "Statement one for L3C survey",
                 "Statement two for L3C survey",
                 "Statement three for L3C survey",
+                "I have relevant expertise in L3C",
             ]
 
             resp = self.POST(
@@ -620,6 +621,7 @@ class ViewsTestCase(HTTPTestCase):
             questions = [
                 "Statement one for L2E survey",
                 "Statement two for L2E survey",
+                "I have relevant expertise in L2E",
             ]
 
             resp = self.POST(
@@ -698,6 +700,100 @@ class ViewsTestCase(HTTPTestCase):
             self.assertIsInstance(l2e_result["vote_counts"]["0"], dict)
             self.assertEqual(l2e_result["vote_counts"]["0"]["2"], 1)
             self.assertEqual(l2e_result["vote_counts"]["expertise"]["False"], 1)
+
+        def test_16_create_li3_survey():
+            """
+            Test creating an LI3 (3 Likert, no expertise) survey
+            /survey/create/
+            /survey/
+            """
+            import json
+
+            questions = [
+                "Statement one for LI3 survey",
+                "Statement two for LI3 survey",
+                "Statement three for LI3 survey",
+            ]
+
+            resp = self.POST(
+                "/api/survey/create/",
+                {
+                    "question": "LI3 parent question",
+                    "questions": json.dumps(questions),
+                    "expiry": "2030-01-01T00:00",
+                    "active": "True",
+                    "kind": "LI3",
+                    "create_active_links": "True",
+                },
+                mimetype=self.mimetypes["json"],
+            )
+
+            self.assertEqual(resp["status"], "success")
+            survey = Survey.objects.filter(kind="LI3").get()
+            self.assertEqual(survey.kind, "LI3")
+            self.assertEqual(survey.questions, questions)
+
+            resp_survey = self.GET(
+                f"/api/survey/{survey.id}/",
+                status=200,
+                mimetype=self.mimetypes["json"],
+                startswith=b"{",
+            )
+            self.assertEqual(resp_survey["kind"], "LI3")
+            self.assertEqual(resp_survey["questions"], questions)
+
+            self.li3_survey_id = survey.id
+
+        def test_17_vote_li3():
+            """
+            Test submitting a dict vote for an LI3 survey, and verify vote_counts aggregation
+            /vote/
+            /survey/results/
+            """
+            import json
+
+            resp_links = self.GET(
+                f"/api/links/?survey={self.li3_survey_id}",
+                status=200,
+                mimetype=self.mimetypes["json"],
+                startswith=b"{",
+            )
+            self.assertGreater(resp_links["count"], 0)
+
+            link_url = resp_links["results"][0]["hyperlink"]
+            params = parse.parse_qs(parse.urlparse(link_url).query)
+            unique_id = params["unique_id"][0]
+
+            vote = {"0": 5, "1": 3, "2": 1}
+
+            resp = self.POST(
+                "/api/vote/",
+                {"unique_id": unique_id, "vote": json.dumps(vote)},
+                status=200,
+                mimetype=self.mimetypes["json"],
+                contains="success",
+            )
+            self.assertEqual(resp["status"], "success")
+
+            result = Result.objects.filter(survey_id=self.li3_survey_id).get()
+            self.assertIsInstance(result.vote, dict)
+            self.assertEqual(result.vote["0"], 5)
+            self.assertEqual(result.vote["1"], 3)
+            self.assertEqual(result.vote["2"], 1)
+
+            resp_results = self.GET(
+                "/api/survey/results/",
+                status=200,
+                mimetype=self.mimetypes["json"],
+                startswith=b"{",
+            )
+            li3_result = next(r for r in resp_results["results"] if r["kind"] == "LI3")
+            self.assertIn("0", li3_result["vote_counts"])
+            self.assertIsInstance(li3_result["vote_counts"]["0"], dict)
+            self.assertEqual(li3_result["vote_counts"]["0"]["5"], 1)
+            self.assertEqual(li3_result["vote_counts"]["1"]["3"], 1)
+            self.assertEqual(li3_result["vote_counts"]["2"]["1"], 1)
+            self.assertNotIn("expertise", li3_result["vote_counts"])
 
         #
         # Run all the integration tests defined within this function:
@@ -900,3 +996,25 @@ class DatabaseModelTestCase(TestCase):
         )
         with self.assertRaises(DjangoValidationError):
             survey.full_clean()
+
+    def test_token_validation_valid(self):
+        """GET /api/vote/{token}/ returns 200 for an existing (unused) token."""
+        link = ActiveLink.objects.get()
+        resp = self.client.get(f"/api/vote/{link.unique_link}/")
+        self.assertEqual(resp.status_code, 200)
+        import json as json_mod
+
+        data = json_mod.loads(resp.content)
+        self.assertEqual(data["status"], "valid")
+
+    def test_token_validation_used_or_missing(self):
+        """GET /api/vote/{token}/ returns 404 for a missing or already-used token."""
+        resp = self.client.get("/api/vote/nonexistent-token-xyz/")
+        self.assertEqual(resp.status_code, 404)
+
+        # Use the link and check again
+        link = ActiveLink.objects.get()
+        uid = link.unique_link
+        link.vote(3)
+        resp = self.client.get(f"/api/vote/{uid}/")
+        self.assertEqual(resp.status_code, 404)
