@@ -12,6 +12,7 @@ function DownloadParticipants() {
 
   const [pollQuestion, setPollQuestion] = useState("");
   const [institutions, setInstitutions] = useState([]);
+  const [surveyData, setSurveyData] = useState(null);
   const { pushError } = useContext(MessageContext);
 
   useEffect(() => {
@@ -33,6 +34,7 @@ function DownloadParticipants() {
 
         if (pollData) {
           setPollQuestion(pollData.question);
+          setSurveyData(pollData);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -93,43 +95,73 @@ function DownloadParticipants() {
     }
   };
 
+  const remaining = surveyData
+    ? surveyData.participants - surveyData.voted
+    : null;
+  const hasLinks = institutions.length > 0;
+
   return (
     <div>
       <div className="container">
         <div className="download--container">
           <h2>Download Voting Links for...</h2>
           <h3>{pollQuestion}</h3>
-          <button
-            type="button"
-            className="button download--button"
-            onClick={handleDownloadAll}
-          >
-            Download All
-          </button>
-          <div className="download--content">
-            <div>
-              <div>
-                <h4>Institution</h4>
-              </div>
-              <div>
-                <h4>Download</h4>
-              </div>
+          {surveyData && (
+            <div className="download--summary">
+              <span>
+                Responses: <strong>{surveyData.voted}</strong> /{" "}
+                {surveyData.participants}
+              </span>
+              <span>
+                Remaining links: <strong>{remaining}</strong>
+              </span>
             </div>
-            {institutions.map((institution) => (
-              <div key={institution.id}>
-                <div>{institution.name}</div>
+          )}
+          {hasLinks ? (
+            <>
+              <button
+                type="button"
+                className="button download--button"
+                onClick={handleDownloadAll}
+              >
+                Download All
+              </button>
+              <div className="download--content">
                 <div>
-                  <button
-                    type="button"
-                    className="button download--button"
-                    onClick={() => handleDownload(institution)}
-                  >
-                    Download
-                  </button>
+                  <div>
+                    <h4>Institution</h4>
+                  </div>
+                  <div>
+                    <h4>Remaining</h4>
+                  </div>
+                  <div>
+                    <h4>Download</h4>
+                  </div>
                 </div>
+                {institutions.map((institution) => (
+                  <div key={institution.id}>
+                    <div>{institution.name}</div>
+                    <div>
+                      {institution.link_count} / {institution.total_count}
+                    </div>
+                    <div>
+                      <button
+                        type="button"
+                        className="button download--button"
+                        onClick={() => handleDownload(institution)}
+                      >
+                        Download
+                      </button>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </>
+          ) : (
+            <p className="download--no-links">
+              All links have been used — no remaining links to download.
+            </p>
+          )}
         </div>
       </div>
     </div>

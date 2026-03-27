@@ -824,6 +824,70 @@ class DatabaseModelTestCase(TestCase):
         # ActiveLink must be destroyed after voting
         self.assertRaises(ObjectDoesNotExist, ActiveLink.objects.get, survey=survey)
 
+    def test_survey_institution_link_counts(self):
+        """
+        /survey/{id}/institutions/ returns correct link_count and total_count per
+        institution with no double-counting when both ActiveLinks and Results exist.
+
+        Setup: 2 institutions, 2 participants each → 4 active links.
+        Cast 1 vote per institution (destroys 2 links).
+        Expected: each institution has link_count=1, total_count=2.
+        """
+        inst_a = Institution.objects.create(name="Inst Alpha", country="GB")
+        inst_b = Institution.objects.create(name="Inst Beta", country="US")
+        disc = Discipline.objects.create(name="TestDisc")
+
+        p_a1 = Participant.objects.create(
+            email="a1@test.invalid", name="A1", institution=inst_a, discipline=disc
+        )
+        p_a2 = Participant.objects.create(
+            email="a2@test.invalid", name="A2", institution=inst_a, discipline=disc
+        )
+        p_b1 = Participant.objects.create(
+            email="b1@test.invalid", name="B1", institution=inst_b, discipline=disc
+        )
+        p_b2 = Participant.objects.create(
+            email="b2@test.invalid", name="B2", institution=inst_b, discipline=disc
+        )
+
+        survey = Survey.objects.create(
+            question="Institution count test survey",
+            active=True,
+            kind="LI",
+            expiry=datetime.datetime(2099, 1, 1, 0, 0),
+            participants=4,
+            voted=0,
+        )
+
+        link_a1 = ActiveLink.objects.create(participant=p_a1, survey=survey)
+        ActiveLink.objects.create(participant=p_a2, survey=survey)
+        link_b1 = ActiveLink.objects.create(participant=p_b1, survey=survey)
+        ActiveLink.objects.create(participant=p_b2, survey=survey)
+
+        # Cast one vote per institution — destroys that ActiveLink, creates a Result
+        link_a1.vote(3)
+        link_b1.vote(4)
+
+        user = User.objects.create(username="counttest")
+        user.set_password("password")
+        user.save()
+        self.client.login(username="counttest", password="password")
+
+        resp = self.client.get(f"/api/survey/{survey.id}/institutions/")
+        self.assertEqual(resp.status_code, 200)
+
+        import json as json_mod
+
+        data = json_mod.loads(resp.content)
+        results = {r["name"]: r for r in data["results"]}
+
+        self.assertIn("Inst Alpha", results)
+        self.assertIn("Inst Beta", results)
+
+        for name in ("Inst Alpha", "Inst Beta"):
+            self.assertEqual(results[name]["link_count"], 1, f"{name} link_count")
+            self.assertEqual(results[name]["total_count"], 2, f"{name} total_count")
+
     def test_invalid_kind_rejected(self):
         """Survey.full_clean() raises ValidationError for an unrecognised kind."""
         from django.core.exceptions import ValidationError as DjangoValidationError

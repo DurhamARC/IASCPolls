@@ -76,6 +76,7 @@ class SurveySerializer(serializers.ModelSerializer):
             "questions",
             "active",
             "kind",
+            "hide_title",
             "expiry",
             "participants",
             "voted",
@@ -83,12 +84,15 @@ class SurveySerializer(serializers.ModelSerializer):
 
 
 class SurveyInstitutionSerializer(serializers.ModelSerializer):
-    name = serializers.ReadOnlyField(source="participant.institution.name")
-    id = serializers.ReadOnlyField(source="participant.institution.id")
+    link_count = serializers.IntegerField()
+    total_count = serializers.SerializerMethodField()
+
+    def get_total_count(self, obj):
+        return obj["link_count"] + obj["voted_count"]
 
     class Meta:
-        model = models.ActiveLink
-        fields = ["id", "name"]
+        model = models.Institution
+        fields = ["id", "name", "link_count", "total_count"]
 
 
 class SurveyResultSerializer(serializers.ModelSerializer):
@@ -99,6 +103,7 @@ class SurveyResultSerializer(serializers.ModelSerializer):
     questions = serializers.JSONField(source="survey.questions")
     kind = serializers.CharField(source="survey.kind")
     active = serializers.CharField(source="survey.active")
+    hide_title = serializers.BooleanField(source="survey.hide_title")
 
     def get_count(self, obj):
         return models.Result.objects.filter(survey_id=obj.survey.id).count()
@@ -128,6 +133,7 @@ class SurveyResultSerializer(serializers.ModelSerializer):
             "active",
             "question",
             "questions",
+            "hide_title",
             "count",
             "vote_counts",
         ]

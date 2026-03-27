@@ -7,6 +7,7 @@
             "questions": null,
             "active": true,
             "kind": "LI",
+            "hide_title": false,
             "expiry": "2026-11-30T23:59:59Z",
             "participants": 15,
             "voted": 5
@@ -24,6 +25,7 @@
             ],
             "active": true,
             "kind": "L3C",
+            "hide_title": true,
             "expiry": "2026-10-31T23:59:59Z",
             "participants": 15,
             "voted": 12
@@ -37,6 +39,7 @@
             "questions": null,
             "active": false,
             "kind": "LI",
+            "hide_title": false,
             "expiry": "2025-09-30T23:59:59Z",
             "participants": 15,
             "voted": 15
@@ -54,6 +57,7 @@
             ],
             "active": true,
             "kind": "L3C",
+            "hide_title": true,
             "expiry": "2026-12-31T23:59:59Z",
             "participants": 15,
             "voted": 6
@@ -67,6 +71,7 @@
             "questions": null,
             "active": true,
             "kind": "LI",
+            "hide_title": false,
             "expiry": "2026-08-31T23:59:59Z",
             "participants": 15,
             "voted": 12
@@ -84,6 +89,7 @@
             ],
             "active": false,
             "kind": "L3C",
+            "hide_title": true,
             "expiry": "2025-06-30T23:59:59Z",
             "participants": 15,
             "voted": 15
@@ -97,6 +103,7 @@
             "questions": null,
             "active": true,
             "kind": "LI",
+            "hide_title": false,
             "expiry": "2027-01-31T23:59:59Z",
             "participants": 15,
             "voted": 5
@@ -113,6 +120,7 @@
             ],
             "active": true,
             "kind": "L2E",
+            "hide_title": true,
             "expiry": "2027-03-31T23:59:59Z",
             "participants": 15,
             "voted": 8
@@ -129,6 +137,7 @@
             ],
             "active": false,
             "kind": "L2E",
+            "hide_title": true,
             "expiry": "2025-12-31T23:59:59Z",
             "participants": 15,
             "voted": 15

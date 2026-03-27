@@ -105,6 +105,10 @@ class Survey(models.Model):
     kind = models.CharField(
         max_length=10, default="LI", validators=[validate_survey_kind]
     )
+    hide_title = models.BooleanField(
+        default=True,
+        help_text="If True, the survey title is not shown to participants",
+    )
     expiry = models.DateTimeField(null=False, default=datetime(2000, 1, 1, 0, 0))
     participants = models.IntegerField(null=False, default=0)
     voted = models.IntegerField(null=False, default=0)
