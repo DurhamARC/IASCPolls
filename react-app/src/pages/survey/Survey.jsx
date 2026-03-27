@@ -22,6 +22,7 @@ export default function Poll() {
   const [surveyKind, setSurveyKind] = useState("LI");
   const [surveyQuestions, setSurveyQuestions] = useState(null);
   const [hideTitle, setHideTitle] = useState(false);
+  const [tokenUsed, setTokenUsed] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -45,15 +46,48 @@ export default function Poll() {
         } else {
           // Survey does not exist, redirect to the error page
           history("/error");
+          return;
         }
       } catch (error) {
         // Handle error and redirect to the error page
         history("/error");
+        return;
+      }
+
+      // Validate the token. A 404 means it has already been used (or never existed).
+      try {
+        await client.get(`/api/vote/${uniqueId}/`);
+      } catch (error) {
+        if (error.response?.status === 404) {
+          setTokenUsed(true);
+        } else {
+          history("/error");
+        }
       }
     };
 
     fetchData();
-  }, [surveyId, history]);
+  }, [surveyId, uniqueId, history]);
+
+  if (tokenUsed) {
+    return (
+      <div className="poll--total">
+        <div className="background-blur" />
+        <div className="background-blur mirror" />
+        <div className="poll">
+          <div className="poll--box">
+            <div className="poll--blurb">
+              This voting link has already been used.
+            </div>
+            <div className="poll--question">
+              If you believe this is an error, please contact the survey
+              administrator.
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="poll--total">
