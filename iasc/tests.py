@@ -900,3 +900,25 @@ class DatabaseModelTestCase(TestCase):
         )
         with self.assertRaises(DjangoValidationError):
             survey.full_clean()
+
+    def test_token_validation_valid(self):
+        """GET /api/vote/{token}/ returns 200 for an existing (unused) token."""
+        link = ActiveLink.objects.get()
+        resp = self.client.get(f"/api/vote/{link.unique_link}/")
+        self.assertEqual(resp.status_code, 200)
+        import json as json_mod
+
+        data = json_mod.loads(resp.content)
+        self.assertEqual(data["status"], "valid")
+
+    def test_token_validation_used_or_missing(self):
+        """GET /api/vote/{token}/ returns 404 for a missing or already-used token."""
+        resp = self.client.get("/api/vote/nonexistent-token-xyz/")
+        self.assertEqual(resp.status_code, 404)
+
+        # Use the link and check again
+        link = ActiveLink.objects.get()
+        uid = link.unique_link
+        link.vote(3)
+        resp = self.client.get(f"/api/vote/{uid}/")
+        self.assertEqual(resp.status_code, 404)

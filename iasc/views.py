@@ -228,6 +228,24 @@ class SubmitVoteView(ViewSet):
 
     permission_classes = (permissions.AllowAny,)
 
+    def retrieve(self, request, pk=None):
+        """Check whether a token is still valid (i.e. has not yet been used)."""
+        if not pk:
+            return Response(
+                {"status": "error", "message": "No token provided"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        exists = ActiveLink.objects.filter(unique_link=pk.strip()).exists()
+        if exists:
+            return Response({"status": "valid"}, status=status.HTTP_200_OK)
+        return Response(
+            {
+                "status": "error",
+                "message": "This voting link has already been used or does not exist.",
+            },
+            status=status.HTTP_404_NOT_FOUND,
+        )
+
     def create(self, request):
         try:
             request_has_keys(request, {"unique_id", "vote"})
