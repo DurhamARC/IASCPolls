@@ -76,6 +76,7 @@ class SurveySerializer(serializers.ModelSerializer):
             "questions",
             "active",
             "kind",
+            "hide_title",
             "expiry",
             "participants",
             "voted",
@@ -99,6 +100,7 @@ class SurveyResultSerializer(serializers.ModelSerializer):
     questions = serializers.JSONField(source="survey.questions")
     kind = serializers.CharField(source="survey.kind")
     active = serializers.CharField(source="survey.active")
+    hide_title = serializers.BooleanField(source="survey.hide_title")
 
     def get_count(self, obj):
         return models.Result.objects.filter(survey_id=obj.survey.id).count()
@@ -128,6 +130,7 @@ class SurveyResultSerializer(serializers.ModelSerializer):
             "active",
             "question",
             "questions",
+            "hide_title",
             "count",
             "vote_counts",
         ]

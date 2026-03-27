@@ -40,6 +40,7 @@ function CreateForm({
     )
   );
   const [active, setActive] = useState(true);
+  const [hideTitle, setHideTitle] = useState(true);
   const [endDate, setEndDate] = useState(getDatePlusMonth());
   const [displayInst, setDisplayInst] = useState(false);
   const [institution, setInstitution] = useState(null);
@@ -75,6 +76,7 @@ function CreateForm({
       active,
       kind,
       expiry: endDate,
+      hide_title: multi ? hideTitle : false,
     };
 
     if (multi) {
@@ -152,9 +154,21 @@ function CreateForm({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="create--statement"
-              placeholder="Enter a title for this survey (shown to participants)"
+              placeholder="Enter a title for this survey"
             />
           </label>
+          <div className="checkbox">
+            <label htmlFor="hide_title">
+              Hide title from participants? &nbsp;
+              <input
+                type="checkbox"
+                name="hide_title"
+                id="hide_title"
+                checked={hideTitle}
+                onChange={(e) => setHideTitle(e.target.checked)}
+              />
+            </label>
+          </div>
           <p>Statements</p>
           {slots.map((slot, i) => (
             <label key={`statement-${i + 1}`} htmlFor={`statement-${i + 1}`}>

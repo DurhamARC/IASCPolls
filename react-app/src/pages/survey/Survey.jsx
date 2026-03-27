@@ -21,6 +21,7 @@ export default function Poll() {
   const [pollQuestion, setPollQuestion] = useState("");
   const [surveyKind, setSurveyKind] = useState("LI");
   const [surveyQuestions, setSurveyQuestions] = useState(null);
+  const [hideTitle, setHideTitle] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,6 +41,7 @@ export default function Poll() {
           setPollQuestion(surveyData.question);
           setSurveyKind(surveyData.kind);
           setSurveyQuestions(surveyData.questions);
+          setHideTitle(surveyData.hide_title);
         } else {
           // Survey does not exist, redirect to the error page
           history("/error");
@@ -65,7 +67,7 @@ export default function Poll() {
             Please respond to the following statement
             {(definitions[surveyKind]?.questions.length ?? 1) > 1 ? "s" : ""}:
           </div>
-          <div className="poll--question">{pollQuestion}</div>
+          {!hideTitle && <div className="poll--question">{pollQuestion}</div>}
           <PollForm
             uniqueId={uniqueId}
             kind={surveyKind}
