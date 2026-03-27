@@ -78,19 +78,12 @@ export default function PollForm({ uniqueId, kind, questions }) {
     .filter((i) => i !== null);
   const allLikertAnswered = likertIndices.every((i) => answers[i] !== "");
 
-  // Map each slot to its display text:
-  // likert slots pull from the DB questions array; checkbox slots use the definition label
-  let likertStatementIndex = 0;
-  const statements = slots.map((slot) => {
-    if (slot.type === "likert") {
-      const text =
-        questions && questions[likertStatementIndex] != null
-          ? questions[likertStatementIndex]
-          : slot.placeholder;
-      likertStatementIndex += 1;
-      return text;
+  // Map each slot to its display text: all slots pull from the DB questions array
+  const statements = slots.map((slot, i) => {
+    if (questions && questions[i] != null) {
+      return questions[i];
     }
-    return slot.label;
+    return slot.placeholder ?? slot.label ?? "";
   });
 
   async function handleSubmit(event) {

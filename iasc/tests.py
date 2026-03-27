@@ -526,6 +526,7 @@ class ViewsTestCase(HTTPTestCase):
                 "Statement one for L3C survey",
                 "Statement two for L3C survey",
                 "Statement three for L3C survey",
+                "I have relevant expertise in L3C",
             ]
 
             resp = self.POST(
@@ -620,6 +621,7 @@ class ViewsTestCase(HTTPTestCase):
             questions = [
                 "Statement one for L2E survey",
                 "Statement two for L2E survey",
+                "I have relevant expertise in L2E",
             ]
 
             resp = self.POST(

@@ -13,8 +13,8 @@ function getDatePlusMonth() {
   return new Date(date - tzoffset).toISOString().slice(0, -1);
 }
 
-function likertSlots(kind) {
-  return definitions[kind].questions.filter((q) => q.type === "likert");
+function inputSlots(kind) {
+  return definitions[kind].questions;
 }
 
 function isMultiQuestion(kind) {
@@ -35,7 +35,7 @@ function CreateForm({
     Object.fromEntries(
       Object.keys(definitions).map((k) => [
         k,
-        Array(likertSlots(k).length).fill(""),
+        Array(inputSlots(k).length).fill(""),
       ])
     )
   );
@@ -109,7 +109,7 @@ function CreateForm({
       });
   };
 
-  const slots = likertSlots(kind);
+  const slots = inputSlots(kind);
   const multi = isMultiQuestion(kind);
 
   return (
@@ -170,18 +170,26 @@ function CreateForm({
             </label>
           </div>
           <p>Statements</p>
-          {slots.map((slot, i) => (
-            <label key={`statement-${i + 1}`} htmlFor={`statement-${i + 1}`}>
-              <p>Statement {i + 1}</p>
-              <textarea
-                id={`statement-${i + 1}`}
-                value={questionsByKind[kind][i]}
-                onChange={(e) => handleQuestionChange(i, e.target.value)}
-                className="create--statement"
-                placeholder={slot.placeholder}
-              />
-            </label>
-          ))}
+          {slots.map((slot, i) => {
+            const likertIndex =
+              slots.slice(0, i).filter((s) => s.type === "likert").length + 1;
+            const slotLabel =
+              slot.type === "checkbox"
+                ? "Checkbox statement"
+                : `Statement ${likertIndex}`;
+            return (
+              <label key={`statement-${i + 1}`} htmlFor={`statement-${i + 1}`}>
+                <p>{slotLabel}</p>
+                <textarea
+                  id={`statement-${i + 1}`}
+                  value={questionsByKind[kind][i]}
+                  onChange={(e) => handleQuestionChange(i, e.target.value)}
+                  className="create--statement"
+                  placeholder={slot.placeholder}
+                />
+              </label>
+            );
+          })}
         </div>
       )}
 
