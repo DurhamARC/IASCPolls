@@ -8,6 +8,7 @@
   align-items: center;
   justify-content: space-evenly;
   margin-top: 2rem;
+  padding: 1.5rem;
 }
 
 .download--content {
@@ -35,4 +36,18 @@
   width: 8rem;
   background-color: #007bff;
   border-color: #0062cc;
+}
+
+.download--summary {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+  color: #444;
+}
+
+.download--no-links {
+  color: #666;
+  font-style: italic;
+  margin-top: 0.5rem;
 }
