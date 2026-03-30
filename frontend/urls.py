@@ -12,6 +12,7 @@ urlpatterns = [
     path("download", views.index),
     path("create", views.index),
     path("thankyou", views.index),
+    path("error", views.index),
     path("favicon.ico", RedirectView.as_view(url=settings.STATIC_URL + "favicon.ico")),
 ]
 

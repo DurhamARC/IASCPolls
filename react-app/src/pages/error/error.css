@@ -1,0 +1,9 @@
+.error--container {
+  margin: 0 auto 5rem auto;
+  width: 80%;
+  max-width: 1920px;
+}
+
+.error--container hr {
+  margin: 1rem 0 1rem 0;
+}
