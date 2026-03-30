@@ -44,13 +44,17 @@ export default function Poll() {
           setSurveyQuestions(surveyData.questions);
           setHideTitle(surveyData.hide_title);
         } else {
-          // Survey does not exist, redirect to the error page
-          history("/error");
+          history("/error", {
+            state: { message: "This survey could not be found." },
+          });
           return;
         }
       } catch (error) {
-        // Handle error and redirect to the error page
-        history("/error");
+        const message =
+          error.response?.status === 404
+            ? "This survey could not be found."
+            : "An error occurred while loading the survey.";
+        history("/error", { state: { message } });
         return;
       }
 
@@ -61,7 +65,9 @@ export default function Poll() {
         if (error.response?.status === 404) {
           setTokenUsed(true);
         } else {
-          history("/error");
+          history("/error", {
+            state: { message: "An error occurred while validating your link." },
+          });
         }
       }
     };

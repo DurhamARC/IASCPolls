@@ -24,6 +24,12 @@ a {
   color: #3c096c;
 }
 
+hr {
+  width: 100%;
+  border: none;
+  border-top: 1px solid #e0e0e0;
+}
+
 h1,
 h2,
 h3,
