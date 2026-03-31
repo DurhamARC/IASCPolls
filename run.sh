@@ -16,6 +16,35 @@ warn()    { echo -e "${YELLOW}⚠  $*${RESET}"; }
 header()  { echo -e "\n${BOLD}$*${RESET}"; }
 divider() { echo -e "${DIM}──────────────────────────────────────────────────${RESET}"; }
 
+require_binary() {
+    local binary="$1"
+
+    if ! command -v "${binary}" &>/dev/null; then
+        MISSING_BINARIES+=("${binary}")
+    fi
+}
+
+# ── Prerequisite checks ───────────────────────────────────────────────────────
+MISSING_BINARIES=()
+
+for binary in python node npm docker nc grep; do
+    require_binary "${binary}"
+done
+
+if ! command -v conda &>/dev/null; then
+    require_binary pip
+fi
+
+if [ "${#MISSING_BINARIES[@]}" -gt 0 ]; then
+    header "Missing required tools"
+    for binary in "${MISSING_BINARIES[@]}"; do
+        echo -e "${RED}✘  ${binary} is required by run.sh but is not on PATH${RESET}"
+    done
+    echo
+    warn "Install the missing tools, restart your shell if needed, then rerun ./run.sh"
+    exit 1
+fi
+
 # ── Load .env ──────────────────────────────────────────────────────────────────
 if [ -f .env ]; then
     info "Loading environment from .env"
@@ -44,7 +73,7 @@ if command -v conda &>/dev/null; then
     # shellcheck disable=SC1091
     source "$(conda info --base)/etc/profile.d/conda.sh"
 
-    if conda env list --json | python3 -c "import sys,json; envs=json.load(sys.stdin)['envs']; exit(0 if any('/${CONDA_ENV}' in e for e in envs) else 1)" 2>/dev/null; then
+    if conda env list --json | python -c "import sys,json; envs=json.load(sys.stdin)['envs']; exit(0 if any('/${CONDA_ENV}' in e for e in envs) else 1)" 2>/dev/null; then
         info "Activating conda environment '${CONDA_ENV}'…"
     else
         warn "Conda environment '${CONDA_ENV}' not found — creating from ${CONDA_BASE_YML}…"
@@ -71,7 +100,9 @@ divider
 header "2 / 5  React build"
 
 REQUIRED_NODE_MAJOR=22
-CURRENT_NODE_MAJOR=$(node --version 2>/dev/null | sed 's/v\([0-9]*\).*/\1/')
+CURRENT_NODE_VERSION=$(node --version 2>/dev/null || true)
+CURRENT_NODE_MAJOR=${CURRENT_NODE_VERSION#v}
+CURRENT_NODE_MAJOR=${CURRENT_NODE_MAJOR%%.*}
 if [ -z "${CURRENT_NODE_MAJOR}" ]; then
     echo -e "${RED}✘  node not found — install Node ${REQUIRED_NODE_MAJOR} LTS (nvm install lts/jod)${RESET}"
     exit 1
