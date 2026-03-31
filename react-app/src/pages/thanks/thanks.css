@@ -1,13 +1,15 @@
 .thankyou--container {
-  height: auto;
+  min-height: calc(100vh - 6rem);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 1rem 0 2rem;
 }
 
 .thankyou--container .container {
-  height: 80vh;
+  height: auto;
+  width: 100%;
 }
 
 .thankyou {
@@ -15,7 +17,9 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 700px;
+  width: min(100%, 700px);
+  max-width: 700px;
+  box-sizing: border-box;
   height: auto;
   margin: 2rem;
   padding: 2rem 4rem 6rem;
@@ -30,6 +34,10 @@
 }
 
 @media screen and (max-width: 768px) {
+  .thankyou--container {
+    min-height: calc(100vh - 10rem);
+  }
+
   .thankyou--title {
     font-size: 2rem;
     -webkit-line-clamp: 3;
@@ -42,6 +50,8 @@
   }
   .thankyou {
     width: 100%;
+    margin: 1rem 0;
+    padding: 1.5rem;
     border: #f5f5f5;
     background-color: #f5f5f5;
   }
