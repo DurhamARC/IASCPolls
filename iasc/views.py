@@ -509,7 +509,25 @@ class XLSResultViewSet(mixins.IASCXLSXFileMixin, ResultViewSet):
     Retrieve results as Excel Spreadsheet on route /api/result/xls/?survey=1&institution=1
     """
 
+    serializer_class = serializers.XLSResultSerializer
     filename_string = "Results-{}-{}-{}.xlsx"
+
+    def _get_vote_keys(self):
+        """Return vote (key, value) pairs if the relevant results have dict votes, else None."""
+        survey_id = self.request.GET.get("survey")
+        if survey_id:
+            first = Result.objects.filter(survey_id=survey_id).first()
+        else:
+            first = Result.objects.filter(survey__isnull=False).first()
+        if first and isinstance(first.vote, dict):
+            return list(first.vote.items())
+        return None
+
+    def get_serializer(self, *args, **kwargs):
+        vote_keys = self._get_vote_keys()
+        if vote_keys is not None:
+            kwargs["vote_keys"] = vote_keys
+        return super().get_serializer(*args, **kwargs)
 
 
 class ZipResultViewSet(mixins.IASCZipFileMixin, XLSResultViewSet):
@@ -517,7 +535,7 @@ class ZipResultViewSet(mixins.IASCZipFileMixin, XLSResultViewSet):
     Retrieve Excel files as Zip file for multiple institutions
     """
 
-    serializer_class = serializers.MultiResultSerializer
+    serializer_class = serializers.MultiXLSResultSerializer
 
     def get_filename(self, request=None, *args, **kwargs):
         return "all_results.zip"

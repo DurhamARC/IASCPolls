@@ -795,6 +795,77 @@ class ViewsTestCase(HTTPTestCase):
             self.assertEqual(li3_result["vote_counts"]["2"]["1"], 1)
             self.assertNotIn("expertise", li3_result["vote_counts"])
 
+        def test_18_xls_multi_survey_results():
+            """
+            Regression test: XLS export for multi-question surveys must expand the
+            vote dict into individual columns (vote_0, vote_1, ..., vote_expertise)
+            rather than leaving a single blank 'vote' cell.
+            /result/xls/
+            """
+
+            # L3C survey: vote = {"0": 3, "1": 4, "2": 2, "expertise": True}
+            resp = self.GET(
+                f"/api/result/xls/?survey={self.l3c_survey_id}",
+                status=200,
+                mimetype=self.mimetypes["xlsx"],
+                startswith=b"PK",
+            )
+            data = self.helper_get_xls_data(resp.content)
+            headers = data.pop(0)
+
+            self.assertIn("vote_0", headers)
+            self.assertIn("vote_1", headers)
+            self.assertIn("vote_2", headers)
+            self.assertIn("vote_expertise", headers)
+            self.assertNotIn("vote", headers)
+
+            row = dict(zip(headers, data[0]))
+            self.assertEqual(row["vote_0"], 3)
+            self.assertEqual(row["vote_1"], 4)
+            self.assertEqual(row["vote_2"], 2)
+            self.assertEqual(row["vote_expertise"], True)
+
+            # L2E survey: vote = {"0": 2, "1": 4, "expertise": False}
+            resp = self.GET(
+                f"/api/result/xls/?survey={self.l2e_survey_id}",
+                status=200,
+                mimetype=self.mimetypes["xlsx"],
+                startswith=b"PK",
+            )
+            data = self.helper_get_xls_data(resp.content)
+            headers = data.pop(0)
+
+            self.assertIn("vote_0", headers)
+            self.assertIn("vote_1", headers)
+            self.assertIn("vote_expertise", headers)
+            self.assertNotIn("vote", headers)
+
+            row = dict(zip(headers, data[0]))
+            self.assertEqual(row["vote_0"], 2)
+            self.assertEqual(row["vote_1"], 4)
+            self.assertEqual(row["vote_expertise"], False)
+
+            # LI3 survey: vote = {"0": 5, "1": 3, "2": 1} — no expertise column
+            resp = self.GET(
+                f"/api/result/xls/?survey={self.li3_survey_id}",
+                status=200,
+                mimetype=self.mimetypes["xlsx"],
+                startswith=b"PK",
+            )
+            data = self.helper_get_xls_data(resp.content)
+            headers = data.pop(0)
+
+            self.assertIn("vote_0", headers)
+            self.assertIn("vote_1", headers)
+            self.assertIn("vote_2", headers)
+            self.assertNotIn("vote_expertise", headers)
+            self.assertNotIn("vote", headers)
+
+            row = dict(zip(headers, data[0]))
+            self.assertEqual(row["vote_0"], 5)
+            self.assertEqual(row["vote_1"], 3)
+            self.assertEqual(row["vote_2"], 1)
+
         #
         # Run all the integration tests defined within this function:
         print(f"\n{len(dir())-1} Integration tests found")
