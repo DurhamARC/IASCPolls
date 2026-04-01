@@ -154,6 +154,73 @@ class ActiveLinkSurveySerializer(ActiveLinkSerializer):
         fields = ["survey", "name", "email", "hyperlink"]
 
 
+class _VoteSubkeyBase:
+    """
+    Mixin: makes a DRF field extract a single sub-key from instance.vote (a dict).
+    Must appear before the DRF field class in the MRO.
+    """
+
+    def __init__(self, vote_key, **kwargs):
+        self.vote_key = vote_key
+        super().__init__(**kwargs)
+
+    def get_attribute(self, instance):
+        vote = getattr(instance, "vote", None)
+        if isinstance(vote, dict):
+            return vote.get(self.vote_key)
+        return None
+
+
+class _VoteIntField(_VoteSubkeyBase, serializers.IntegerField):
+    """Vote sub-key field for integer (Likert) values — rendered as a number in Excel."""
+
+    pass
+
+
+class _VoteBoolField(_VoteSubkeyBase, serializers.BooleanField):
+    """Vote sub-key field for boolean (expertise checkbox) values — rendered as bool in Excel."""
+
+    pass
+
+
+class _VoteStrField(_VoteSubkeyBase, serializers.CharField):
+    """Vote sub-key field for any other value type."""
+
+    pass
+
+
+def _sort_vote_items(items):
+    """Sort (key, value) pairs: numeric keys (ascending) first, then alphabetical."""
+    numeric = sorted(((k, v) for k, v in items if k.isdigit()), key=lambda x: int(x[0]))
+    non_numeric = sorted((k, v) for k, v in items if not k.isdigit())
+    return numeric + non_numeric
+
+
+def _vote_field_for_value(vote_key, value):
+    """Return the appropriate typed sub-key field for a given vote value."""
+    if isinstance(value, bool):
+        return _VoteBoolField(vote_key=vote_key, read_only=True)
+    if isinstance(value, int):
+        return _VoteIntField(vote_key=vote_key, read_only=True)
+    return _VoteStrField(vote_key=vote_key, read_only=True)
+
+
+class VoteExpandMixin:
+    """
+    Mixin for result serializers used in Excel export.
+    When instantiated with vote_keys (a list of (key, value) pairs from a sample
+    vote dict), replaces the single 'vote' field with individual typed fields:
+    vote_0, vote_1, ..., vote_expertise etc.
+    """
+
+    def __init__(self, *args, vote_keys=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        if vote_keys is not None:
+            self.fields.pop("vote", None)
+            for key, value in _sort_vote_items(vote_keys):
+                self.fields[f"vote_{key}"] = _vote_field_for_value(key, value)
+
+
 class ResultSerializer(serializers.ModelSerializer):
     discipline = disciplineSlug
     institution = institutionSlug
@@ -187,3 +254,15 @@ class MultiResultSerializer(ResultSerializer):
     class Meta:
         model = models.Result
         fields = ["filename", "survey", "vote", "institution", "discipline", "added"]
+
+
+class XLSResultSerializer(VoteExpandMixin, ResultSerializer):
+    """ResultSerializer for Excel export: expands dict votes into individual columns."""
+
+    pass
+
+
+class MultiXLSResultSerializer(VoteExpandMixin, MultiResultSerializer):
+    """MultiResultSerializer for zip Excel export: expands dict votes into individual columns."""
+
+    pass
