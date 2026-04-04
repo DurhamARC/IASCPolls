@@ -7,22 +7,14 @@ import definitions from "../surveyDefinitions";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const VOTE_LABELS = {
-  0: "Strongly Disagree",
-  1: "Disagree",
-  2: "Slightly Disagree",
-  3: "Slightly Agree",
-  4: "Agree",
-  5: "Strongly Agree",
+  1: "Strongly Agree",
+  2: "Agree",
+  3: "Neutral",
+  4: "Disagree",
+  5: "Strongly Disagree",
 };
 
-const COLORS = [
-  "#C0392B",
-  "#E74C3C",
-  "#E59866",
-  "#82E0AA",
-  "#27AE60",
-  "#1A5276",
-];
+const COLORS = ["#999", "#1A5276", "#27AE60", "#F4D03F", "#E59866", "#C0392B"];
 
 const PIE_OPTIONS = {
   plugins: {
