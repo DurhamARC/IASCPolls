@@ -727,9 +727,20 @@ input[type="file"][value]:not([value=""]) {
     width: 30vw;
   }
 
+  .dashboard--next--page {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
   .dashboard--next--page span {
     width: 30vw;
     padding: 1rem;
+  }
+
+  .dashboard--button--next {
+    width: auto;
+    min-width: 5rem;
+    padding: 0.5rem 1rem;
   }
 
   .dashboard--button {
