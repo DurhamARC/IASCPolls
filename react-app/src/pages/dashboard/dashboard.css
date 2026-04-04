@@ -516,15 +516,6 @@
   background-color: green;
 }
 
-.material-symbols-outlined {
-  font-family: "Material Symbols Outlined", sans-serif;
-  font-size: 24px;
-  width: 24px;
-  height: 24px;
-  display: inline-block;
-  overflow: hidden;
-}
-
 .next-step {
   display: flex;
   flex-direction: column;
