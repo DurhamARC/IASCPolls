@@ -713,4 +713,15 @@ input[type="file"][value]:not([value=""]) {
     width: 30vw;
     padding: 1rem;
   }
+
+  .dashboard--button {
+    height: auto;
+    padding: 1.5rem 1rem;
+    font-size: 1.2rem;
+  }
+
+  .create-add-container {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
 }
