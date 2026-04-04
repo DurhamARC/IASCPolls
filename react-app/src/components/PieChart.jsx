@@ -54,7 +54,12 @@ function buildCheckboxChartData(counts) {
 function SinglePie({ title, chartData }) {
   return (
     <div
-      style={{ width: "300px", textAlign: "center", marginBottom: "1.5rem" }}
+      style={{
+        width: "100%",
+        maxWidth: "300px",
+        textAlign: "center",
+        marginBottom: "1.5rem",
+      }}
     >
       <p
         style={{
@@ -113,7 +118,14 @@ function PieChart({ surveyId, fallbackQuestion }) {
 
   if (!hasResults) {
     return (
-      <div style={{ width: "300px", textAlign: "center", padding: "1rem" }}>
+      <div
+        style={{
+          width: "100%",
+          maxWidth: "300px",
+          textAlign: "center",
+          padding: "1rem",
+        }}
+      >
         <p style={{ fontWeight: "bold", marginBottom: "0.5rem" }}>{title}</p>
         <p style={{ color: "#999" }}>No results yet</p>
         <p style={{ color: "#999", fontSize: "0.8rem", marginTop: "0.5rem" }}>
@@ -132,7 +144,14 @@ function PieChart({ surveyId, fallbackQuestion }) {
     const dbStatements = survey.questions ?? [];
     let likertIdx = 0;
     return (
-      <div style={{ width: "300px", textAlign: "center", padding: "0.5rem" }}>
+      <div
+        style={{
+          width: "100%",
+          maxWidth: "300px",
+          textAlign: "center",
+          padding: "0.5rem",
+        }}
+      >
         <p style={{ fontWeight: "bold", marginBottom: "1rem" }}>{title}</p>
         {slots.map((slot) => {
           if (slot.type === "likert") {
@@ -168,7 +187,7 @@ function PieChart({ surveyId, fallbackQuestion }) {
   }
 
   return (
-    <div style={{ width: "300px", textAlign: "center" }}>
+    <div style={{ width: "100%", maxWidth: "300px", textAlign: "center" }}>
       <p style={{ fontWeight: "bold", marginBottom: "0.5rem" }}>{title}</p>
       <Pie data={buildLikertChartData(voteCounts)} options={PIE_OPTIONS} />
       <p style={{ color: "#999", fontSize: "0.8rem", marginTop: "0.5rem" }}>
