@@ -671,27 +671,44 @@ input[type="file"][value]:not([value=""]) {
 }
 
 @media (max-width: 768px) {
+  .dashboard {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
   .dashboard--overview {
-    display: none !important;
+    width: 100%;
+    order: -1;
   }
+
+  .dashboard--overview--content {
+    width: 100%;
+  }
+
   .dashboard--projects {
-    width: 100vw;
+    width: 100%;
   }
+
   .dashboard--question--table {
-    width: 100vw;
+    width: 100%;
   }
+
   .dashboard--question--entry {
     width: 10vw;
   }
+
   .no-mobile {
     display: none;
   }
+
   .dashboard--overview-active-box {
     width: 90vw;
   }
+
   .filter-button {
     width: 30vw;
   }
+
   .dashboard--next--page span {
     width: 30vw;
     padding: 1rem;
