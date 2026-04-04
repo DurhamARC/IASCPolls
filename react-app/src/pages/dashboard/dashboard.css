@@ -304,6 +304,11 @@
   background-color: #f5f5f5; /* Color of the scrollbar track */
 }
 
+.dashboard--question--table {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.5) #f5f5f5;
+}
+
 .dashboard--question--table thead tr th {
   padding: 1rem;
 }
@@ -675,6 +680,12 @@ input[type="file"][value]:not([value=""]) {
   width: 100%;
   max-width: 350px;
   margin: 10px;
+}
+
+@media (max-width: 1024px) {
+  .no-tablet {
+    display: none;
+  }
 }
 
 @media (max-width: 768px) {
