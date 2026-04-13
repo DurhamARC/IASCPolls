@@ -2,7 +2,7 @@ import React, { useEffect, useContext, useState } from "react";
 import Symbol from "./Symbol";
 import { client } from "../Api";
 import { MessageContext } from "./MessageHandler";
-import definitions from "../surveyDefinitions";
+import { useSurveyDefinitions } from "./SurveyDefinitionsContext";
 
 /**
  * Display the survey table in the dashboard and manage the data returned
@@ -15,6 +15,7 @@ function DashboardTable({ reload, selectedSurveyId, onSelect }) {
 
   /* MessageContext allows raising errors and messages */
   const { pushError } = useContext(MessageContext);
+  const definitions = useSurveyDefinitions();
 
   /* Table State */
   const [questionDatabase, setQuestionDatabase] = useState([]);
