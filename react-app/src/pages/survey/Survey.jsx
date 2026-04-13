@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { client } from "../../Api";
 import PollForm from "../../components/SurveyForm";
-import definitions from "../../surveyDefinitions";
 import "./survey.css";
 
 /**
@@ -19,7 +18,7 @@ export default function Poll() {
   const uniqueId = searchParams.get("unique_id");
 
   const [pollQuestion, setPollQuestion] = useState("");
-  const [surveyKind, setSurveyKind] = useState("LI");
+  const [templateSlots, setTemplateSlots] = useState([]);
   const [surveyQuestions, setSurveyQuestions] = useState(null);
   const [hideTitle, setHideTitle] = useState(false);
   const [tokenUsed, setTokenUsed] = useState(false);
@@ -40,7 +39,7 @@ export default function Poll() {
 
         if (surveyData) {
           setPollQuestion(surveyData.question);
-          setSurveyKind(surveyData.kind);
+          setTemplateSlots(surveyData.template_slots ?? []);
           setSurveyQuestions(surveyData.questions);
           setHideTitle(surveyData.hide_title);
         } else {
@@ -101,16 +100,16 @@ export default function Poll() {
       <div className="background-blur mirror" />
       <div className="poll">
         <div
-          className={`poll--box${(definitions[surveyKind]?.questions.length ?? 1) > 1 ? " poll--box-l3c" : ""}`}
+          className={`poll--box${templateSlots.length > 1 ? " poll--box-l3c" : ""}`}
         >
           <div className="poll--blurb">
             Please respond to the following statement
-            {(definitions[surveyKind]?.questions.length ?? 1) > 1 ? "s" : ""}:
+            {templateSlots.length > 1 ? "s" : ""}:
           </div>
           {!hideTitle && <div className="poll--question">{pollQuestion}</div>}
           <PollForm
             uniqueId={uniqueId}
-            kind={surveyKind}
+            slots={templateSlots}
             questions={surveyQuestions}
           />
         </div>

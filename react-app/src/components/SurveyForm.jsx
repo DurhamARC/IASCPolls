@@ -2,7 +2,6 @@ import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { client } from "../Api";
 import { MessageContext } from "./MessageHandler";
-import definitions from "../surveyDefinitions";
 
 const LIKERT_OPTIONS = [
   { value: "5", label: "Strongly Disagree" },
@@ -60,12 +59,9 @@ const QUESTION_RENDERERS = {
   checkbox: CheckboxRow,
 };
 
-export default function PollForm({ uniqueId, kind, questions }) {
+export default function PollForm({ uniqueId, questions, slots }) {
   const navigate = useNavigate();
   const { pushError } = useContext(MessageContext);
-
-  const definition = definitions[kind] ?? definitions.LI;
-  const slots = definition.questions;
 
   // Build initial state: likert slots get "" (unselected), checkbox slots get false
   const initialAnswers = Object.fromEntries(
