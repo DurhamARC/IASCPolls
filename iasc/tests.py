@@ -1095,6 +1095,24 @@ class DatabaseModelTestCase(TestCase):
 class SurveyTemplateTestCase(TestCase):
     """Tests for SurveyTemplate model and /api/survey/templates/ endpoints."""
 
+    @staticmethod
+    def _make_template(label, slug, slots, is_builtin=False):
+        """Helper: create a SurveyTemplate with its SurveyTemplateSlot rows."""
+        from iasc.models import SurveyTemplate, SurveyTemplateSlot
+
+        tmpl = SurveyTemplate.objects.create(
+            label=label, slug=slug, is_builtin=is_builtin
+        )
+        for order, slot in enumerate(slots):
+            SurveyTemplateSlot.objects.create(
+                template=tmpl,
+                order=order,
+                slot_id=slot["id"],
+                type=slot["type"],
+                placeholder=slot.get("placeholder", ""),
+            )
+        return tmpl
+
     def setUp(self):
         super().setUp()
         from iasc.models import SurveyTemplate
@@ -1110,11 +1128,10 @@ class SurveyTemplateTestCase(TestCase):
         self.json_mt = "application/json"
 
         # Create a non-builtin template for mutation tests
-        self.custom = SurveyTemplate.objects.create(
-            label="Custom Template",
-            slug="CUSTOM",
-            slots=[{"id": "q0", "type": "likert", "placeholder": "Rate this"}],
-            is_builtin=False,
+        self.custom = self._make_template(
+            "Custom Template",
+            "CUSTOM",
+            [{"id": "q0", "type": "likert", "placeholder": "Rate this"}],
         )
 
     def _get(self, url, expected_status=200):
@@ -1264,10 +1281,8 @@ class SurveyTemplateTestCase(TestCase):
     # --- delete ---
 
     def test_delete_custom_template(self):
-        unused = self.SurveyTemplate.objects.create(
-            label="Unused",
-            slug="UNUSED1",
-            slots=[{"id": "q0", "type": "likert", "placeholder": "x"}],
+        unused = self._make_template(
+            "Unused", "UNUSED1", [{"id": "q0", "type": "likert", "placeholder": "x"}]
         )
         self._delete(f"/api/survey/templates/{unused.slug}/")
         self.assertFalse(self.SurveyTemplate.objects.filter(slug="UNUSED1").exists())
