@@ -5,6 +5,8 @@ from rest_framework import serializers
 
 from iasc import models
 
+VALID_SLOT_TYPES = {"likert", "checkbox"}
+
 UserModel = get_user_model()
 
 
@@ -67,7 +69,76 @@ class InstitutionSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class SurveyTemplateSerializer(serializers.ModelSerializer):
+    survey_count = serializers.SerializerMethodField()
+
+    def get_survey_count(self, obj):
+        return models.Survey.objects.filter(kind=obj.slug).count()
+
+    def validate_slots(self, value):
+        if not isinstance(value, list) or len(value) == 0:
+            raise serializers.ValidationError("slots must be a non-empty list.")
+        for i, slot in enumerate(value):
+            if not isinstance(slot, dict):
+                raise serializers.ValidationError(f"Slot {i} must be an object.")
+            if "id" not in slot or "type" not in slot:
+                raise serializers.ValidationError(
+                    f"Slot {i} must have 'id' and 'type' fields."
+                )
+            if slot["type"] not in VALID_SLOT_TYPES:
+                raise serializers.ValidationError(
+                    f"Slot {i} type '{slot['type']}' is not valid. "
+                    f"Valid types: {sorted(VALID_SLOT_TYPES)}"
+                )
+        ids = [s["id"] for s in value]
+        if len(ids) != len(set(ids)):
+            raise serializers.ValidationError(
+                "Slot ids must be unique within a template."
+            )
+        return value
+
+    def validate(self, data):
+        # Block structural edits on templates that already have surveys
+        if self.instance is not None:
+            existing_slots = self.instance.slots
+            new_slots = data.get("slots", existing_slots)
+            if new_slots != existing_slots:
+                survey_count = models.Survey.objects.filter(
+                    kind=self.instance.slug
+                ).count()
+                if survey_count > 0:
+                    raise serializers.ValidationError(
+                        "Cannot change slot structure: surveys already exist using "
+                        "this template. You may only update the label or slot "
+                        "placeholder text."
+                    )
+        return data
+
+    class Meta:
+        model = models.SurveyTemplate
+        fields = [
+            "id",
+            "label",
+            "slug",
+            "slots",
+            "is_builtin",
+            "survey_count",
+            "created_at",
+            "updated_at",
+        ]
+        read_only_fields = ["is_builtin", "created_at", "updated_at"]
+
+
 class SurveySerializer(serializers.ModelSerializer):
+    template_slots = serializers.SerializerMethodField()
+
+    def get_template_slots(self, obj):
+        try:
+            template = models.SurveyTemplate.objects.get(slug=obj.kind)
+            return template.slots
+        except models.SurveyTemplate.DoesNotExist:
+            return None
+
     class Meta:
         model = models.Survey
         fields = [
@@ -76,6 +147,7 @@ class SurveySerializer(serializers.ModelSerializer):
             "questions",
             "active",
             "kind",
+            "template_slots",
             "hide_title",
             "expiry",
             "participants",
@@ -104,6 +176,14 @@ class SurveyResultSerializer(serializers.ModelSerializer):
     kind = serializers.CharField(source="survey.kind")
     active = serializers.CharField(source="survey.active")
     hide_title = serializers.BooleanField(source="survey.hide_title")
+    template_slots = serializers.SerializerMethodField()
+
+    def get_template_slots(self, obj):
+        try:
+            template = models.SurveyTemplate.objects.get(slug=obj.survey.kind)
+            return template.slots
+        except models.SurveyTemplate.DoesNotExist:
+            return None
 
     def get_count(self, obj):
         return models.Result.objects.filter(survey_id=obj.survey.id).count()
@@ -133,6 +213,7 @@ class SurveyResultSerializer(serializers.ModelSerializer):
             "active",
             "question",
             "questions",
+            "template_slots",
             "hide_title",
             "count",
             "vote_counts",
