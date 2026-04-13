@@ -1,7 +1,15 @@
 from builtins import issubclass
 
 from django.contrib import admin
-from iasc.models import Institution, Survey, Result, Participant, Discipline, ActiveLink
+from iasc.models import (
+    Institution,
+    Survey,
+    SurveyTemplate,
+    Result,
+    Participant,
+    Discipline,
+    ActiveLink,
+)
 
 
 @admin.register(Discipline)
@@ -32,3 +40,9 @@ class ResultAdmin(admin.ModelAdmin):
 @admin.register(ActiveLink)
 class ActiveLinkAdmin(admin.ModelAdmin):
     list_display = ("unique_link", "participant", "survey")
+
+
+@admin.register(SurveyTemplate)
+class SurveyTemplateAdmin(admin.ModelAdmin):
+    list_display = ("slug", "label", "is_builtin", "created_at")
+    readonly_fields = ("is_builtin", "created_at", "updated_at")

@@ -34,6 +34,7 @@ api_views = [
     (r"survey/create", views.CreateSurveyView, "survey/create"),
     (r"survey/close", views.CloseSurveyView, "survey/close"),
     (r"survey/results", views.SurveyResultsViewSet, "survey/results"),
+    (r"survey/templates", views.SurveyTemplateViewSet, "survey/templates"),
     (r"survey", views.SurveyViewSet, "survey"),
     (r"vote", views.SubmitVoteView, "vote"),
     (r"links/xls", views.XLSActiveLinkViewSet, "links/xls"),
