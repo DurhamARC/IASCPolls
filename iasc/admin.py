@@ -2,13 +2,14 @@ from builtins import issubclass
 
 from django.contrib import admin
 from iasc.models import (
+    ActiveLink,
+    Discipline,
     Institution,
+    Participant,
+    Result,
     Survey,
     SurveyTemplate,
-    Result,
-    Participant,
-    Discipline,
-    ActiveLink,
+    SurveyTemplateSlot,
 )
 
 
@@ -42,7 +43,15 @@ class ActiveLinkAdmin(admin.ModelAdmin):
     list_display = ("unique_link", "participant", "survey")
 
 
+class SurveyTemplateSlotInline(admin.TabularInline):
+    model = SurveyTemplateSlot
+    extra = 0
+    fields = ("order", "slot_id", "type", "placeholder")
+    ordering = ("order",)
+
+
 @admin.register(SurveyTemplate)
 class SurveyTemplateAdmin(admin.ModelAdmin):
     list_display = ("slug", "label", "is_builtin", "created_at")
     readonly_fields = ("is_builtin", "created_at", "updated_at")
+    inlines = [SurveyTemplateSlotInline]

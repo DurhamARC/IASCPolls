@@ -5,8 +5,6 @@ from rest_framework import serializers
 
 from iasc import models
 
-VALID_SLOT_TYPES = {"likert", "checkbox"}
-
 UserModel = get_user_model()
 
 
@@ -69,28 +67,49 @@ class InstitutionSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class SurveyTemplateSlotSerializer(serializers.ModelSerializer):
+    """Serializes a SurveyTemplateSlot as {id, type, placeholder}."""
+
+    id = serializers.CharField(source="slot_id")
+
+    class Meta:
+        model = models.SurveyTemplateSlot
+        fields = ["id", "type", "placeholder"]
+
+
+def _template_slots_list(kind):
+    """Return [{id, type, placeholder}] for the given kind slug, or None."""
+    slots = list(
+        models.SurveyTemplateSlot.objects.filter(template__slug=kind).order_by("order")
+    )
+    return SurveyTemplateSlotSerializer(slots, many=True).data or None
+
+
 class SurveyTemplateSerializer(serializers.ModelSerializer):
+    slots = SurveyTemplateSlotSerializer(source="slot_set", many=True)
     survey_count = serializers.SerializerMethodField()
+
+    def get_fields(self):
+        fields = super().get_fields()
+        if self.instance is not None:
+            fields["slug"].read_only = True
+        return fields
 
     def get_survey_count(self, obj):
         return models.Survey.objects.filter(kind=obj.slug).count()
 
     def validate_slots(self, value):
-        if not isinstance(value, list) or len(value) == 0:
+        # value is a list of validated slot dicts with model field names (slot_id, type, placeholder)
+        if not value:
             raise serializers.ValidationError("slots must be a non-empty list.")
+        valid_types = {c[0] for c in models.SLOT_TYPE_CHOICES}
         for i, slot in enumerate(value):
-            if not isinstance(slot, dict):
-                raise serializers.ValidationError(f"Slot {i} must be an object.")
-            if "id" not in slot or "type" not in slot:
+            if slot.get("type", "") not in valid_types:
                 raise serializers.ValidationError(
-                    f"Slot {i} must have 'id' and 'type' fields."
+                    f"Slot {i} type '{slot.get('type', '')}' is not valid. "
+                    f"Valid types: {sorted(valid_types)}"
                 )
-            if slot["type"] not in VALID_SLOT_TYPES:
-                raise serializers.ValidationError(
-                    f"Slot {i} type '{slot['type']}' is not valid. "
-                    f"Valid types: {sorted(VALID_SLOT_TYPES)}"
-                )
-        ids = [s["id"] for s in value]
+        ids = [s["slot_id"] for s in value]
         if len(ids) != len(set(ids)):
             raise serializers.ValidationError(
                 "Slot ids must be unique within a template."
@@ -98,21 +117,51 @@ class SurveyTemplateSerializer(serializers.ModelSerializer):
         return value
 
     def validate(self, data):
-        # Block structural edits on templates that already have surveys
-        if self.instance is not None:
-            existing_slots = self.instance.slots
-            new_slots = data.get("slots", existing_slots)
-            if new_slots != existing_slots:
-                survey_count = models.Survey.objects.filter(
-                    kind=self.instance.slug
-                ).count()
-                if survey_count > 0:
+        # Block structural edits (slot IDs or types) when surveys already exist.
+        if self.instance is not None and "slot_set" in data:
+            existing = list(
+                models.SurveyTemplateSlot.objects.filter(template=self.instance)
+                .order_by("order")
+                .values_list("slot_id", "type")
+            )
+            incoming = [(s["slot_id"], s["type"]) for s in data["slot_set"]]
+            if incoming != existing:
+                if models.Survey.objects.filter(kind=self.instance.slug).exists():
                     raise serializers.ValidationError(
                         "Cannot change slot structure: surveys already exist using "
                         "this template. You may only update the label or slot "
                         "placeholder text."
                     )
         return data
+
+    def create(self, validated_data):
+        slot_data = validated_data.pop("slot_set", [])
+        template = models.SurveyTemplate.objects.create(**validated_data)
+        for order, slot in enumerate(slot_data):
+            models.SurveyTemplateSlot.objects.create(
+                template=template,
+                order=order,
+                slot_id=slot["slot_id"],
+                type=slot["type"],
+                placeholder=slot.get("placeholder", ""),
+            )
+        return template
+
+    def update(self, instance, validated_data):
+        slot_data = validated_data.pop("slot_set", None)
+        instance.label = validated_data.get("label", instance.label)
+        instance.save()
+        if slot_data is not None:
+            models.SurveyTemplateSlot.objects.filter(template=instance).delete()
+            for order, slot in enumerate(slot_data):
+                models.SurveyTemplateSlot.objects.create(
+                    template=instance,
+                    order=order,
+                    slot_id=slot["slot_id"],
+                    type=slot["type"],
+                    placeholder=slot.get("placeholder", ""),
+                )
+        return instance
 
     class Meta:
         model = models.SurveyTemplate
@@ -133,11 +182,7 @@ class SurveySerializer(serializers.ModelSerializer):
     template_slots = serializers.SerializerMethodField()
 
     def get_template_slots(self, obj):
-        try:
-            template = models.SurveyTemplate.objects.get(slug=obj.kind)
-            return template.slots
-        except models.SurveyTemplate.DoesNotExist:
-            return None
+        return _template_slots_list(obj.kind)
 
     class Meta:
         model = models.Survey
@@ -179,11 +224,7 @@ class SurveyResultSerializer(serializers.ModelSerializer):
     template_slots = serializers.SerializerMethodField()
 
     def get_template_slots(self, obj):
-        try:
-            template = models.SurveyTemplate.objects.get(slug=obj.survey.kind)
-            return template.slots
-        except models.SurveyTemplate.DoesNotExist:
-            return None
+        return _template_slots_list(obj.survey.kind)
 
     def get_count(self, obj):
         return models.Result.objects.filter(survey_id=obj.survey.id).count()
