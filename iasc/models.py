@@ -6,14 +6,34 @@ from django.db import models, transaction
 from datetime import datetime
 
 from iasc import settings
-from iasc.survey_defs import VALID_KINDS
 
 
 def validate_survey_kind(value):
-    if value not in VALID_KINDS:
-        raise ValidationError(
-            f"Invalid survey kind '{value}'. Valid kinds: {VALID_KINDS}"
-        )
+    from iasc.survey_defs import get_valid_slugs
+
+    valid = get_valid_slugs()
+    if value not in valid:
+        raise ValidationError(f"Invalid survey kind '{value}'. Valid kinds: {valid}")
+
+
+class SurveyTemplate(models.Model):
+    """
+    Database-backed survey template, replacing conf/survey_definitions.json.
+    Each template defines a reusable structure (ordered list of question slots)
+    that surveys are created from.
+    """
+
+    label = models.CharField(max_length=255)
+    slug = models.SlugField(max_length=32, unique=True, db_index=True)
+    slots = models.JSONField(
+        help_text="Ordered list of question slots: [{id, type, placeholder}]"
+    )
+    is_builtin = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.label} ({self.slug})"
 
 
 class Institution(models.Model):
