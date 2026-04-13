@@ -1,5 +1,6 @@
 import datetime
 import io
+import json
 from random import randrange
 from zipfile import ZipFile
 
@@ -1089,3 +1090,235 @@ class DatabaseModelTestCase(TestCase):
         link.vote(3)
         resp = self.client.get(f"/api/vote/{uid}/")
         self.assertEqual(resp.status_code, 404)
+
+
+class SurveyTemplateTestCase(TestCase):
+    """Tests for SurveyTemplate model and /api/survey/templates/ endpoints."""
+
+    def setUp(self):
+        super().setUp()
+        from iasc.models import SurveyTemplate
+
+        self.SurveyTemplate = SurveyTemplate
+
+        user = User.objects.create(username="tmpl_user")
+        user.set_password("password")
+        user.save()
+        self.client = __import__("django.test", fromlist=["Client"]).Client()
+        self.client.login(username="tmpl_user", password="password")
+
+        self.json_mt = "application/json"
+
+        # Create a non-builtin template for mutation tests
+        self.custom = SurveyTemplate.objects.create(
+            label="Custom Template",
+            slug="CUSTOM",
+            slots=[{"id": "q0", "type": "likert", "placeholder": "Rate this"}],
+            is_builtin=False,
+        )
+
+    def _get(self, url, expected_status=200):
+        resp = self.client.get(url)
+        self.assertEqual(resp.status_code, expected_status)
+        return json.loads(resp.content)
+
+    def _post(self, url, data, expected_status=201):
+        resp = self.client.post(url, json.dumps(data), content_type="application/json")
+        self.assertEqual(resp.status_code, expected_status)
+        return json.loads(resp.content)
+
+    def _patch(self, url, data, expected_status=200):
+        resp = self.client.patch(url, json.dumps(data), content_type="application/json")
+        self.assertEqual(resp.status_code, expected_status)
+        return json.loads(resp.content)
+
+    def _delete(self, url, expected_status=204):
+        resp = self.client.delete(url)
+        self.assertEqual(resp.status_code, expected_status)
+        return resp
+
+    # --- list / retrieve ---
+
+    def test_list_returns_seeded_builtins(self):
+        """The 4 builtin templates are returned by the list endpoint."""
+        data = self._get("/api/survey/templates/")
+        slugs = {t["slug"] for t in data}
+        self.assertIn("LI", slugs)
+        self.assertIn("L2E", slugs)
+        self.assertIn("L3C", slugs)
+        self.assertIn("LI3", slugs)
+
+    def test_retrieve_by_slug(self):
+        data = self._get("/api/survey/templates/LI/")
+        self.assertEqual(data["slug"], "LI")
+        self.assertTrue(data["is_builtin"])
+        self.assertIsInstance(data["slots"], list)
+        self.assertGreater(len(data["slots"]), 0)
+
+    def test_survey_serializer_includes_template_slots(self):
+        """GET /api/survey/<id>/ includes template_slots from the linked template."""
+        institution = Institution.objects.create(name="Slots Test Uni", country="GB")
+        discipline = Discipline.objects.create(name="SlotsDiscipline")
+        survey = Survey.objects.create(
+            question="Template slots test",
+            active=True,
+            kind="LI",
+            expiry=datetime.datetime(2099, 1, 1),
+        )
+        data = self._get(f"/api/survey/{survey.id}/")
+        self.assertIn("template_slots", data)
+        self.assertIsNotNone(data["template_slots"])
+        self.assertEqual(data["template_slots"][0]["type"], "likert")
+
+    # --- create ---
+
+    def test_create_valid_template(self):
+        data = self._post(
+            "/api/survey/templates/",
+            {
+                "label": "My New Template",
+                "slug": "NEW1",
+                "slots": [
+                    {"id": "q0", "type": "likert", "placeholder": "Statement 1"},
+                    {"id": "q1", "type": "checkbox", "placeholder": "Expertise"},
+                ],
+            },
+        )
+        self.assertEqual(data["slug"], "NEW1")
+        self.assertEqual(len(data["slots"]), 2)
+        self.assertFalse(data["is_builtin"])
+
+    def test_create_duplicate_slug_rejected(self):
+        self._post(
+            "/api/survey/templates/",
+            {
+                "label": "Dup",
+                "slug": "CUSTOM",
+                "slots": [{"id": "q0", "type": "likert"}],
+            },
+            expected_status=400,
+        )
+
+    def test_create_empty_slots_rejected(self):
+        self._post(
+            "/api/survey/templates/",
+            {"label": "Bad", "slug": "BAD1", "slots": []},
+            expected_status=400,
+        )
+
+    def test_create_invalid_slot_type_rejected(self):
+        self._post(
+            "/api/survey/templates/",
+            {
+                "label": "BadType",
+                "slug": "BAD2",
+                "slots": [{"id": "q0", "type": "radio"}],
+            },
+            expected_status=400,
+        )
+
+    def test_create_duplicate_slot_ids_rejected(self):
+        self._post(
+            "/api/survey/templates/",
+            {
+                "label": "DupIds",
+                "slug": "BAD3",
+                "slots": [
+                    {"id": "q0", "type": "likert"},
+                    {"id": "q0", "type": "checkbox"},
+                ],
+            },
+            expected_status=400,
+        )
+
+    # --- update ---
+
+    def test_patch_custom_template_label(self):
+        data = self._patch(
+            f"/api/survey/templates/{self.custom.slug}/",
+            {"label": "Renamed"},
+        )
+        self.assertEqual(data["label"], "Renamed")
+
+    def test_patch_builtin_template_rejected(self):
+        self._patch(
+            "/api/survey/templates/LI/",
+            {"label": "Hacked"},
+            expected_status=400,
+        )
+
+    def test_patch_slots_blocked_when_surveys_exist(self):
+        """Changing slots is blocked if surveys already use this template."""
+        Survey.objects.create(
+            question="Blocking survey",
+            active=True,
+            kind=self.custom.slug,
+            expiry=datetime.datetime(2099, 1, 1),
+        )
+        self._patch(
+            f"/api/survey/templates/{self.custom.slug}/",
+            {"slots": [{"id": "q0", "type": "checkbox", "placeholder": "Changed"}]},
+            expected_status=400,
+        )
+
+    # --- delete ---
+
+    def test_delete_custom_template(self):
+        unused = self.SurveyTemplate.objects.create(
+            label="Unused",
+            slug="UNUSED1",
+            slots=[{"id": "q0", "type": "likert", "placeholder": "x"}],
+        )
+        self._delete(f"/api/survey/templates/{unused.slug}/")
+        self.assertFalse(self.SurveyTemplate.objects.filter(slug="UNUSED1").exists())
+
+    def test_delete_builtin_rejected(self):
+        resp = self.client.delete("/api/survey/templates/LI/")
+        self.assertEqual(resp.status_code, 400)
+        self.assertTrue(self.SurveyTemplate.objects.filter(slug="LI").exists())
+
+    def test_delete_template_with_surveys_rejected(self):
+        Survey.objects.create(
+            question="Prevent delete",
+            active=True,
+            kind=self.custom.slug,
+            expiry=datetime.datetime(2099, 1, 1),
+        )
+        resp = self.client.delete(f"/api/survey/templates/{self.custom.slug}/")
+        self.assertEqual(resp.status_code, 400)
+
+    # --- survey_count ---
+
+    def test_survey_count_in_template_response(self):
+        Survey.objects.create(
+            question="Count test",
+            active=True,
+            kind=self.custom.slug,
+            expiry=datetime.datetime(2099, 1, 1),
+        )
+        data = self._get(f"/api/survey/templates/{self.custom.slug}/")
+        self.assertEqual(data["survey_count"], 1)
+
+    # --- validate_survey_kind uses DB ---
+
+    def test_survey_kind_validation_uses_db(self):
+        """Survey.full_clean() accepts a slug that exists in SurveyTemplate."""
+        survey = Survey(
+            question="DB-validated kind",
+            active=True,
+            kind=self.custom.slug,
+            expiry=datetime.datetime(2099, 1, 1),
+        )
+        survey.full_clean()  # should not raise
+
+    def test_survey_kind_invalid_still_rejected(self):
+        from django.core.exceptions import ValidationError as DjangoValidationError
+
+        survey = Survey(
+            question="Bad kind",
+            active=True,
+            kind="NONEXISTENT",
+            expiry=datetime.datetime(2099, 1, 1),
+        )
+        with self.assertRaises(DjangoValidationError):
+            survey.full_clean()
