@@ -1174,8 +1174,6 @@ class SurveyTemplateTestCase(TestCase):
 
     def test_survey_serializer_includes_template_slots(self):
         """GET /api/survey/<id>/ includes template_slots from the linked template."""
-        institution = Institution.objects.create(name="Slots Test Uni", country="GB")
-        discipline = Discipline.objects.create(name="SlotsDiscipline")
         survey = Survey.objects.create(
             question="Template slots test",
             active=True,
@@ -1286,6 +1284,46 @@ class SurveyTemplateTestCase(TestCase):
             {"slots": [{"id": "q0", "type": "checkbox", "placeholder": "Changed"}]},
             expected_status=400,
         )
+
+    def test_patch_slots_allowed_when_no_surveys_exist(self):
+        """Changing slot structure is allowed when no surveys use this template."""
+        data = self._patch(
+            f"/api/survey/templates/{self.custom.slug}/",
+            {
+                "slots": [
+                    {"id": "q0", "type": "likert", "placeholder": "New statement"},
+                    {"id": "q1", "type": "checkbox", "placeholder": "New checkbox"},
+                ]
+            },
+        )
+        self.assertEqual(len(data["slots"]), 2)
+        self.assertEqual(data["slots"][1]["type"], "checkbox")
+
+    def test_survey_results_serializer_includes_template_slots(self):
+        """GET /api/survey/results/ includes template_slots for each result survey."""
+        from iasc.models import Result
+
+        survey = Survey.objects.create(
+            question="Result slots test",
+            active=True,
+            kind="LI",
+            expiry=datetime.datetime(2099, 1, 1),
+        )
+        institution = Institution.objects.create(name="ResultSlotsUni", country="GB")
+        discipline = Discipline.objects.create(name="ResultSlotsDiscipline")
+        Result.objects.create(
+            survey=survey,
+            vote=3,
+            institution=institution,
+            discipline=discipline,
+        )
+        data = self._get("/api/survey/results/")
+        results = data.get("results", [])
+        matching = [r for r in results if r["id"] == survey.id]
+        self.assertEqual(len(matching), 1)
+        self.assertIn("template_slots", matching[0])
+        self.assertIsNotNone(matching[0]["template_slots"])
+        self.assertEqual(matching[0]["template_slots"][0]["type"], "likert")
 
     # --- delete ---
 
