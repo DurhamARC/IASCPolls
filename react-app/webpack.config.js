@@ -35,6 +35,13 @@ module.exports = {
         type: "asset/source",
       },
       {
+        test: /\.woff2$/,
+        type: "asset/resource",
+        generator: {
+          filename: "./fonts/[name]-[hash][ext]",
+        },
+      },
+      {
         test: /\.(jpe?g|png|gif|svg|webp)$/i,
         type: "asset/resource",
         generator: {

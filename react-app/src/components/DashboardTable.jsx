@@ -128,14 +128,14 @@ function DashboardTable({ reload, selectedSurveyId, onSelect }) {
       <table className="dashboard--question--table">
         <thead>
           <tr>
-            <th className="no-mobile">Statement</th>
+            <th className="no-mobile no-tablet">Statement</th>
             <th>ID</th>
             <th className="no-mobile">Type</th>
             <th>Completed</th>
             <th className="no-mobile">Links</th>
             <th>Expiry</th>
             <th>Active</th>
-            <th className="no-mobile">Results</th>
+            <th className="no-mobile no-tablet">Results</th>
           </tr>
         </thead>
         <tbody>
@@ -150,7 +150,7 @@ function DashboardTable({ reload, selectedSurveyId, onSelect }) {
                 )
               }
             >
-              <td className="no-mobile">
+              <td className="no-mobile no-tablet">
                 {row.question.substring(0, 50)}
                 {row.question.length > 50 && "..."}
               </td>
@@ -176,7 +176,7 @@ function DashboardTable({ reload, selectedSurveyId, onSelect }) {
                   }}
                 />
               </td>
-              <td className="no-mobile">
+              <td className="no-mobile no-tablet">
                 <a href={`/api/result/xls/?survey=${row.id}`}>
                   <span className="material-symbols-outlined">download</span>
                 </a>
