@@ -5,6 +5,7 @@ import "./styles/global.css";
 import { ErrorBoundary } from "react-error-boundary";
 import { AuthProvider } from "./components/AuthContext";
 import { MessageProvider } from "./components/MessageHandler";
+import { SurveyDefinitionsProvider } from "./components/SurveyDefinitionsContext";
 import NavBar from "./components/nav/NavBar";
 import Footer from "./components/footer/Footer";
 import Alert from "./components/Alert";
@@ -65,23 +66,28 @@ function App() {
       <ErrorBoundary fallbackRender={fallbackRender}>
         <MessageProvider>
           <AuthProvider>
-            <Suspense fallback={<div>Loading...</div>}>
-              <BrowserRouter>
-                <NavBar />
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/poll" element={<Poll />} />
-                  <Route path="/about" element={<About />} />
-                  <Route path="/thankyou" element={<Thanks />} />
-                  <Route path="/ethics" element={<Ethics />} />
-                  <Route path="/error" element={<Error />} />
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/dashboard" element={<Dashboard />} />
-                  <Route path="/download" element={<DownloadParticipants />} />
-                </Routes>
-                <Footer />
-              </BrowserRouter>
-            </Suspense>
+            <SurveyDefinitionsProvider>
+              <Suspense fallback={<div>Loading...</div>}>
+                <BrowserRouter>
+                  <NavBar />
+                  <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/poll" element={<Poll />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/thankyou" element={<Thanks />} />
+                    <Route path="/ethics" element={<Ethics />} />
+                    <Route path="/error" element={<Error />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route
+                      path="/download"
+                      element={<DownloadParticipants />}
+                    />
+                  </Routes>
+                  <Footer />
+                </BrowserRouter>
+              </Suspense>
+            </SurveyDefinitionsProvider>
           </AuthProvider>
         </MessageProvider>
       </ErrorBoundary>
