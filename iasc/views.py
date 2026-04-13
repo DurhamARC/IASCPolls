@@ -562,7 +562,7 @@ class SurveyTemplateViewSet(viewsets.ModelViewSet):
 
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = serializers.SurveyTemplateSerializer
-    queryset = SurveyTemplate.objects.all().order_by("id")
+    queryset = SurveyTemplate.objects.prefetch_related("slot_set").order_by("id")
     pagination_class = None
     lookup_field = "slug"
 
@@ -594,10 +594,6 @@ class SurveyTemplateViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
         return super().update(request, *args, **kwargs)
-
-    def partial_update(self, request, *args, **kwargs):
-        kwargs["partial"] = True
-        return self.update(request, *args, **kwargs)
 
 
 # Azure Healthcheck route
