@@ -26,7 +26,15 @@ from iasc.filters import (
 )
 
 from iasc.logic import parse_excel_sheet_to_db, create_survey_in_db
-from iasc.models import ActiveLink, Result, Participant, Survey, Discipline, Institution
+from iasc.models import (
+    ActiveLink,
+    Result,
+    Participant,
+    Survey,
+    SurveyTemplate,
+    Discipline,
+    Institution,
+)
 from iasc.utils import (
     get_error_message,
     request_has_keys,
@@ -539,6 +547,57 @@ class ZipResultViewSet(mixins.IASCZipFileMixin, XLSResultViewSet):
 
     def get_filename(self, request=None, *args, **kwargs):
         return "all_results.zip"
+
+
+class SurveyTemplateViewSet(viewsets.ModelViewSet):
+    """
+    CRUD endpoints for SurveyTemplate.
+
+    - GET  /api/survey/templates/         — list all templates
+    - GET  /api/survey/templates/<slug>/  — retrieve a single template
+    - POST /api/survey/templates/         — create a new template
+    - PATCH/PUT /api/survey/templates/<slug>/  — update a template
+    - DELETE /api/survey/templates/<slug>/     — delete a template (blocked if builtin or referenced)
+    """
+
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = serializers.SurveyTemplateSerializer
+    queryset = SurveyTemplate.objects.all().order_by("id")
+    pagination_class = None
+    lookup_field = "slug"
+
+    def destroy(self, request, *args, **kwargs):
+        template = self.get_object()
+        if template.is_builtin:
+            return Response(
+                {"status": "error", "message": "Built-in templates cannot be deleted."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        if Survey.objects.filter(kind=template.slug).exists():
+            return Response(
+                {
+                    "status": "error",
+                    "message": "Cannot delete a template that has surveys associated with it.",
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        return super().destroy(request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        template = self.get_object()
+        if template.is_builtin:
+            return Response(
+                {
+                    "status": "error",
+                    "message": "Built-in templates cannot be modified.",
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        return super().update(request, *args, **kwargs)
+
+    def partial_update(self, request, *args, **kwargs):
+        kwargs["partial"] = True
+        return self.update(request, *args, **kwargs)
 
 
 # Azure Healthcheck route
