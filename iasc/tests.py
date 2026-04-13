@@ -1257,6 +1257,15 @@ class SurveyTemplateTestCase(TestCase):
         )
         self.assertEqual(data["label"], "Renamed")
 
+    def test_patch_slug_is_ignored(self):
+        """slug is read-only on update; sending a new value has no effect."""
+        data = self._patch(
+            f"/api/survey/templates/{self.custom.slug}/",
+            {"slug": "NEWSLUG"},
+        )
+        self.assertEqual(data["slug"], self.custom.slug)
+        self.assertFalse(self.SurveyTemplate.objects.filter(slug="NEWSLUG").exists())
+
     def test_patch_builtin_template_rejected(self):
         self._patch(
             "/api/survey/templates/LI/",

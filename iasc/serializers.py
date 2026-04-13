@@ -79,17 +79,21 @@ class SurveyTemplateSlotSerializer(serializers.ModelSerializer):
 
 def _template_slots_list(kind):
     """Return [{id, type, placeholder}] for the given kind slug, or None."""
-    slots = models.SurveyTemplateSlot.objects.filter(template__slug=kind).order_by(
-        "order"
+    slots = list(
+        models.SurveyTemplateSlot.objects.filter(template__slug=kind).order_by("order")
     )
-    if not slots.exists():
-        return None
-    return SurveyTemplateSlotSerializer(slots, many=True).data
+    return SurveyTemplateSlotSerializer(slots, many=True).data or None
 
 
 class SurveyTemplateSerializer(serializers.ModelSerializer):
     slots = SurveyTemplateSlotSerializer(source="slot_set", many=True)
     survey_count = serializers.SerializerMethodField()
+
+    def get_fields(self):
+        fields = super().get_fields()
+        if self.instance is not None:
+            fields["slug"].read_only = True
+        return fields
 
     def get_survey_count(self, obj):
         return models.Survey.objects.filter(kind=obj.slug).count()
