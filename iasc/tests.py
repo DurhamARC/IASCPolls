@@ -1091,8 +1091,8 @@ class DatabaseModelTestCase(TestCase):
         resp = self.client.get(f"/api/vote/{uid}/")
         self.assertEqual(resp.status_code, 404)
 
-    def test_vote_validation_rejects_wrong_keys(self):
-        """POST /api/vote/ with unexpected dict keys returns 400 and preserves the token."""
+    def _l3c_link(self):
+        """Create a fresh L3C survey and return an ActiveLink for it."""
         survey = Survey.objects.create(
             question="L3C validation test",
             questions=["S1", "S2", "S3", "Expertise"],
@@ -1102,7 +1102,11 @@ class DatabaseModelTestCase(TestCase):
             participants=1,
             voted=0,
         )
-        link = ActiveLink.objects.create(participant=self.participant, survey=survey)
+        return ActiveLink.objects.create(participant=self.participant, survey=survey)
+
+    def test_vote_validation_rejects_wrong_keys(self):
+        """POST /api/vote/ with unexpected dict keys returns 400 and preserves the token."""
+        link = self._l3c_link()
         # "expertise" key is no longer valid for L3C; the checkbox key is now "3"
         bad_vote = {"0": 3, "1": 4, "2": 2, "expertise": True}
         response = self.client.post(
@@ -1112,6 +1116,49 @@ class DatabaseModelTestCase(TestCase):
         self.assertEqual(response.status_code, 400)
         # Token must survive a rejected vote
         self.assertTrue(
+            ActiveLink.objects.filter(unique_link=link.unique_link).exists()
+        )
+
+    def test_vote_validation_rejects_out_of_range_likert_in_dict(self):
+        """POST /api/vote/ with an out-of-range Likert value inside a dict vote returns 400."""
+        link = self._l3c_link()
+        bad_vote = {"0": 99, "1": 4, "2": 2, "3": True}  # 99 is outside 1–5
+        response = self.client.post(
+            "/api/vote/",
+            {"unique_id": str(link.unique_link), "vote": json.dumps(bad_vote)},
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertTrue(
+            ActiveLink.objects.filter(unique_link=link.unique_link).exists()
+        )
+
+    def test_vote_validation_rejects_wrong_checkbox_type(self):
+        """POST /api/vote/ with an integer where a boolean is expected returns 400."""
+        link = self._l3c_link()
+        bad_vote = {"0": 3, "1": 4, "2": 2, "3": 1}  # 1 is int, not bool
+        response = self.client.post(
+            "/api/vote/",
+            {"unique_id": str(link.unique_link), "vote": json.dumps(bad_vote)},
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertTrue(
+            ActiveLink.objects.filter(unique_link=link.unique_link).exists()
+        )
+
+    def test_vote_validation_accepts_valid_dict_vote(self):
+        """POST /api/vote/ with a correctly-structured dict vote returns 200 and stores the result."""
+        link = self._l3c_link()
+        valid_vote = {"0": 3, "1": 4, "2": 2, "3": True}
+        response = self.client.post(
+            "/api/vote/",
+            {"unique_id": str(link.unique_link), "vote": json.dumps(valid_vote)},
+        )
+        self.assertEqual(response.status_code, 200)
+        result = Result.objects.get(survey=link.survey)
+        self.assertEqual(result.vote["0"], 3)
+        self.assertEqual(result.vote["3"], True)
+        self.assertIsInstance(result.vote["3"], bool)
+        self.assertFalse(
             ActiveLink.objects.filter(unique_link=link.unique_link).exists()
         )
 
