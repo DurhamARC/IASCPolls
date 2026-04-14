@@ -6,6 +6,7 @@ import CreateContainer from "../../components/CreateContainer";
 import AddParticipants from "../../components/addparticipants/AddParticipants";
 import PieChart from "../../components/PieChart";
 import { AuthContext } from "../../components/AuthContext";
+import { SurveyDefinitionsProvider } from "../../components/SurveyDefinitionsContext";
 
 /**
  * Create Dashboard React component to contain page
@@ -47,80 +48,82 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="container">
-      <div className="dashboard" ref={dashboardRef}>
-        <div className="dashboard--overview">
-          <div className="dashboard--tools">
-            <p className="dashboard--section-header">Survey tools</p>
-            <hr />
-            <div className="create-add-container">
-              <div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowAddParticipants(true);
-                  }}
-                  className="dashboard--button"
-                >
-                  <div>
-                    <span className="material-symbols-outlined">
-                      contact_page
-                    </span>
-                  </div>
-                  <div>Add Participants</div>
-                </button>
-              </div>
+    <SurveyDefinitionsProvider>
+      <div className="container">
+        <div className="dashboard" ref={dashboardRef}>
+          <div className="dashboard--overview">
+            <div className="dashboard--tools">
+              <p className="dashboard--section-header">Survey tools</p>
+              <hr />
+              <div className="create-add-container">
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowAddParticipants(true);
+                    }}
+                    className="dashboard--button"
+                  >
+                    <div>
+                      <span className="material-symbols-outlined">
+                        contact_page
+                      </span>
+                    </div>
+                    <div>Add Participants</div>
+                  </button>
+                </div>
 
-              <div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowCreateContainer(true);
-                  }}
-                  className="dashboard--button"
-                >
-                  <div>
-                    <span className="material-symbols-outlined">
-                      edit_square
-                    </span>
-                  </div>
-                  <div>Create</div>
-                </button>
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowCreateContainer(true);
+                    }}
+                    className="dashboard--button"
+                  >
+                    <div>
+                      <span className="material-symbols-outlined">
+                        edit_square
+                      </span>
+                    </div>
+                    <div>Create</div>
+                  </button>
+                </div>
               </div>
             </div>
+            <div className="pie-chart">
+              <PieChart
+                surveyId={selectedSurveyId}
+                fallbackQuestion={selectedSurveyQuestion}
+              />
+            </div>
           </div>
-          <div className="pie-chart">
-            <PieChart
-              surveyId={selectedSurveyId}
-              fallbackQuestion={selectedSurveyQuestion}
+          <div className="dashboard--projects">
+            {showCreateContainer && (
+              <CreateContainer
+                onClose={() => {
+                  setShowCreateContainer(false);
+                }}
+                createdCallback={() => {
+                  setReloadCtr(reloadCtr + 1);
+                }}
+              />
+            )}
+            {showAddParticipants && (
+              <AddParticipants
+                onClose={() => {
+                  setShowAddParticipants(false);
+                }}
+              />
+            )}
+            <DashboardTable
+              reload={reloadCtr}
+              selectedSurveyId={selectedSurveyId}
+              onSelect={handleSelect}
             />
           </div>
-        </div>
-        <div className="dashboard--projects">
-          {showCreateContainer && (
-            <CreateContainer
-              onClose={() => {
-                setShowCreateContainer(false);
-              }}
-              createdCallback={() => {
-                setReloadCtr(reloadCtr + 1);
-              }}
-            />
-          )}
-          {showAddParticipants && (
-            <AddParticipants
-              onClose={() => {
-                setShowAddParticipants(false);
-              }}
-            />
-          )}
-          <DashboardTable
-            reload={reloadCtr}
-            selectedSurveyId={selectedSurveyId}
-            onSelect={handleSelect}
-          />
         </div>
       </div>
-    </div>
+    </SurveyDefinitionsProvider>
   );
 }

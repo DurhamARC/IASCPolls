@@ -102,7 +102,7 @@ class SurveyTemplateSerializer(serializers.ModelSerializer):
         # value is a list of validated slot dicts with model field names (slot_id, type, placeholder)
         if not value:
             raise serializers.ValidationError("slots must be a non-empty list.")
-        valid_types = {c[0] for c in models.SLOT_TYPE_CHOICES}
+        valid_types = set(models.SLOT_TYPES)
         for i, slot in enumerate(value):
             if slot.get("type", "") not in valid_types:
                 raise serializers.ValidationError(

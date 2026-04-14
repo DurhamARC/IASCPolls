@@ -16,12 +16,7 @@ def validate_survey_kind(value):
         raise ValidationError(f"Invalid survey kind '{value}'. Valid kinds: {valid}")
 
 
-SLOT_TYPE_LIKERT = "likert"
-SLOT_TYPE_CHECKBOX = "checkbox"
-SLOT_TYPE_CHOICES = [
-    (SLOT_TYPE_LIKERT, "Likert"),
-    (SLOT_TYPE_CHECKBOX, "Checkbox"),
-]
+SLOT_TYPES = ["likert", "checkbox"]
 
 
 class SurveyTemplate(models.Model):
@@ -53,7 +48,7 @@ class SurveyTemplateSlot(models.Model):
     )
     order = models.PositiveIntegerField()
     slot_id = models.CharField(max_length=32, help_text='Vote key, e.g. "q0"')
-    type = models.CharField(max_length=32, choices=SLOT_TYPE_CHOICES)
+    type = models.CharField(max_length=32, choices=[(t, t.title()) for t in SLOT_TYPES])
     placeholder = models.TextField(blank=True, default="")
 
     class Meta:
