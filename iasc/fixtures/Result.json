@@ -63,7 +63,7 @@
                 "0": 5,
                 "1": 2,
                 "2": 4,
-                "expertise": true
+                "3": true
             },
             "institution": 4,
             "discipline": 3,
@@ -79,7 +79,7 @@
                 "0": 5,
                 "1": 1,
                 "2": 1,
-                "expertise": false
+                "3": false
             },
             "institution": 3,
             "discipline": 2,
@@ -95,7 +95,7 @@
                 "0": 3,
                 "1": 4,
                 "2": 1,
-                "expertise": true
+                "3": true
             },
             "institution": 1,
             "discipline": 1,
@@ -111,7 +111,7 @@
                 "0": 4,
                 "1": 3,
                 "2": 1,
-                "expertise": false
+                "3": false
             },
             "institution": 2,
             "discipline": 4,
@@ -127,7 +127,7 @@
                 "0": 4,
                 "1": 3,
                 "2": 4,
-                "expertise": false
+                "3": false
             },
             "institution": 2,
             "discipline": 5,
@@ -143,7 +143,7 @@
                 "0": 1,
                 "1": 3,
                 "2": 1,
-                "expertise": true
+                "3": true
             },
             "institution": 2,
             "discipline": 3,
@@ -159,7 +159,7 @@
                 "0": 4,
                 "1": 3,
                 "2": 1,
-                "expertise": true
+                "3": true
             },
             "institution": 4,
             "discipline": 6,
@@ -175,7 +175,7 @@
                 "0": 4,
                 "1": 3,
                 "2": 1,
-                "expertise": true
+                "3": true
             },
             "institution": 4,
             "discipline": 5,
@@ -191,7 +191,7 @@
                 "0": 5,
                 "1": 2,
                 "2": 4,
-                "expertise": true
+                "3": true
             },
             "institution": 3,
             "discipline": 1,
@@ -207,7 +207,7 @@
                 "0": 5,
                 "1": 2,
                 "2": 5,
-                "expertise": true
+                "3": true
             },
             "institution": 1,
             "discipline": 1,
@@ -223,7 +223,7 @@
                 "0": 4,
                 "1": 3,
                 "2": 1,
-                "expertise": true
+                "3": true
             },
             "institution": 3,
             "discipline": 6,
@@ -239,7 +239,7 @@
                 "0": 3,
                 "1": 5,
                 "2": 4,
-                "expertise": false
+                "3": false
             },
             "institution": 1,
             "discipline": 2,
@@ -420,7 +420,7 @@
                 "0": 4,
                 "1": 2,
                 "2": 2,
-                "expertise": false
+                "3": false
             },
             "institution": 3,
             "discipline": 2,
@@ -436,7 +436,7 @@
                 "0": 5,
                 "1": 5,
                 "2": 2,
-                "expertise": true
+                "3": true
             },
             "institution": 2,
             "discipline": 4,
@@ -452,7 +452,7 @@
                 "0": 1,
                 "1": 5,
                 "2": 5,
-                "expertise": false
+                "3": false
             },
             "institution": 2,
             "discipline": 3,
@@ -468,7 +468,7 @@
                 "0": 4,
                 "1": 3,
                 "2": 2,
-                "expertise": false
+                "3": false
             },
             "institution": 1,
             "discipline": 1,
@@ -484,7 +484,7 @@
                 "0": 4,
                 "1": 5,
                 "2": 4,
-                "expertise": false
+                "3": false
             },
             "institution": 2,
             "discipline": 5,
@@ -500,7 +500,7 @@
                 "0": 1,
                 "1": 4,
                 "2": 1,
-                "expertise": true
+                "3": true
             },
             "institution": 4,
             "discipline": 7,
@@ -648,7 +648,7 @@
                 "0": 4,
                 "1": 5,
                 "2": 5,
-                "expertise": false
+                "3": false
             },
             "institution": 1,
             "discipline": 2,
@@ -664,7 +664,7 @@
                 "0": 5,
                 "1": 1,
                 "2": 1,
-                "expertise": false
+                "3": false
             },
             "institution": 1,
             "discipline": 1,
@@ -680,7 +680,7 @@
                 "0": 3,
                 "1": 5,
                 "2": 2,
-                "expertise": true
+                "3": true
             },
             "institution": 3,
             "discipline": 6,
@@ -696,7 +696,7 @@
                 "0": 1,
                 "1": 4,
                 "2": 3,
-                "expertise": true
+                "3": true
             },
             "institution": 3,
             "discipline": 2,
@@ -712,7 +712,7 @@
                 "0": 3,
                 "1": 3,
                 "2": 1,
-                "expertise": false
+                "3": false
             },
             "institution": 2,
             "discipline": 4,
@@ -728,7 +728,7 @@
                 "0": 1,
                 "1": 3,
                 "2": 2,
-                "expertise": false
+                "3": false
             },
             "institution": 4,
             "discipline": 3,
@@ -744,7 +744,7 @@
                 "0": 1,
                 "1": 4,
                 "2": 4,
-                "expertise": false
+                "3": false
             },
             "institution": 4,
             "discipline": 7,
@@ -760,7 +760,7 @@
                 "0": 5,
                 "1": 5,
                 "2": 2,
-                "expertise": false
+                "3": false
             },
             "institution": 3,
             "discipline": 7,
@@ -776,7 +776,7 @@
                 "0": 5,
                 "1": 1,
                 "2": 2,
-                "expertise": true
+                "3": true
             },
             "institution": 2,
             "discipline": 5,
@@ -792,7 +792,7 @@
                 "0": 5,
                 "1": 1,
                 "2": 5,
-                "expertise": false
+                "3": false
             },
             "institution": 4,
             "discipline": 6,
@@ -808,7 +808,7 @@
                 "0": 1,
                 "1": 1,
                 "2": 3,
-                "expertise": true
+                "3": true
             },
             "institution": 3,
             "discipline": 1,
@@ -824,7 +824,7 @@
                 "0": 4,
                 "1": 5,
                 "2": 1,
-                "expertise": false
+                "3": false
             },
             "institution": 4,
             "discipline": 5,
@@ -840,7 +840,7 @@
                 "0": 4,
                 "1": 1,
                 "2": 3,
-                "expertise": false
+                "3": false
             },
             "institution": 2,
             "discipline": 3,
@@ -856,7 +856,7 @@
                 "0": 4,
                 "1": 3,
                 "2": 3,
-                "expertise": false
+                "3": false
             },
             "institution": 1,
             "discipline": 1,
@@ -872,7 +872,7 @@
                 "0": 1,
                 "1": 1,
                 "2": 5,
-                "expertise": true
+                "3": true
             },
             "institution": 4,
             "discipline": 4,
@@ -939,7 +939,11 @@
         "pk": 71,
         "fields": {
             "survey": 8,
-            "vote": {"0": 5, "1": 4, "expertise": true},
+            "vote": {
+                "0": 5,
+                "1": 4,
+                "2": true
+            },
             "institution": 1,
             "discipline": 1,
             "added": "2026-01-10T09:14:22Z"
@@ -950,7 +954,11 @@
         "pk": 72,
         "fields": {
             "survey": 8,
-            "vote": {"0": 4, "1": 3, "expertise": true},
+            "vote": {
+                "0": 4,
+                "1": 3,
+                "2": true
+            },
             "institution": 2,
             "discipline": 3,
             "added": "2026-01-11T14:32:07Z"
@@ -961,7 +969,11 @@
         "pk": 73,
         "fields": {
             "survey": 8,
-            "vote": {"0": 3, "1": 2, "expertise": false},
+            "vote": {
+                "0": 3,
+                "1": 2,
+                "2": false
+            },
             "institution": 3,
             "discipline": 5,
             "added": "2026-01-14T08:55:41Z"
@@ -972,7 +984,11 @@
         "pk": 74,
         "fields": {
             "survey": 8,
-            "vote": {"0": 5, "1": 5, "expertise": true},
+            "vote": {
+                "0": 5,
+                "1": 5,
+                "2": true
+            },
             "institution": 4,
             "discipline": 2,
             "added": "2026-01-17T19:03:58Z"
@@ -983,7 +999,11 @@
         "pk": 75,
         "fields": {
             "survey": 8,
-            "vote": {"0": 4, "1": 4, "expertise": true},
+            "vote": {
+                "0": 4,
+                "1": 4,
+                "2": true
+            },
             "institution": 1,
             "discipline": 4,
             "added": "2026-01-21T11:28:33Z"
@@ -994,7 +1014,11 @@
         "pk": 76,
         "fields": {
             "survey": 8,
-            "vote": {"0": 2, "1": 1, "expertise": false},
+            "vote": {
+                "0": 2,
+                "1": 1,
+                "2": false
+            },
             "institution": 2,
             "discipline": 6,
             "added": "2026-01-25T16:47:19Z"
@@ -1005,7 +1029,11 @@
         "pk": 77,
         "fields": {
             "survey": 8,
-            "vote": {"0": 5, "1": 3, "expertise": true},
+            "vote": {
+                "0": 5,
+                "1": 3,
+                "2": true
+            },
             "institution": 3,
             "discipline": 7,
             "added": "2026-02-03T10:12:44Z"
@@ -1016,7 +1044,11 @@
         "pk": 78,
         "fields": {
             "survey": 8,
-            "vote": {"0": 3, "1": 4, "expertise": false},
+            "vote": {
+                "0": 3,
+                "1": 4,
+                "2": false
+            },
             "institution": 4,
             "discipline": 1,
             "added": "2026-02-07T07:39:55Z"
@@ -1027,7 +1059,11 @@
         "pk": 79,
         "fields": {
             "survey": 9,
-            "vote": {"0": 4, "1": 3, "expertise": true},
+            "vote": {
+                "0": 4,
+                "1": 3,
+                "2": true
+            },
             "institution": 1,
             "discipline": 2,
             "added": "2025-06-04T13:22:10Z"
@@ -1038,7 +1074,11 @@
         "pk": 80,
         "fields": {
             "survey": 9,
-            "vote": {"0": 5, "1": 4, "expertise": true},
+            "vote": {
+                "0": 5,
+                "1": 4,
+                "2": true
+            },
             "institution": 2,
             "discipline": 1,
             "added": "2025-06-08T09:47:31Z"
@@ -1049,7 +1089,11 @@
         "pk": 81,
         "fields": {
             "survey": 9,
-            "vote": {"0": 2, "1": 2, "expertise": false},
+            "vote": {
+                "0": 2,
+                "1": 2,
+                "2": false
+            },
             "institution": 3,
             "discipline": 4,
             "added": "2025-06-12T17:05:58Z"
@@ -1060,7 +1104,11 @@
         "pk": 82,
         "fields": {
             "survey": 9,
-            "vote": {"0": 3, "1": 1, "expertise": false},
+            "vote": {
+                "0": 3,
+                "1": 1,
+                "2": false
+            },
             "institution": 4,
             "discipline": 6,
             "added": "2025-06-15T08:33:27Z"
@@ -1071,7 +1119,11 @@
         "pk": 83,
         "fields": {
             "survey": 9,
-            "vote": {"0": 5, "1": 5, "expertise": true},
+            "vote": {
+                "0": 5,
+                "1": 5,
+                "2": true
+            },
             "institution": 1,
             "discipline": 5,
             "added": "2025-06-19T14:58:02Z"
@@ -1082,7 +1134,11 @@
         "pk": 84,
         "fields": {
             "survey": 9,
-            "vote": {"0": 4, "1": 4, "expertise": true},
+            "vote": {
+                "0": 4,
+                "1": 4,
+                "2": true
+            },
             "institution": 2,
             "discipline": 3,
             "added": "2025-06-23T11:14:39Z"
@@ -1093,7 +1149,11 @@
         "pk": 85,
         "fields": {
             "survey": 9,
-            "vote": {"0": 1, "1": 2, "expertise": false},
+            "vote": {
+                "0": 1,
+                "1": 2,
+                "2": false
+            },
             "institution": 3,
             "discipline": 7,
             "added": "2025-07-01T06:41:53Z"
@@ -1104,7 +1164,11 @@
         "pk": 86,
         "fields": {
             "survey": 9,
-            "vote": {"0": 3, "1": 3, "expertise": true},
+            "vote": {
+                "0": 3,
+                "1": 3,
+                "2": true
+            },
             "institution": 4,
             "discipline": 2,
             "added": "2025-07-05T15:27:16Z"
@@ -1115,7 +1179,11 @@
         "pk": 87,
         "fields": {
             "survey": 9,
-            "vote": {"0": 5, "1": 4, "expertise": true},
+            "vote": {
+                "0": 5,
+                "1": 4,
+                "2": true
+            },
             "institution": 1,
             "discipline": 1,
             "added": "2025-07-09T10:03:44Z"
@@ -1126,7 +1194,11 @@
         "pk": 88,
         "fields": {
             "survey": 9,
-            "vote": {"0": 4, "1": 5, "expertise": false},
+            "vote": {
+                "0": 4,
+                "1": 5,
+                "2": false
+            },
             "institution": 2,
             "discipline": 6,
             "added": "2025-07-14T18:52:07Z"
@@ -1137,7 +1209,11 @@
         "pk": 89,
         "fields": {
             "survey": 9,
-            "vote": {"0": 2, "1": 3, "expertise": false},
+            "vote": {
+                "0": 2,
+                "1": 3,
+                "2": false
+            },
             "institution": 3,
             "discipline": 4,
             "added": "2025-07-18T08:19:35Z"
@@ -1148,7 +1224,11 @@
         "pk": 90,
         "fields": {
             "survey": 9,
-            "vote": {"0": 3, "1": 2, "expertise": true},
+            "vote": {
+                "0": 3,
+                "1": 2,
+                "2": true
+            },
             "institution": 4,
             "discipline": 5,
             "added": "2025-07-22T13:44:28Z"
@@ -1159,7 +1239,11 @@
         "pk": 91,
         "fields": {
             "survey": 9,
-            "vote": {"0": 5, "1": 5, "expertise": true},
+            "vote": {
+                "0": 5,
+                "1": 5,
+                "2": true
+            },
             "institution": 1,
             "discipline": 3,
             "added": "2025-07-28T07:30:11Z"
@@ -1170,7 +1254,11 @@
         "pk": 92,
         "fields": {
             "survey": 9,
-            "vote": {"0": 4, "1": 3, "expertise": false},
+            "vote": {
+                "0": 4,
+                "1": 3,
+                "2": false
+            },
             "institution": 2,
             "discipline": 7,
             "added": "2025-08-01T16:08:59Z"
@@ -1181,7 +1269,11 @@
         "pk": 93,
         "fields": {
             "survey": 9,
-            "vote": {"0": 1, "1": 1, "expertise": false},
+            "vote": {
+                "0": 1,
+                "1": 1,
+                "2": false
+            },
             "institution": 3,
             "discipline": 1,
             "added": "2025-08-06T09:55:42Z"
