@@ -94,7 +94,10 @@ export default function PollForm({ uniqueId, questions, slots }) {
       // Single-question (LI): submit as a plain integer for backward compatibility
       vote = parseInt(answers[0], 10);
     } else {
-      // Multi-question: dict with numeric string keys for likert, "expertise" for checkbox
+      // Multi-question: numeric string key per slot position for all slot types.
+      // Likert slots use a per-likert counter so existing vote data is unchanged;
+      // checkbox slots now use their overall slot index instead of the former
+      // hardcoded "expertise" key, which broke when templates had multiple checkboxes.
       vote = {};
       let likertIdx = 0;
       slots.forEach((slot, i) => {
@@ -102,7 +105,7 @@ export default function PollForm({ uniqueId, questions, slots }) {
           vote[String(likertIdx)] = parseInt(answers[i], 10);
           likertIdx += 1;
         } else if (slot.type === "checkbox") {
-          vote.expertise = answers[i];
+          vote[String(i)] = answers[i];
         }
       });
     }
