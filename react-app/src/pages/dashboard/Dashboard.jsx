@@ -5,6 +5,7 @@ import DashboardTable from "../../components/DashboardTable";
 import CreateContainer from "../../components/CreateContainer";
 import AddParticipants from "../../components/addparticipants/AddParticipants";
 import PieChart from "../../components/PieChart";
+import TemplateManager from "../../components/TemplateManager";
 import { AuthContext } from "../../components/AuthContext";
 import { SurveyDefinitionsProvider } from "../../components/SurveyDefinitionsContext";
 
@@ -16,6 +17,7 @@ import { SurveyDefinitionsProvider } from "../../components/SurveyDefinitionsCon
 export default function Dashboard() {
   const [showCreateContainer, setShowCreateContainer] = useState(false);
   const [showAddParticipants, setShowAddParticipants] = useState(false);
+  const [showTemplateManager, setShowTemplateManager] = useState(false);
   const [reloadCtr, setReloadCtr] = useState(0);
   const [selectedSurveyId, setSelectedSurveyId] = useState(null);
   const [selectedSurveyQuestion, setSelectedSurveyQuestion] = useState(null);
@@ -33,6 +35,7 @@ export default function Dashboard() {
     if (dashboardRef.current && !dashboardRef.current.contains(event.target)) {
       setShowCreateContainer(false);
       setShowAddParticipants(false);
+      setShowTemplateManager(false);
     }
   };
 
@@ -89,6 +92,21 @@ export default function Dashboard() {
                     <div>Create</div>
                   </button>
                 </div>
+
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowTemplateManager(true);
+                    }}
+                    className="dashboard--button"
+                  >
+                    <div>
+                      <span className="material-symbols-outlined">style</span>
+                    </div>
+                    <div>Templates</div>
+                  </button>
+                </div>
               </div>
             </div>
             <div className="pie-chart">
@@ -99,6 +117,13 @@ export default function Dashboard() {
             </div>
           </div>
           <div className="dashboard--projects">
+            {showTemplateManager && (
+              <TemplateManager
+                onClose={() => {
+                  setShowTemplateManager(false);
+                }}
+              />
+            )}
             {showCreateContainer && (
               <CreateContainer
                 onClose={() => {

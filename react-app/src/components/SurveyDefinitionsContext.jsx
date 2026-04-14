@@ -1,8 +1,15 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { client } from "../Api";
 import { AuthContext } from "./AuthContext";
 
 const SurveyDefinitionsContext = createContext({});
+const SurveyDefinitionsRefreshContext = createContext(() => {});
 
 /**
  * Fetches survey template definitions from /api/survey/templates/ when the
@@ -12,10 +19,16 @@ const SurveyDefinitionsContext = createContext({});
  * Returns an empty dict when the user is not logged in or while loading;
  * consuming components should handle this gracefully (e.g. render null until
  * the dict is populated).
+ *
+ * Also provides a refresh() function via useRefreshSurveyDefinitions() that
+ * forces a re-fetch (e.g. after a template is created or deleted).
  */
 export function SurveyDefinitionsProvider({ children }) {
   const { isAuth } = useContext(AuthContext);
   const [definitions, setDefinitions] = useState({});
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const refresh = useCallback(() => setRefreshKey((k) => k + 1), []);
 
   useEffect(() => {
     if (!isAuth) {
@@ -34,15 +47,21 @@ export function SurveyDefinitionsProvider({ children }) {
       .catch(() => {
         setDefinitions({});
       });
-  }, [isAuth]);
+  }, [isAuth, refreshKey]);
 
   return (
-    <SurveyDefinitionsContext.Provider value={definitions}>
-      {children}
-    </SurveyDefinitionsContext.Provider>
+    <SurveyDefinitionsRefreshContext.Provider value={refresh}>
+      <SurveyDefinitionsContext.Provider value={definitions}>
+        {children}
+      </SurveyDefinitionsContext.Provider>
+    </SurveyDefinitionsRefreshContext.Provider>
   );
 }
 
 export function useSurveyDefinitions() {
   return useContext(SurveyDefinitionsContext);
+}
+
+export function useRefreshSurveyDefinitions() {
+  return useContext(SurveyDefinitionsRefreshContext);
 }
