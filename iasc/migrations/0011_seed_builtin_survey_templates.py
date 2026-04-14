@@ -1,25 +1,64 @@
 """
-Data migration: seed the four builtin SurveyTemplate rows from
-conf/survey_definitions.json.  Slug values match existing Survey.kind values
-(e.g. "LI", "L2E") so that validate_survey_kind() continues to accept them.
-"""
+Data migration: seed the four builtin SurveyTemplate rows.
+Slug values match existing Survey.kind values (e.g. "LI", "L2E") so that
+validate_survey_kind() continues to accept them.
 
-import json
-from pathlib import Path
+Template data is inlined here so this migration has no dependency on
+conf/survey_definitions.json (which is removed in Phase 4 cleanup).
+"""
 
 from django.db import migrations
 
-_DEFS_PATH = (
-    Path(__file__).resolve().parent.parent.parent / "conf" / "survey_definitions.json"
-)
+_BUILTIN_TEMPLATES = {
+    "LI": {
+        "label": "Single Likert",
+        "questions": [
+            {
+                "id": "q0",
+                "type": "likert",
+                "placeholder": "Enter the statement participants will see",
+            }
+        ],
+    },
+    "L2E": {
+        "label": "2 Likert + Checkbox",
+        "questions": [
+            {"id": "q0", "type": "likert", "placeholder": "Enter statement 1"},
+            {"id": "q1", "type": "likert", "placeholder": "Enter statement 2"},
+            {
+                "id": "q2",
+                "type": "checkbox",
+                "placeholder": "Enter checkbox statement (e.g. I have relevant expertise)",
+            },
+        ],
+    },
+    "L3C": {
+        "label": "3 Likert + Checkbox",
+        "questions": [
+            {"id": "q0", "type": "likert", "placeholder": "Enter statement 1"},
+            {"id": "q1", "type": "likert", "placeholder": "Enter statement 2"},
+            {"id": "q2", "type": "likert", "placeholder": "Enter statement 3"},
+            {
+                "id": "q3",
+                "type": "checkbox",
+                "placeholder": "Enter checkbox statement (e.g. I have relevant expertise)",
+            },
+        ],
+    },
+    "LI3": {
+        "label": "3 Likert",
+        "questions": [
+            {"id": "q0", "type": "likert", "placeholder": "Enter statement 1"},
+            {"id": "q1", "type": "likert", "placeholder": "Enter statement 2"},
+            {"id": "q2", "type": "likert", "placeholder": "Enter statement 3"},
+        ],
+    },
+}
 
 
 def seed_templates(apps, schema_editor):
     SurveyTemplate = apps.get_model("iasc", "SurveyTemplate")
-    with open(_DEFS_PATH) as f:
-        defs = json.load(f)
-
-    for kind, definition in defs.items():
+    for kind, definition in _BUILTIN_TEMPLATES.items():
         SurveyTemplate.objects.get_or_create(
             slug=kind,
             defaults={
