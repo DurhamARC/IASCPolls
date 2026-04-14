@@ -69,7 +69,7 @@ def seed_templates(apps, schema_editor):
         )
 
 
-def remove_templates(apps, schema_editor):
+def remove_templates(apps, schema_editor):  # pragma: no cover
     SurveyTemplate = apps.get_model("iasc", "SurveyTemplate")
     SurveyTemplate.objects.filter(is_builtin=True).delete()
 

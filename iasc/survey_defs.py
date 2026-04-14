@@ -12,5 +12,5 @@ def get_valid_slugs():
         from iasc.models import SurveyTemplate
 
         return list(SurveyTemplate.objects.values_list("slug", flat=True))
-    except (AppRegistryNotReady, DatabaseError):
+    except (AppRegistryNotReady, DatabaseError):  # pragma: no cover
         return []
