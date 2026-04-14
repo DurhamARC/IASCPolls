@@ -108,6 +108,7 @@ export default function Poll() {
           </div>
           {!hideTitle && <div className="poll--question">{pollQuestion}</div>}
           <PollForm
+            key={templateSlots.length}
             uniqueId={uniqueId}
             slots={templateSlots}
             questions={surveyQuestions}
