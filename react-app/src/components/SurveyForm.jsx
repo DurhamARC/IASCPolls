@@ -94,10 +94,8 @@ export default function PollForm({ uniqueId, questions, slots }) {
       // Single-question (LI): submit as a plain integer for backward compatibility
       vote = parseInt(answers[0], 10);
     } else {
-      // Multi-question: numeric string key per slot position for all slot types.
-      // Likert slots use a per-likert counter so existing vote data is unchanged;
-      // checkbox slots now use their overall slot index instead of the former
-      // hardcoded "expertise" key, which broke when templates had multiple checkboxes.
+      // Multi-question: likert slots are keyed by a running likert counter;
+      // checkbox slots are keyed by their overall slot position index.
       vote = {};
       let likertIdx = 0;
       slots.forEach((slot, i) => {

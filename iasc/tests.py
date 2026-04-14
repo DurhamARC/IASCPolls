@@ -324,7 +324,7 @@ class ViewsTestCase(HTTPTestCase):
 
                 resp = self.POST(
                     "/api/vote/",
-                    {"unique_id": params["unique_id"][0], "vote": randrange(5)},
+                    {"unique_id": params["unique_id"][0], "vote": randrange(1, 6)},
                     status=200,
                     mimetype=self.mimetypes["json"],
                     contains="success",
@@ -517,7 +517,7 @@ class ViewsTestCase(HTTPTestCase):
 
         def test_12_create_l3c_survey():
             """
-            Test creating an L3C (3 Likert + expertise) survey
+            Test creating an L3C (3 Likert + 1 checkbox) survey
             /survey/create/
             /survey/
             """
@@ -581,7 +581,7 @@ class ViewsTestCase(HTTPTestCase):
             params = parse.parse_qs(parse.urlparse(link_url).query)
             unique_id = params["unique_id"][0]
 
-            vote = {"0": 3, "1": 4, "2": 2, "expertise": True}
+            vote = {"0": 3, "1": 4, "2": 2, "3": True}
 
             resp = self.POST(
                 "/api/vote/",
@@ -596,7 +596,7 @@ class ViewsTestCase(HTTPTestCase):
             result = Result.objects.filter(survey_id=self.l3c_survey_id).get()
             self.assertIsInstance(result.vote, dict)
             self.assertEqual(result.vote["0"], 3)
-            self.assertEqual(result.vote["expertise"], True)
+            self.assertEqual(result.vote["3"], True)
 
             # Verify vote_counts aggregation is nested for L3C
             resp_results = self.GET(
@@ -609,11 +609,11 @@ class ViewsTestCase(HTTPTestCase):
             self.assertIn("0", l3c_result["vote_counts"])
             self.assertIsInstance(l3c_result["vote_counts"]["0"], dict)
             self.assertEqual(l3c_result["vote_counts"]["0"]["3"], 1)
-            self.assertEqual(l3c_result["vote_counts"]["expertise"]["True"], 1)
+            self.assertEqual(l3c_result["vote_counts"]["3"]["True"], 1)
 
         def test_14_create_l2e_survey():
             """
-            Test creating an L2E (2 Likert + expertise) survey
+            Test creating an L2E (2 Likert + 1 checkbox) survey
             /survey/create/
             /survey/
             """
@@ -674,7 +674,7 @@ class ViewsTestCase(HTTPTestCase):
             params = parse.parse_qs(parse.urlparse(link_url).query)
             unique_id = params["unique_id"][0]
 
-            vote = {"0": 2, "1": 4, "expertise": False}
+            vote = {"0": 2, "1": 4, "2": False}
 
             resp = self.POST(
                 "/api/vote/",
@@ -688,7 +688,7 @@ class ViewsTestCase(HTTPTestCase):
             result = Result.objects.filter(survey_id=self.l2e_survey_id).get()
             self.assertIsInstance(result.vote, dict)
             self.assertEqual(result.vote["0"], 2)
-            self.assertEqual(result.vote["expertise"], False)
+            self.assertEqual(result.vote["2"], False)
 
             resp_results = self.GET(
                 "/api/survey/results/",
@@ -700,7 +700,7 @@ class ViewsTestCase(HTTPTestCase):
             self.assertIn("0", l2e_result["vote_counts"])
             self.assertIsInstance(l2e_result["vote_counts"]["0"], dict)
             self.assertEqual(l2e_result["vote_counts"]["0"]["2"], 1)
-            self.assertEqual(l2e_result["vote_counts"]["expertise"]["False"], 1)
+            self.assertEqual(l2e_result["vote_counts"]["2"]["False"], 1)
 
         def test_16_create_li3_survey():
             """
@@ -799,12 +799,12 @@ class ViewsTestCase(HTTPTestCase):
         def test_18_xls_multi_survey_results():
             """
             Regression test: XLS export for multi-question surveys must expand the
-            vote dict into individual columns (vote_0, vote_1, ..., vote_expertise)
+            vote dict into individual columns (vote_0, vote_1, vote_2, ...)
             rather than leaving a single blank 'vote' cell.
             /result/xls/
             """
 
-            # L3C survey: vote = {"0": 3, "1": 4, "2": 2, "expertise": True}
+            # L3C survey: vote = {"0": 3, "1": 4, "2": 2, "3": True}
             resp = self.GET(
                 f"/api/result/xls/?survey={self.l3c_survey_id}",
                 status=200,
@@ -817,16 +817,16 @@ class ViewsTestCase(HTTPTestCase):
             self.assertIn("vote_0", headers)
             self.assertIn("vote_1", headers)
             self.assertIn("vote_2", headers)
-            self.assertIn("vote_expertise", headers)
+            self.assertIn("vote_3", headers)
             self.assertNotIn("vote", headers)
 
             row = dict(zip(headers, data[0]))
             self.assertEqual(row["vote_0"], 3)
             self.assertEqual(row["vote_1"], 4)
             self.assertEqual(row["vote_2"], 2)
-            self.assertEqual(row["vote_expertise"], True)
+            self.assertEqual(row["vote_3"], True)
 
-            # L2E survey: vote = {"0": 2, "1": 4, "expertise": False}
+            # L2E survey: vote = {"0": 2, "1": 4, "2": False}
             resp = self.GET(
                 f"/api/result/xls/?survey={self.l2e_survey_id}",
                 status=200,
@@ -838,13 +838,13 @@ class ViewsTestCase(HTTPTestCase):
 
             self.assertIn("vote_0", headers)
             self.assertIn("vote_1", headers)
-            self.assertIn("vote_expertise", headers)
+            self.assertIn("vote_2", headers)
             self.assertNotIn("vote", headers)
 
             row = dict(zip(headers, data[0]))
             self.assertEqual(row["vote_0"], 2)
             self.assertEqual(row["vote_1"], 4)
-            self.assertEqual(row["vote_expertise"], False)
+            self.assertEqual(row["vote_2"], False)
 
             # LI3 survey: vote = {"0": 5, "1": 3, "2": 1} — no expertise column
             resp = self.GET(
@@ -942,13 +942,13 @@ class DatabaseModelTestCase(TestCase):
             voted=0,
         )
         link = ActiveLink.objects.create(participant=self.participant, survey=survey)
-        vote = {"0": 3, "1": 4, "2": 2, "expertise": True}
+        vote = {"0": 3, "1": 4, "2": 2, "3": True}
         link.vote(vote)
 
         result = Result.objects.get(survey=survey)
         self.assertIsInstance(result.vote, dict)
         self.assertEqual(result.vote["0"], 3)
-        self.assertEqual(result.vote["expertise"], True)
+        self.assertEqual(result.vote["3"], True)
 
         # ActiveLink must be destroyed after voting
         self.assertRaises(ObjectDoesNotExist, ActiveLink.objects.get, survey=survey)
@@ -981,13 +981,13 @@ class DatabaseModelTestCase(TestCase):
             voted=0,
         )
         link = ActiveLink.objects.create(participant=self.participant, survey=survey)
-        vote = {"0": 2, "1": 5, "expertise": False}
+        vote = {"0": 2, "1": 5, "2": False}
         link.vote(vote)
 
         result = Result.objects.get(survey=survey)
         self.assertIsInstance(result.vote, dict)
         self.assertEqual(result.vote["0"], 2)
-        self.assertEqual(result.vote["expertise"], False)
+        self.assertEqual(result.vote["2"], False)
 
         # ActiveLink must be destroyed after voting
         self.assertRaises(ObjectDoesNotExist, ActiveLink.objects.get, survey=survey)
@@ -1090,6 +1090,42 @@ class DatabaseModelTestCase(TestCase):
         link.vote(3)
         resp = self.client.get(f"/api/vote/{uid}/")
         self.assertEqual(resp.status_code, 404)
+
+    def test_vote_validation_rejects_wrong_keys(self):
+        """POST /api/vote/ with unexpected dict keys returns 400 and preserves the token."""
+        survey = Survey.objects.create(
+            question="L3C validation test",
+            questions=["S1", "S2", "S3", "Expertise"],
+            active=True,
+            kind="L3C",
+            expiry=datetime.datetime(2099, 1, 1, 0, 0),
+            participants=1,
+            voted=0,
+        )
+        link = ActiveLink.objects.create(participant=self.participant, survey=survey)
+        # "expertise" key is no longer valid for L3C; the checkbox key is now "3"
+        bad_vote = {"0": 3, "1": 4, "2": 2, "expertise": True}
+        response = self.client.post(
+            "/api/vote/",
+            {"unique_id": str(link.unique_link), "vote": json.dumps(bad_vote)},
+        )
+        self.assertEqual(response.status_code, 400)
+        # Token must survive a rejected vote
+        self.assertTrue(
+            ActiveLink.objects.filter(unique_link=link.unique_link).exists()
+        )
+
+    def test_vote_validation_rejects_out_of_range_likert(self):
+        """POST /api/vote/ with an out-of-range Likert value returns 400 and preserves the token."""
+        link = ActiveLink.objects.get(survey=self.survey)
+        response = self.client.post(
+            "/api/vote/",
+            {"unique_id": str(link.unique_link), "vote": "99"},
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertTrue(
+            ActiveLink.objects.filter(unique_link=link.unique_link).exists()
+        )
 
 
 class SurveyTemplateTestCase(TestCase):

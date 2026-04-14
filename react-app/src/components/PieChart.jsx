@@ -167,8 +167,6 @@ function PieChart({ surveyId, fallbackQuestion }) {
           }
           if (slot.type === "checkbox") {
             // Vote key is the slot's overall position index (String(i)).
-            // Older votes used the hardcoded "expertise" key; those will no
-            // longer render here but the stored data is preserved.
             const cbCounts = voteCounts[String(i)];
             return cbCounts ? (
               <SinglePie

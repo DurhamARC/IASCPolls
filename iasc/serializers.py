@@ -234,7 +234,7 @@ class SurveyResultSerializer(serializers.ModelSerializer):
         counts = {}
         for result in results:
             if isinstance(result.vote, dict):
-                # multi-question vote: {"0": 3, "1": 2, ..., "expertise": true}
+                # multi-question vote: {"0": 3, "1": 2, ..., "3": true}
                 for sub_key, sub_val in result.vote.items():
                     if sub_key not in counts:
                         counts[sub_key] = {}
@@ -300,7 +300,7 @@ class _VoteIntField(_VoteSubkeyBase, serializers.IntegerField):
 
 
 class _VoteBoolField(_VoteSubkeyBase, serializers.BooleanField):
-    """Vote sub-key field for boolean (expertise checkbox) values — rendered as bool in Excel."""
+    """Vote sub-key field for boolean (checkbox) values — rendered as bool in Excel."""
 
     pass
 
@@ -332,7 +332,7 @@ class VoteExpandMixin:
     Mixin for result serializers used in Excel export.
     When instantiated with vote_keys (a list of (key, value) pairs from a sample
     vote dict), replaces the single 'vote' field with individual typed fields:
-    vote_0, vote_1, ..., vote_expertise etc.
+    vote_0, vote_1, vote_2, ... etc.
     """
 
     def __init__(self, *args, vote_keys=None, **kwargs):
