@@ -18,11 +18,8 @@ def get_valid_slugs():
     (e.g. during initial migrate before the SurveyTemplate migration has run).
     """
     try:
-        from django.core.exceptions import AppRegistryNotReady
-        from django.db import DatabaseError
-
         from iasc.models import SurveyTemplate
 
         return list(SurveyTemplate.objects.values_list("slug", flat=True))
-    except (AppRegistryNotReady, DatabaseError):
+    except Exception:
         return VALID_KINDS

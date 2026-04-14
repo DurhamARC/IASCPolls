@@ -16,59 +16,24 @@ def validate_survey_kind(value):
         raise ValidationError(f"Invalid survey kind '{value}'. Valid kinds: {valid}")
 
 
-SLOT_TYPE_LIKERT = "likert"
-SLOT_TYPE_CHECKBOX = "checkbox"
-SLOT_TYPE_CHOICES = [
-    (SLOT_TYPE_LIKERT, "Likert"),
-    (SLOT_TYPE_CHECKBOX, "Checkbox"),
-]
-
-
 class SurveyTemplate(models.Model):
     """
     Database-backed survey template, replacing conf/survey_definitions.json.
     Each template defines a reusable structure (ordered list of question slots)
-    that surveys are created from.  Slots are stored in SurveyTemplateSlot.
+    that surveys are created from.
     """
 
     label = models.CharField(max_length=255)
     slug = models.SlugField(max_length=32, unique=True, db_index=True)
+    slots = models.JSONField(
+        help_text="Ordered list of question slots: [{id, type, placeholder}]"
+    )
     is_builtin = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.label} ({self.slug})"
-
-
-class SurveyTemplateSlot(models.Model):
-    """
-    A single question slot within a SurveyTemplate.
-    Slots are ordered by their `order` field and identified by `slot_id`
-    (e.g. "q0", "q1") which becomes the key in the vote payload.
-    """
-
-    template = models.ForeignKey(
-        "SurveyTemplate", on_delete=models.CASCADE, related_name="slot_set"
-    )
-    order = models.PositiveIntegerField()
-    slot_id = models.CharField(max_length=32, help_text='Vote key, e.g. "q0"')
-    type = models.CharField(max_length=32, choices=SLOT_TYPE_CHOICES)
-    placeholder = models.TextField(blank=True, default="")
-
-    class Meta:
-        ordering = ["order"]
-        constraints = [
-            models.UniqueConstraint(
-                fields=["template", "slot_id"], name="unique_slot_id_per_template"
-            ),
-            models.UniqueConstraint(
-                fields=["template", "order"], name="unique_slot_order_per_template"
-            ),
-        ]
-
-    def __str__(self):
-        return f"{self.template.slug}[{self.order}] {self.slot_id} ({self.type})"
 
 
 class Institution(models.Model):

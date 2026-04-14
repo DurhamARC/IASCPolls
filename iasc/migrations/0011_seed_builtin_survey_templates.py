@@ -1,7 +1,8 @@
 """
 Data migration: seed the four builtin SurveyTemplate rows from
-conf/survey_definitions.json.  Slug values match existing Survey.kind values
-(e.g. "LI", "L2E") so that validate_survey_kind() continues to accept them.
+conf/survey_definitions.json.  Slugs are lowercased kind codes so that
+existing Survey.kind values (e.g. "LI", "L2E") continue to validate —
+validate_survey_kind() now does a case-insensitive lookup.
 """
 
 import json

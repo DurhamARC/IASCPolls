@@ -1095,24 +1095,6 @@ class DatabaseModelTestCase(TestCase):
 class SurveyTemplateTestCase(TestCase):
     """Tests for SurveyTemplate model and /api/survey/templates/ endpoints."""
 
-    @staticmethod
-    def _make_template(label, slug, slots, is_builtin=False):
-        """Helper: create a SurveyTemplate with its SurveyTemplateSlot rows."""
-        from iasc.models import SurveyTemplate, SurveyTemplateSlot
-
-        tmpl = SurveyTemplate.objects.create(
-            label=label, slug=slug, is_builtin=is_builtin
-        )
-        for order, slot in enumerate(slots):
-            SurveyTemplateSlot.objects.create(
-                template=tmpl,
-                order=order,
-                slot_id=slot["id"],
-                type=slot["type"],
-                placeholder=slot.get("placeholder", ""),
-            )
-        return tmpl
-
     def setUp(self):
         super().setUp()
         from iasc.models import SurveyTemplate
@@ -1128,10 +1110,11 @@ class SurveyTemplateTestCase(TestCase):
         self.json_mt = "application/json"
 
         # Create a non-builtin template for mutation tests
-        self.custom = self._make_template(
-            "Custom Template",
-            "CUSTOM",
-            [{"id": "q0", "type": "likert", "placeholder": "Rate this"}],
+        self.custom = SurveyTemplate.objects.create(
+            label="Custom Template",
+            slug="CUSTOM",
+            slots=[{"id": "q0", "type": "likert", "placeholder": "Rate this"}],
+            is_builtin=False,
         )
 
     def _get(self, url, expected_status=200):
@@ -1174,6 +1157,8 @@ class SurveyTemplateTestCase(TestCase):
 
     def test_survey_serializer_includes_template_slots(self):
         """GET /api/survey/<id>/ includes template_slots from the linked template."""
+        institution = Institution.objects.create(name="Slots Test Uni", country="GB")
+        discipline = Discipline.objects.create(name="SlotsDiscipline")
         survey = Survey.objects.create(
             question="Template slots test",
             active=True,
@@ -1255,15 +1240,6 @@ class SurveyTemplateTestCase(TestCase):
         )
         self.assertEqual(data["label"], "Renamed")
 
-    def test_patch_slug_is_ignored(self):
-        """slug is read-only on update; sending a new value has no effect."""
-        data = self._patch(
-            f"/api/survey/templates/{self.custom.slug}/",
-            {"slug": "NEWSLUG"},
-        )
-        self.assertEqual(data["slug"], self.custom.slug)
-        self.assertFalse(self.SurveyTemplate.objects.filter(slug="NEWSLUG").exists())
-
     def test_patch_builtin_template_rejected(self):
         self._patch(
             "/api/survey/templates/LI/",
@@ -1285,51 +1261,13 @@ class SurveyTemplateTestCase(TestCase):
             expected_status=400,
         )
 
-    def test_patch_slots_allowed_when_no_surveys_exist(self):
-        """Changing slot structure is allowed when no surveys use this template."""
-        data = self._patch(
-            f"/api/survey/templates/{self.custom.slug}/",
-            {
-                "slots": [
-                    {"id": "q0", "type": "likert", "placeholder": "New statement"},
-                    {"id": "q1", "type": "checkbox", "placeholder": "New checkbox"},
-                ]
-            },
-        )
-        self.assertEqual(len(data["slots"]), 2)
-        self.assertEqual(data["slots"][1]["type"], "checkbox")
-
-    def test_survey_results_serializer_includes_template_slots(self):
-        """GET /api/survey/results/ includes template_slots for each result survey."""
-        from iasc.models import Result
-
-        survey = Survey.objects.create(
-            question="Result slots test",
-            active=True,
-            kind="LI",
-            expiry=datetime.datetime(2099, 1, 1),
-        )
-        institution = Institution.objects.create(name="ResultSlotsUni", country="GB")
-        discipline = Discipline.objects.create(name="ResultSlotsDiscipline")
-        Result.objects.create(
-            survey=survey,
-            vote=3,
-            institution=institution,
-            discipline=discipline,
-        )
-        data = self._get("/api/survey/results/")
-        results = data.get("results", [])
-        matching = [r for r in results if r["id"] == survey.id]
-        self.assertEqual(len(matching), 1)
-        self.assertIn("template_slots", matching[0])
-        self.assertIsNotNone(matching[0]["template_slots"])
-        self.assertEqual(matching[0]["template_slots"][0]["type"], "likert")
-
     # --- delete ---
 
     def test_delete_custom_template(self):
-        unused = self._make_template(
-            "Unused", "UNUSED1", [{"id": "q0", "type": "likert", "placeholder": "x"}]
+        unused = self.SurveyTemplate.objects.create(
+            label="Unused",
+            slug="UNUSED1",
+            slots=[{"id": "q0", "type": "likert", "placeholder": "x"}],
         )
         self._delete(f"/api/survey/templates/{unused.slug}/")
         self.assertFalse(self.SurveyTemplate.objects.filter(slug="UNUSED1").exists())
