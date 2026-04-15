@@ -1,92 +1,92 @@
 [
-    {
-        "model": "iasc.survey",
-        "pk": 1,
-        "fields": {
-            "question": "Machine learning models have improved significantly in the last 5 years.",
-            "questions": null,
-            "active": true,
-            "kind": "LI",
-            "hide_title": false,
-            "expiry": "2026-11-30T23:59:59Z",
-            "participants": 15,
-            "voted": 5
-        }
-    },
-    {
-        "model": "iasc.survey",
-        "pk": 3,
-        "fields": {
-            "question": "Do you believe peer review is effective?",
-            "questions": null,
-            "active": false,
-            "kind": "LI",
-            "hide_title": false,
-            "expiry": "2025-09-30T23:59:59Z",
-            "participants": 15,
-            "voted": 15
-        }
-    },
-    {
-        "model": "iasc.survey",
-        "pk": 5,
-        "fields": {
-            "question": "I frequently use AI assistants to write code.",
-            "questions": null,
-            "active": true,
-            "kind": "LI",
-            "hide_title": false,
-            "expiry": "2026-08-31T23:59:59Z",
-            "participants": 15,
-            "voted": 12
-        }
-    },
-    {
-        "model": "iasc.survey",
-        "pk": 7,
-        "fields": {
-            "question": "Interdisciplinary research is well-supported by my institution.",
-            "questions": null,
-            "active": true,
-            "kind": "LI",
-            "hide_title": false,
-            "expiry": "2027-01-31T23:59:59Z",
-            "participants": 15,
-            "voted": 5
-        }
-    },
-    {
-        "model": "iasc.survey",
-        "pk": 8,
-        "fields": {
-            "question": "Rate your views on research software and state your expertise.",
-            "questions": [
-                "Research software should be treated as a first-class research output",
-                "Current training for research software development is adequate"
-            ],
-            "active": true,
-            "kind": "L2E",
-            "hide_title": true,
-            "expiry": "2027-03-31T23:59:59Z",
-            "participants": 15,
-            "voted": 8
-        }
-    },
-    {
-        "model": "iasc.survey",
-        "pk": 9,
-        "fields": {
-            "question": "Rate your views on data management and state your expertise.",
-            "questions": [
-                "FAIR data principles are well understood in my field",
-                "Institutional data management support is sufficient"
-            ],
-            "active": false,
-            "kind": "L2E",
-            "hide_title": true,
-            "expiry": "2025-12-31T23:59:59Z",
-            "participants": 15,
-            "voted": 15
-        }
+  {
+    "model": "iasc.survey",
+    "pk": 1,
+    "fields": {
+      "question": "Machine learning models have improved significantly in the last 5 years.",
+      "questions": null,
+      "active": true,
+      "kind": "LI",
+      "hide_title": false,
+      "expiry": "2026-11-30T23:59:59Z",
+      "participants": 15,
+      "voted": 5
     }
+  },
+  {
+    "model": "iasc.survey",
+    "pk": 2,
+    "fields": {
+      "question": "Do you believe peer review is effective?",
+      "questions": null,
+      "active": false,
+      "kind": "LI",
+      "hide_title": false,
+      "expiry": "2025-09-30T23:59:59Z",
+      "participants": 15,
+      "voted": 15
+    }
+  },
+  {
+    "model": "iasc.survey",
+    "pk": 3,
+    "fields": {
+      "question": "I frequently use AI assistants to write code.",
+      "questions": null,
+      "active": true,
+      "kind": "LI",
+      "hide_title": false,
+      "expiry": "2026-08-31T23:59:59Z",
+      "participants": 15,
+      "voted": 12
+    }
+  },
+  {
+    "model": "iasc.survey",
+    "pk": 4,
+    "fields": {
+      "question": "Interdisciplinary research is well-supported by my institution.",
+      "questions": null,
+      "active": true,
+      "kind": "LI",
+      "hide_title": false,
+      "expiry": "2027-01-31T23:59:59Z",
+      "participants": 15,
+      "voted": 5
+    }
+  },
+  {
+    "model": "iasc.survey",
+    "pk": 5,
+    "fields": {
+      "question": "Rate your views on research software and state your expertise.",
+      "questions": [
+        "Research software should be treated as a first-class research output",
+        "Current training for research software development is adequate"
+      ],
+      "active": true,
+      "kind": "L2E",
+      "hide_title": true,
+      "expiry": "2027-03-31T23:59:59Z",
+      "participants": 15,
+      "voted": 8
+    }
+  },
+  {
+    "model": "iasc.survey",
+    "pk": 6,
+    "fields": {
+      "question": "Rate your views on data management and state your expertise.",
+      "questions": [
+        "FAIR data principles are well understood in my field",
+        "Institutional data management support is sufficient"
+      ],
+      "active": false,
+      "kind": "L2E",
+      "hide_title": true,
+      "expiry": "2025-12-31T23:59:59Z",
+      "participants": 15,
+      "voted": 15
+    }
+  }
 ]
