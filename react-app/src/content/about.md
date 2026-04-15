@@ -11,8 +11,12 @@ Following a successful pilot phase in 2022–23 (involving 30 institutions), the
 ### COVID-19 proof-of-concept pilot study (2023)
 - Our first pilot study established a hub-and-spoke network across 30 universities in 12 countries, coordinated from Durham University. This work was [published in PLOS ONE](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0313541).
 
-### Astrobiology surveys (2024)
+### Extraterrestrial life surveys (2024)
 - The second pilot applied a refined methodology to the global astrobiology community, alongside a comparison group of non-astrobiologists. Three statements probed views on the likely existence of basic, complex, and intelligent extraterrestrial life. This work was [published in Nature Astronomy](https://www.nature.com/articles/s41550-024-02451-0).
+
+### Possible extraterrestrial life discovery surveys (2025)
+- Following two major 2025 announcements of possible extraterrestrial life - on exoplanet K2-18b in April and in the Cheyava Falls rock on Mars in September – we surveyed the global astrobiology community to capture the distribution of expert opinion, and to draw a comparision between the two cases. This work is forthcoming in Nature Astronomy.
+
 
 ## The 2024-27 C-SCOPE Network
 
