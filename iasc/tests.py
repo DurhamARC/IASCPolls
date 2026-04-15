@@ -324,7 +324,7 @@ class ViewsTestCase(HTTPTestCase):
 
                 resp = self.POST(
                     "/api/vote/",
-                    {"unique_id": params["unique_id"][0], "vote": randrange(5)},
+                    {"unique_id": params["unique_id"][0], "vote": randrange(1, 6)},
                     status=200,
                     mimetype=self.mimetypes["json"],
                     contains="success",
@@ -515,105 +515,9 @@ class ViewsTestCase(HTTPTestCase):
             self.assertEqual(Survey.objects.count(), 2)
             self.assertEqual(ActiveLink.objects.count(), 1)
 
-        def test_12_create_l3c_survey():
-            """
-            Test creating an L3C (3 Likert + expertise) survey
-            /survey/create/
-            /survey/
-            """
-            import json
-
-            questions = [
-                "Statement one for L3C survey",
-                "Statement two for L3C survey",
-                "Statement three for L3C survey",
-                "I have relevant expertise in L3C",
-            ]
-
-            resp = self.POST(
-                "/api/survey/create/",
-                {
-                    "question": "L3C parent question",
-                    "questions": json.dumps(questions),
-                    "expiry": "2030-01-01T00:00",
-                    "active": "True",
-                    "kind": "L3C",
-                    "create_active_links": "True",
-                },
-                mimetype=self.mimetypes["json"],
-            )
-
-            self.assertEqual(resp["status"], "success")
-            survey = Survey.objects.filter(kind="L3C").get()
-            self.assertEqual(survey.kind, "L3C")
-            self.assertEqual(survey.questions, questions)
-
-            # Verify questions are returned by the survey list endpoint
-            resp_survey = self.GET(
-                f"/api/survey/{survey.id}/",
-                status=200,
-                mimetype=self.mimetypes["json"],
-                startswith=b"{",
-            )
-            self.assertEqual(resp_survey["kind"], "L3C")
-            self.assertEqual(resp_survey["questions"], questions)
-
-            self.l3c_survey_id = survey.id
-
-        def test_13_vote_l3c():
-            """
-            Test submitting a dict vote for an L3C survey, and verify vote_counts aggregation
-            /vote/
-            /survey/results/
-            """
-            import json
-
-            # Get a voting link for the L3C survey
-            resp_links = self.GET(
-                f"/api/links/?survey={self.l3c_survey_id}",
-                status=200,
-                mimetype=self.mimetypes["json"],
-                startswith=b"{",
-            )
-            self.assertGreater(resp_links["count"], 0)
-
-            link_url = resp_links["results"][0]["hyperlink"]
-            params = parse.parse_qs(parse.urlparse(link_url).query)
-            unique_id = params["unique_id"][0]
-
-            vote = {"0": 3, "1": 4, "2": 2, "expertise": True}
-
-            resp = self.POST(
-                "/api/vote/",
-                {"unique_id": unique_id, "vote": json.dumps(vote)},
-                status=200,
-                mimetype=self.mimetypes["json"],
-                contains="success",
-            )
-            self.assertEqual(resp["status"], "success")
-
-            # Verify the result was stored as a dict
-            result = Result.objects.filter(survey_id=self.l3c_survey_id).get()
-            self.assertIsInstance(result.vote, dict)
-            self.assertEqual(result.vote["0"], 3)
-            self.assertEqual(result.vote["expertise"], True)
-
-            # Verify vote_counts aggregation is nested for L3C
-            resp_results = self.GET(
-                "/api/survey/results/",
-                status=200,
-                mimetype=self.mimetypes["json"],
-                startswith=b"{",
-            )
-            l3c_result = next(r for r in resp_results["results"] if r["kind"] == "L3C")
-            self.assertIn("0", l3c_result["vote_counts"])
-            self.assertIsInstance(l3c_result["vote_counts"]["0"], dict)
-            self.assertEqual(l3c_result["vote_counts"]["0"]["3"], 1)
-            self.assertEqual(l3c_result["vote_counts"]["expertise"]["True"], 1)
-
         def test_14_create_l2e_survey():
             """
-            Test creating an L2E (2 Likert + expertise) survey
+            Test creating an L2E (2 Likert + 1 checkbox) survey
             /survey/create/
             /survey/
             """
@@ -674,7 +578,7 @@ class ViewsTestCase(HTTPTestCase):
             params = parse.parse_qs(parse.urlparse(link_url).query)
             unique_id = params["unique_id"][0]
 
-            vote = {"0": 2, "1": 4, "expertise": False}
+            vote = {"0": 2, "1": 4, "2": False}
 
             resp = self.POST(
                 "/api/vote/",
@@ -688,7 +592,7 @@ class ViewsTestCase(HTTPTestCase):
             result = Result.objects.filter(survey_id=self.l2e_survey_id).get()
             self.assertIsInstance(result.vote, dict)
             self.assertEqual(result.vote["0"], 2)
-            self.assertEqual(result.vote["expertise"], False)
+            self.assertEqual(result.vote["2"], False)
 
             resp_results = self.GET(
                 "/api/survey/results/",
@@ -700,7 +604,7 @@ class ViewsTestCase(HTTPTestCase):
             self.assertIn("0", l2e_result["vote_counts"])
             self.assertIsInstance(l2e_result["vote_counts"]["0"], dict)
             self.assertEqual(l2e_result["vote_counts"]["0"]["2"], 1)
-            self.assertEqual(l2e_result["vote_counts"]["expertise"]["False"], 1)
+            self.assertEqual(l2e_result["vote_counts"]["2"]["False"], 1)
 
         def test_16_create_li3_survey():
             """
@@ -799,34 +703,12 @@ class ViewsTestCase(HTTPTestCase):
         def test_18_xls_multi_survey_results():
             """
             Regression test: XLS export for multi-question surveys must expand the
-            vote dict into individual columns (vote_0, vote_1, ..., vote_expertise)
+            vote dict into individual columns (vote_0, vote_1, vote_2, ...)
             rather than leaving a single blank 'vote' cell.
             /result/xls/
             """
 
-            # L3C survey: vote = {"0": 3, "1": 4, "2": 2, "expertise": True}
-            resp = self.GET(
-                f"/api/result/xls/?survey={self.l3c_survey_id}",
-                status=200,
-                mimetype=self.mimetypes["xlsx"],
-                startswith=b"PK",
-            )
-            data = self.helper_get_xls_data(resp.content)
-            headers = data.pop(0)
-
-            self.assertIn("vote_0", headers)
-            self.assertIn("vote_1", headers)
-            self.assertIn("vote_2", headers)
-            self.assertIn("vote_expertise", headers)
-            self.assertNotIn("vote", headers)
-
-            row = dict(zip(headers, data[0]))
-            self.assertEqual(row["vote_0"], 3)
-            self.assertEqual(row["vote_1"], 4)
-            self.assertEqual(row["vote_2"], 2)
-            self.assertEqual(row["vote_expertise"], True)
-
-            # L2E survey: vote = {"0": 2, "1": 4, "expertise": False}
+            # L2E survey: vote = {"0": 2, "1": 4, "2": False}
             resp = self.GET(
                 f"/api/result/xls/?survey={self.l2e_survey_id}",
                 status=200,
@@ -838,13 +720,13 @@ class ViewsTestCase(HTTPTestCase):
 
             self.assertIn("vote_0", headers)
             self.assertIn("vote_1", headers)
-            self.assertIn("vote_expertise", headers)
+            self.assertIn("vote_2", headers)
             self.assertNotIn("vote", headers)
 
             row = dict(zip(headers, data[0]))
             self.assertEqual(row["vote_0"], 2)
             self.assertEqual(row["vote_1"], 4)
-            self.assertEqual(row["vote_expertise"], False)
+            self.assertEqual(row["vote_2"], False)
 
             # LI3 survey: vote = {"0": 5, "1": 3, "2": 1} — no expertise column
             resp = self.GET(
@@ -914,45 +796,6 @@ class DatabaseModelTestCase(TestCase):
         # Check that we raise ObjectDoesNotExist looking up the uid:
         self.assertRaises(ObjectDoesNotExist, ActiveLink.objects.get, unique_link=uid)
 
-    def test_l3c_survey_creation(self):
-        """L3C survey stores questions list and correct kind."""
-        questions = ["Statement A", "Statement B", "Statement C"]
-        survey = Survey.objects.create(
-            question="L3C parent",
-            questions=questions,
-            active=True,
-            kind="L3C",
-            expiry=datetime.datetime(2099, 1, 1, 0, 0),
-            participants=1,
-            voted=0,
-        )
-        saved = Survey.objects.get(pk=survey.pk)
-        self.assertEqual(saved.kind, "L3C")
-        self.assertEqual(saved.questions, questions)
-
-    def test_l3c_vote_stored_as_dict(self):
-        """Voting on an L3C survey stores a dict in Result.vote."""
-        survey = Survey.objects.create(
-            question="L3C vote test",
-            questions=["S1", "S2", "S3"],
-            active=True,
-            kind="L3C",
-            expiry=datetime.datetime(2099, 1, 1, 0, 0),
-            participants=1,
-            voted=0,
-        )
-        link = ActiveLink.objects.create(participant=self.participant, survey=survey)
-        vote = {"0": 3, "1": 4, "2": 2, "expertise": True}
-        link.vote(vote)
-
-        result = Result.objects.get(survey=survey)
-        self.assertIsInstance(result.vote, dict)
-        self.assertEqual(result.vote["0"], 3)
-        self.assertEqual(result.vote["expertise"], True)
-
-        # ActiveLink must be destroyed after voting
-        self.assertRaises(ObjectDoesNotExist, ActiveLink.objects.get, survey=survey)
-
     def test_l2e_survey_creation(self):
         """L2E survey stores questions list and correct kind."""
         questions = ["Statement A", "Statement B"]
@@ -981,13 +824,13 @@ class DatabaseModelTestCase(TestCase):
             voted=0,
         )
         link = ActiveLink.objects.create(participant=self.participant, survey=survey)
-        vote = {"0": 2, "1": 5, "expertise": False}
+        vote = {"0": 2, "1": 5, "2": False}
         link.vote(vote)
 
         result = Result.objects.get(survey=survey)
         self.assertIsInstance(result.vote, dict)
         self.assertEqual(result.vote["0"], 2)
-        self.assertEqual(result.vote["expertise"], False)
+        self.assertEqual(result.vote["2"], False)
 
         # ActiveLink must be destroyed after voting
         self.assertRaises(ObjectDoesNotExist, ActiveLink.objects.get, survey=survey)
@@ -1091,6 +934,89 @@ class DatabaseModelTestCase(TestCase):
         resp = self.client.get(f"/api/vote/{uid}/")
         self.assertEqual(resp.status_code, 404)
 
+    def _l2e_link(self):
+        """Create a fresh L2E survey and return an ActiveLink for it."""
+        survey = Survey.objects.create(
+            question="L2E validation test",
+            questions=["S1", "S2", "Expertise"],
+            active=True,
+            kind="L2E",
+            expiry=datetime.datetime(2099, 1, 1, 0, 0),
+            participants=1,
+            voted=0,
+        )
+        return ActiveLink.objects.create(participant=self.participant, survey=survey)
+
+    def test_vote_validation_rejects_wrong_keys(self):
+        """POST /api/vote/ with unexpected dict keys returns 400 and preserves the token."""
+        link = self._l2e_link()
+        # "expertise" key is not valid for L2E; the checkbox slot key is "2"
+        bad_vote = {"0": 3, "1": 4, "expertise": True}
+        response = self.client.post(
+            "/api/vote/",
+            {"unique_id": str(link.unique_link), "vote": json.dumps(bad_vote)},
+        )
+        self.assertEqual(response.status_code, 400)
+        # Token must survive a rejected vote
+        self.assertTrue(
+            ActiveLink.objects.filter(unique_link=link.unique_link).exists()
+        )
+
+    def test_vote_validation_rejects_out_of_range_likert_in_dict(self):
+        """POST /api/vote/ with an out-of-range Likert value inside a dict vote returns 400."""
+        link = self._l2e_link()
+        bad_vote = {"0": 99, "1": 4, "2": True}  # 99 is outside 1–5
+        response = self.client.post(
+            "/api/vote/",
+            {"unique_id": str(link.unique_link), "vote": json.dumps(bad_vote)},
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertTrue(
+            ActiveLink.objects.filter(unique_link=link.unique_link).exists()
+        )
+
+    def test_vote_validation_rejects_wrong_checkbox_type(self):
+        """POST /api/vote/ with an integer where a boolean is expected returns 400."""
+        link = self._l2e_link()
+        bad_vote = {"0": 3, "1": 4, "2": 1}  # 1 is int, not bool
+        response = self.client.post(
+            "/api/vote/",
+            {"unique_id": str(link.unique_link), "vote": json.dumps(bad_vote)},
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertTrue(
+            ActiveLink.objects.filter(unique_link=link.unique_link).exists()
+        )
+
+    def test_vote_validation_accepts_valid_dict_vote(self):
+        """POST /api/vote/ with a correctly-structured dict vote returns 200 and stores the result."""
+        link = self._l2e_link()
+        valid_vote = {"0": 3, "1": 4, "2": True}
+        response = self.client.post(
+            "/api/vote/",
+            {"unique_id": str(link.unique_link), "vote": json.dumps(valid_vote)},
+        )
+        self.assertEqual(response.status_code, 200)
+        result = Result.objects.get(survey=link.survey)
+        self.assertEqual(result.vote["0"], 3)
+        self.assertEqual(result.vote["2"], True)
+        self.assertIsInstance(result.vote["2"], bool)
+        self.assertFalse(
+            ActiveLink.objects.filter(unique_link=link.unique_link).exists()
+        )
+
+    def test_vote_validation_rejects_out_of_range_likert(self):
+        """POST /api/vote/ with an out-of-range Likert value returns 400 and preserves the token."""
+        link = ActiveLink.objects.get(survey=self.survey)
+        response = self.client.post(
+            "/api/vote/",
+            {"unique_id": str(link.unique_link), "vote": "99"},
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertTrue(
+            ActiveLink.objects.filter(unique_link=link.unique_link).exists()
+        )
+
 
 class SurveyTemplateTestCase(TestCase):
     """Tests for SurveyTemplate model and /api/survey/templates/ endpoints."""
@@ -1157,13 +1083,13 @@ class SurveyTemplateTestCase(TestCase):
     # --- list / retrieve ---
 
     def test_list_returns_seeded_builtins(self):
-        """The 4 builtin templates are returned by the list endpoint."""
+        """The 3 builtin templates are returned by the list endpoint."""
         data = self._get("/api/survey/templates/")
         slugs = {t["slug"] for t in data}
         self.assertIn("LI", slugs)
         self.assertIn("L2E", slugs)
-        self.assertIn("L3C", slugs)
         self.assertIn("LI3", slugs)
+        self.assertNotIn("L3C", slugs)
 
     def test_retrieve_by_slug(self):
         data = self._get("/api/survey/templates/LI/")

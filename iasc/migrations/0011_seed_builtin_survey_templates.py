@@ -32,19 +32,6 @@ _BUILTIN_TEMPLATES = {
             },
         ],
     },
-    "L3C": {
-        "label": "3 Likert + Checkbox",
-        "questions": [
-            {"id": "q0", "type": "likert", "placeholder": "Enter statement 1"},
-            {"id": "q1", "type": "likert", "placeholder": "Enter statement 2"},
-            {"id": "q2", "type": "likert", "placeholder": "Enter statement 3"},
-            {
-                "id": "q3",
-                "type": "checkbox",
-                "placeholder": "Enter checkbox statement (e.g. I have relevant expertise)",
-            },
-        ],
-    },
     "LI3": {
         "label": "3 Likert",
         "questions": [

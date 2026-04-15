@@ -171,7 +171,7 @@ discipline=2
 # Survey Templates
 Session-authorization protected route. ⚠️
 
-Survey templates define the structure of a survey: an ordered list of question slots, each with a type (`likert` or `checkbox`) and placeholder text. The four built-in templates (`LI`, `L2E`, `L3C`, `LI3`) cannot be modified or deleted. Custom templates can be created, updated, and deleted provided no surveys have been created from them.
+Survey templates define the structure of a survey: an ordered list of question slots, each with a type (`likert` or `checkbox`) and placeholder text. The three built-in templates (`LI`, `L2E`, `LI3`) cannot be modified or deleted. Custom templates can be created, updated, and deleted provided no surveys have been created from them.
 
 Templates are looked up by their `slug` in all detail, update, and delete routes.
 

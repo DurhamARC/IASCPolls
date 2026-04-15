@@ -150,7 +150,7 @@ function PieChart({ surveyId, fallbackQuestion }) {
         }}
       >
         <p style={{ fontWeight: "bold", marginBottom: "1rem" }}>{title}</p>
-        {slots.map((slot) => {
+        {slots.map((slot, i) => {
           if (slot.type === "likert") {
             const key = String(likertIdx);
             const slotTitle =
@@ -166,11 +166,13 @@ function PieChart({ surveyId, fallbackQuestion }) {
             ) : null;
           }
           if (slot.type === "checkbox") {
-            return voteCounts.expertise ? (
+            // Vote key is the slot's overall position index (String(i)).
+            const cbCounts = voteCounts[String(i)];
+            return cbCounts ? (
               <SinglePie
                 key={slot.id}
-                title={slot.placeholder}
-                chartData={buildCheckboxChartData(voteCounts.expertise)}
+                title={dbStatements[i] || slot.placeholder}
+                chartData={buildCheckboxChartData(cbCounts)}
               />
             ) : null;
           }

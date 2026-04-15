@@ -76,7 +76,7 @@ export default function PollForm({ uniqueId, questions, slots }) {
 
   // Map each slot to its display text: all slots pull from the DB questions array
   const statements = slots.map((slot, i) => {
-    if (questions && questions[i] != null) {
+    if (questions && questions[i]) {
       return questions[i];
     }
     return slot.placeholder ?? slot.label ?? "";
@@ -94,7 +94,8 @@ export default function PollForm({ uniqueId, questions, slots }) {
       // Single-question (LI): submit as a plain integer for backward compatibility
       vote = parseInt(answers[0], 10);
     } else {
-      // Multi-question: dict with numeric string keys for likert, "expertise" for checkbox
+      // Multi-question: likert slots are keyed by a running likert counter;
+      // checkbox slots are keyed by their overall slot position index.
       vote = {};
       let likertIdx = 0;
       slots.forEach((slot, i) => {
@@ -102,7 +103,7 @@ export default function PollForm({ uniqueId, questions, slots }) {
           vote[String(likertIdx)] = parseInt(answers[i], 10);
           likertIdx += 1;
         } else if (slot.type === "checkbox") {
-          vote.expertise = answers[i];
+          vote[String(i)] = answers[i];
         }
       });
     }
