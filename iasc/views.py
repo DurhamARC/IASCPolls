@@ -331,7 +331,14 @@ class SubmitVoteView(ViewSet):
                     vote = int(raw_vote)
             else:
                 vote = raw_vote
-            template = SurveyTemplate.objects.get(slug=link.survey.kind)
+            try:
+                template = SurveyTemplate.objects.get(slug=link.survey.kind)
+            except SurveyTemplate.DoesNotExist:
+                # Should not happen: template deletion is blocked while surveys
+                # reference it, but guard against inconsistent state.
+                raise ValidationError(
+                    f"Survey template '{link.survey.kind}' not found."
+                )
             slots = list(template.slot_set.order_by("order"))
             _validate_vote(vote, slots)
             link.vote(vote)
