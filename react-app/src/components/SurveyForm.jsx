@@ -76,7 +76,7 @@ export default function PollForm({ uniqueId, questions, slots }) {
 
   // Map each slot to its display text: all slots pull from the DB questions array
   const statements = slots.map((slot, i) => {
-    if (questions && questions[i] != null) {
+    if (questions && questions[i]) {
       return questions[i];
     }
     return slot.placeholder ?? slot.label ?? "";

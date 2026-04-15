@@ -48,7 +48,8 @@ function CreateForm({
   }, [definitions]);
 
   const slots = definitions[kind]?.questions ?? [];
-  const multi = slots.length > 1;
+  const isSingleLikert = slots.length === 1 && slots[0]?.type === "likert";
+  const multi = !isSingleLikert;
 
   const handleQuestionChange = (index, value) => {
     setQuestionsByKind((prev) => {
