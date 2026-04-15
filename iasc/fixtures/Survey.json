@@ -15,24 +15,6 @@
     },
     {
         "model": "iasc.survey",
-        "pk": 2,
-        "fields": {
-            "question": "Rate your agreement on the impact of open science and state your expertise.",
-            "questions": [
-                "Data sharing improves research quality",
-                "Open access publishing is essential",
-                "Preprints accelerate science"
-            ],
-            "active": true,
-            "kind": "L3C",
-            "hide_title": true,
-            "expiry": "2026-10-31T23:59:59Z",
-            "participants": 15,
-            "voted": 12
-        }
-    },
-    {
-        "model": "iasc.survey",
         "pk": 3,
         "fields": {
             "question": "Do you believe peer review is effective?",
@@ -47,24 +29,6 @@
     },
     {
         "model": "iasc.survey",
-        "pk": 4,
-        "fields": {
-            "question": "Rate the adoption of reproducible research practices in your field.",
-            "questions": [
-                "Code and data are routinely published",
-                "Replication studies are valued",
-                "Methodologies are well-documented"
-            ],
-            "active": true,
-            "kind": "L3C",
-            "hide_title": true,
-            "expiry": "2026-12-31T23:59:59Z",
-            "participants": 15,
-            "voted": 6
-        }
-    },
-    {
-        "model": "iasc.survey",
         "pk": 5,
         "fields": {
             "question": "I frequently use AI assistants to write code.",
@@ -75,24 +39,6 @@
             "expiry": "2026-08-31T23:59:59Z",
             "participants": 15,
             "voted": 12
-        }
-    },
-    {
-        "model": "iasc.survey",
-        "pk": 6,
-        "fields": {
-            "question": "Evaluate the current state of academic publishing and tenure evaluation.",
-            "questions": [
-                "Impact factors correctly represent quality",
-                "Open access fees are reasonably priced",
-                "Peer reviewers should be compensated"
-            ],
-            "active": false,
-            "kind": "L3C",
-            "hide_title": true,
-            "expiry": "2025-06-30T23:59:59Z",
-            "participants": 15,
-            "voted": 15
         }
     },
     {
