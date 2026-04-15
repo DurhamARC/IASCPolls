@@ -171,7 +171,7 @@ function PieChart({ surveyId, fallbackQuestion }) {
             return cbCounts ? (
               <SinglePie
                 key={slot.id}
-                title={slot.placeholder}
+                title={dbStatements[i] || slot.placeholder}
                 chartData={buildCheckboxChartData(cbCounts)}
               />
             ) : null;
