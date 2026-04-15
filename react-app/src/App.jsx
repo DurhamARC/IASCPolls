@@ -8,6 +8,7 @@ import { MessageProvider } from "./components/MessageHandler";
 import NavBar from "./components/nav/NavBar";
 import Footer from "./components/footer/Footer";
 import Alert from "./components/Alert";
+import AxiosInterceptor from "./components/AxiosInterceptor";
 
 // The below configuration allows webpack to pack each page of the site separately.
 // These are then lazy-loaded into the application.
@@ -67,6 +68,7 @@ function App() {
           <AuthProvider>
             <Suspense fallback={<div>Loading...</div>}>
               <BrowserRouter>
+                <AxiosInterceptor />
                 <NavBar />
                 <Routes>
                   <Route path="/" element={<Home />} />

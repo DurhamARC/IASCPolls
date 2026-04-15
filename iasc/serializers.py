@@ -67,7 +67,123 @@ class InstitutionSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class SurveyTemplateSlotSerializer(serializers.ModelSerializer):
+    """Serializes a SurveyTemplateSlot as {id, type, placeholder}."""
+
+    id = serializers.CharField(source="slot_id")
+
+    class Meta:
+        model = models.SurveyTemplateSlot
+        fields = ["id", "type", "placeholder"]
+
+
+def _template_slots_list(kind):
+    """Return [{id, type, placeholder}] for the given kind slug, or None."""
+    slots = list(
+        models.SurveyTemplateSlot.objects.filter(template__slug=kind).order_by("order")
+    )
+    return SurveyTemplateSlotSerializer(slots, many=True).data or None
+
+
+class SurveyTemplateSerializer(serializers.ModelSerializer):
+    slots = SurveyTemplateSlotSerializer(source="slot_set", many=True)
+    survey_count = serializers.SerializerMethodField()
+
+    def get_fields(self):
+        fields = super().get_fields()
+        if self.instance is not None:
+            fields["slug"].read_only = True
+        return fields
+
+    def get_survey_count(self, obj):
+        return models.Survey.objects.filter(kind=obj.slug).count()
+
+    def validate_slots(self, value):
+        # value is a list of validated slot dicts with model field names (slot_id, type, placeholder)
+        if not value:
+            raise serializers.ValidationError("slots must be a non-empty list.")
+        valid_types = set(models.SLOT_TYPES)
+        for i, slot in enumerate(value):
+            if slot.get("type", "") not in valid_types:
+                raise serializers.ValidationError(
+                    f"Slot {i} type '{slot.get('type', '')}' is not valid. "
+                    f"Valid types: {sorted(valid_types)}"
+                )
+        ids = [s["slot_id"] for s in value]
+        if len(ids) != len(set(ids)):
+            raise serializers.ValidationError(
+                "Slot ids must be unique within a template."
+            )
+        return value
+
+    def validate(self, data):
+        # Block structural edits (slot IDs or types) when surveys already exist.
+        if self.instance is not None and "slot_set" in data:
+            existing = list(
+                models.SurveyTemplateSlot.objects.filter(template=self.instance)
+                .order_by("order")
+                .values_list("slot_id", "type")
+            )
+            incoming = [(s["slot_id"], s["type"]) for s in data["slot_set"]]
+            if incoming != existing:
+                if models.Survey.objects.filter(kind=self.instance.slug).exists():
+                    raise serializers.ValidationError(
+                        "Cannot change slot structure: surveys already exist using "
+                        "this template. You may only update the label or slot "
+                        "placeholder text."
+                    )
+        return data
+
+    def create(self, validated_data):
+        slot_data = validated_data.pop("slot_set", [])
+        template = models.SurveyTemplate.objects.create(**validated_data)
+        for order, slot in enumerate(slot_data):
+            models.SurveyTemplateSlot.objects.create(
+                template=template,
+                order=order,
+                slot_id=slot["slot_id"],
+                type=slot["type"],
+                placeholder=slot.get("placeholder", ""),
+            )
+        return template
+
+    def update(self, instance, validated_data):
+        slot_data = validated_data.pop("slot_set", None)
+        instance.label = validated_data.get("label", instance.label)
+        instance.save()
+        if slot_data is not None:
+            models.SurveyTemplateSlot.objects.filter(template=instance).delete()
+            for order, slot in enumerate(slot_data):
+                models.SurveyTemplateSlot.objects.create(
+                    template=instance,
+                    order=order,
+                    slot_id=slot["slot_id"],
+                    type=slot["type"],
+                    placeholder=slot.get("placeholder", ""),
+                )
+        return instance
+
+    class Meta:
+        model = models.SurveyTemplate
+        fields = [
+            "id",
+            "label",
+            "slug",
+            "slots",
+            "is_builtin",
+            "survey_count",
+            "created_at",
+            "updated_at",
+        ]
+        read_only_fields = ["is_builtin", "created_at", "updated_at"]
+
+
 class SurveySerializer(serializers.ModelSerializer):
+    template_slots = serializers.SerializerMethodField()
+
+    def get_template_slots(self, obj):
+        return _template_slots_list(obj.kind)
+
     class Meta:
         model = models.Survey
         fields = [
@@ -76,6 +192,7 @@ class SurveySerializer(serializers.ModelSerializer):
             "questions",
             "active",
             "kind",
+            "template_slots",
             "hide_title",
             "expiry",
             "participants",
@@ -104,6 +221,10 @@ class SurveyResultSerializer(serializers.ModelSerializer):
     kind = serializers.CharField(source="survey.kind")
     active = serializers.CharField(source="survey.active")
     hide_title = serializers.BooleanField(source="survey.hide_title")
+    template_slots = serializers.SerializerMethodField()
+
+    def get_template_slots(self, obj):
+        return _template_slots_list(obj.survey.kind)
 
     def get_count(self, obj):
         return models.Result.objects.filter(survey_id=obj.survey.id).count()
@@ -113,7 +234,7 @@ class SurveyResultSerializer(serializers.ModelSerializer):
         counts = {}
         for result in results:
             if isinstance(result.vote, dict):
-                # multi-question vote: {"0": 3, "1": 2, ..., "expertise": true}
+                # multi-question vote: {"0": 3, "1": 2, ..., "3": true}
                 for sub_key, sub_val in result.vote.items():
                     if sub_key not in counts:
                         counts[sub_key] = {}
@@ -133,6 +254,7 @@ class SurveyResultSerializer(serializers.ModelSerializer):
             "active",
             "question",
             "questions",
+            "template_slots",
             "hide_title",
             "count",
             "vote_counts",
@@ -178,7 +300,7 @@ class _VoteIntField(_VoteSubkeyBase, serializers.IntegerField):
 
 
 class _VoteBoolField(_VoteSubkeyBase, serializers.BooleanField):
-    """Vote sub-key field for boolean (expertise checkbox) values — rendered as bool in Excel."""
+    """Vote sub-key field for boolean (checkbox) values — rendered as bool in Excel."""
 
     pass
 
@@ -210,7 +332,7 @@ class VoteExpandMixin:
     Mixin for result serializers used in Excel export.
     When instantiated with vote_keys (a list of (key, value) pairs from a sample
     vote dict), replaces the single 'vote' field with individual typed fields:
-    vote_0, vote_1, ..., vote_expertise etc.
+    vote_0, vote_1, vote_2, ... etc.
     """
 
     def __init__(self, *args, vote_keys=None, **kwargs):

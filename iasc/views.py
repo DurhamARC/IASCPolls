@@ -26,7 +26,15 @@ from iasc.filters import (
 )
 
 from iasc.logic import parse_excel_sheet_to_db, create_survey_in_db
-from iasc.models import ActiveLink, Result, Participant, Survey, Discipline, Institution
+from iasc.models import (
+    ActiveLink,
+    Result,
+    Participant,
+    Survey,
+    SurveyTemplate,
+    Discipline,
+    Institution,
+)
 from iasc.utils import (
     get_error_message,
     request_has_keys,
@@ -221,6 +229,66 @@ class CloseSurveyView(ViewSet):
             )
 
 
+def _expected_vote_schema(slots):
+    """
+    Derive expected {vote_key: slot_type} from an ordered list of template slots.
+    Returns None for the single-likert case (vote is a plain integer).
+    Mirrors the key encoding in SurveyForm.jsx.
+    """
+    if len(slots) == 1 and slots[0].type == "likert":
+        return None
+    schema = {}
+    likert_idx = 0
+    for i, slot in enumerate(slots):
+        if slot.type == "likert":
+            schema[str(likert_idx)] = "likert"
+            likert_idx += 1
+        elif slot.type == "checkbox":
+            schema[str(i)] = "checkbox"
+    return schema
+
+
+def _validate_vote(vote, slots):
+    """
+    Validate a parsed vote against the survey's template slots.
+    Raises ValidationError if the vote structure or values are invalid.
+    """
+    schema = _expected_vote_schema(slots)
+    if schema is None:
+        # Single-likert survey: plain integer 1–5
+        if not isinstance(vote, int) or isinstance(vote, bool):
+            raise ValidationError(
+                "Vote must be an integer for single-question surveys."
+            )
+        if not 1 <= vote <= 5:
+            raise ValidationError(f"Likert vote must be between 1 and 5, got {vote}.")
+        return
+    if not isinstance(vote, dict):
+        raise ValidationError("Vote must be a JSON object for multi-question surveys.")
+    submitted = set(vote.keys())
+    expected = set(schema.keys())
+    if submitted != expected:
+        raise ValidationError(
+            f"Invalid vote keys {sorted(submitted)}; expected {sorted(expected)}."
+        )
+    for key, slot_type in schema.items():
+        value = vote[key]
+        if slot_type == "likert":
+            if not isinstance(value, int) or isinstance(value, bool):
+                raise ValidationError(
+                    f"Vote['{key}'] must be an integer, got {type(value).__name__}."
+                )
+            if not 1 <= value <= 5:
+                raise ValidationError(
+                    f"Vote['{key}'] must be between 1 and 5, got {value}."
+                )
+        elif slot_type == "checkbox":
+            if not isinstance(value, bool):
+                raise ValidationError(
+                    f"Vote['{key}'] must be a boolean, got {type(value).__name__}."
+                )
+
+
 class SubmitVoteView(ViewSet):
     """
     Take and ActiveLink and cast a vote
@@ -263,6 +331,16 @@ class SubmitVoteView(ViewSet):
                     vote = int(raw_vote)
             else:
                 vote = raw_vote
+            try:
+                template = SurveyTemplate.objects.get(slug=link.survey.kind)
+            except SurveyTemplate.DoesNotExist:
+                # Should not happen: template deletion is blocked while surveys
+                # reference it, but guard against inconsistent state.
+                raise ValidationError(
+                    f"Survey template '{link.survey.kind}' not found."
+                )
+            slots = list(template.slot_set.order_by("order"))
+            _validate_vote(vote, slots)
             link.vote(vote)
 
             return Response(
@@ -405,7 +483,11 @@ class SurveyViewSet(viewsets.ReadOnlyModelViewSet):
 
 class SurveyResultsViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    queryset = Result.objects.filter(survey__isnull=False).distinct("survey_id")
+    queryset = (
+        Result.objects.filter(survey__isnull=False)
+        .select_related("survey")
+        .distinct("survey_id")
+    )
 
     pagination_class = None
     serializer_class = serializers.SurveyResultSerializer
@@ -539,6 +621,53 @@ class ZipResultViewSet(mixins.IASCZipFileMixin, XLSResultViewSet):
 
     def get_filename(self, request=None, *args, **kwargs):
         return "all_results.zip"
+
+
+class SurveyTemplateViewSet(viewsets.ModelViewSet):
+    """
+    CRUD endpoints for SurveyTemplate.
+
+    - GET  /api/survey/templates/         — list all templates
+    - GET  /api/survey/templates/<slug>/  — retrieve a single template
+    - POST /api/survey/templates/         — create a new template
+    - PATCH/PUT /api/survey/templates/<slug>/  — update a template
+    - DELETE /api/survey/templates/<slug>/     — delete a template (blocked if builtin or referenced)
+    """
+
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = serializers.SurveyTemplateSerializer
+    queryset = SurveyTemplate.objects.prefetch_related("slot_set").order_by("id")
+    pagination_class = None
+    lookup_field = "slug"
+
+    def destroy(self, request, *args, **kwargs):
+        template = self.get_object()
+        if template.is_builtin:
+            return Response(
+                {"status": "error", "message": "Built-in templates cannot be deleted."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        if Survey.objects.filter(kind=template.slug).exists():
+            return Response(
+                {
+                    "status": "error",
+                    "message": "Cannot delete a template that has surveys associated with it.",
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        return super().destroy(request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        template = self.get_object()
+        if template.is_builtin:
+            return Response(
+                {
+                    "status": "error",
+                    "message": "Built-in templates cannot be modified.",
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        return super().update(request, *args, **kwargs)
 
 
 # Azure Healthcheck route

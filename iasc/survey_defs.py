@@ -1,9 +1,16 @@
-import json
-from pathlib import Path
+def get_valid_slugs():
+    """Return all SurveyTemplate slugs from the database.
 
-_DEFS_PATH = Path(__file__).resolve().parent.parent / "conf" / "survey_definitions.json"
+    Falls back to an empty list if the table does not yet exist
+    (e.g. during initial migrate before the SurveyTemplate migration has run).
+    Validators are not called during migrations, so an empty fallback is safe.
+    """
+    try:
+        from django.core.exceptions import AppRegistryNotReady
+        from django.db import DatabaseError
 
-with open(_DEFS_PATH) as _f:
-    SURVEY_DEFINITIONS = json.load(_f)
+        from iasc.models import SurveyTemplate
 
-VALID_KINDS = list(SURVEY_DEFINITIONS.keys())
+        return list(SurveyTemplate.objects.values_list("slug", flat=True))
+    except (AppRegistryNotReady, DatabaseError):  # pragma: no cover
+        return []

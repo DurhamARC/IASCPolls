@@ -1,9 +1,9 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { client } from "../Api";
 import { MessageContext } from "./MessageHandler";
 import { Institution } from "./Institution";
-import definitions from "../surveyDefinitions";
+import { useSurveyDefinitions } from "./SurveyDefinitionsContext";
 
 function getDatePlusMonth() {
   const date = new Date();
@@ -13,38 +13,43 @@ function getDatePlusMonth() {
   return new Date(date - tzoffset).toISOString().slice(0, -1);
 }
 
-function inputSlots(kind) {
-  return definitions[kind].questions;
-}
-
-function isMultiQuestion(kind) {
-  return definitions[kind].questions.length > 1;
-}
-
 function CreateForm({
   onSubmit,
   setSurveyDetails,
   setSubmitting,
   setCompleted,
 }) {
-  const [kind, setKind] = useState(Object.keys(definitions)[0]);
+  const definitions = useSurveyDefinitions();
+  const [kind, setKind] = useState("");
   const [statement, setStatement] = useState("");
   const [title, setTitle] = useState("");
-  // Per-kind statement arrays, initialised from the definition
-  const [questionsByKind, setQuestionsByKind] = useState(() =>
-    Object.fromEntries(
-      Object.keys(definitions).map((k) => [
-        k,
-        Array(inputSlots(k).length).fill(""),
-      ])
-    )
-  );
+  // Per-kind statement arrays, grown as definitions arrive
+  const [questionsByKind, setQuestionsByKind] = useState({});
   const [active, setActive] = useState(true);
   const [hideTitle, setHideTitle] = useState(true);
   const [endDate, setEndDate] = useState(getDatePlusMonth());
   const [displayInst, setDisplayInst] = useState(false);
   const [institution, setInstitution] = useState(null);
   const { pushError } = useContext(MessageContext);
+
+  // Populate kind and per-kind question arrays once definitions load.
+  // Also extends questionsByKind if new slugs appear (e.g. after template creation).
+  useEffect(() => {
+    const slugs = Object.keys(definitions);
+    if (slugs.length === 0) return;
+    setKind((prev) => prev || slugs[0]);
+    setQuestionsByKind((prev) => {
+      const next = { ...prev };
+      slugs.forEach((k) => {
+        if (!next[k]) next[k] = Array(definitions[k].questions.length).fill("");
+      });
+      return next;
+    });
+  }, [definitions]);
+
+  const slots = definitions[kind]?.questions ?? [];
+  const isSingleLikert = slots.length === 1 && slots[0]?.type === "likert";
+  const multi = !isSingleLikert;
 
   const handleQuestionChange = (index, value) => {
     setQuestionsByKind((prev) => {
@@ -69,8 +74,6 @@ function CreateForm({
   const handleSubmit = async (event) => {
     event.preventDefault();
     setSubmitting(true);
-
-    const multi = isMultiQuestion(kind);
     const data = {
       question: multi ? title : statement,
       active,
@@ -109,8 +112,8 @@ function CreateForm({
       });
   };
 
-  const slots = inputSlots(kind);
-  const multi = isMultiQuestion(kind);
+  // Don't render until definitions have loaded
+  if (!kind) return null;
 
   return (
     <form onSubmit={handleSubmit}>
@@ -141,7 +144,7 @@ function CreateForm({
             value={statement}
             onChange={(e) => setStatement(e.target.value)}
             className="create--statement"
-            placeholder={definitions[kind].questions[0].placeholder}
+            placeholder={slots[0]?.placeholder ?? ""}
           />
         </label>
       )}

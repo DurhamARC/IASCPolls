@@ -2,7 +2,6 @@ import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { client } from "../Api";
 import { MessageContext } from "./MessageHandler";
-import definitions from "../surveyDefinitions";
 
 const LIKERT_OPTIONS = [
   { value: "5", label: "Strongly Disagree" },
@@ -60,12 +59,9 @@ const QUESTION_RENDERERS = {
   checkbox: CheckboxRow,
 };
 
-export default function PollForm({ uniqueId, kind, questions }) {
+export default function PollForm({ uniqueId, questions, slots }) {
   const navigate = useNavigate();
   const { pushError } = useContext(MessageContext);
-
-  const definition = definitions[kind] ?? definitions.LI;
-  const slots = definition.questions;
 
   // Build initial state: likert slots get "" (unselected), checkbox slots get false
   const initialAnswers = Object.fromEntries(
@@ -80,7 +76,7 @@ export default function PollForm({ uniqueId, kind, questions }) {
 
   // Map each slot to its display text: all slots pull from the DB questions array
   const statements = slots.map((slot, i) => {
-    if (questions && questions[i] != null) {
+    if (questions && questions[i]) {
       return questions[i];
     }
     return slot.placeholder ?? slot.label ?? "";
@@ -98,7 +94,8 @@ export default function PollForm({ uniqueId, kind, questions }) {
       // Single-question (LI): submit as a plain integer for backward compatibility
       vote = parseInt(answers[0], 10);
     } else {
-      // Multi-question: dict with numeric string keys for likert, "expertise" for checkbox
+      // Multi-question: likert slots are keyed by a running likert counter;
+      // checkbox slots are keyed by their overall slot position index.
       vote = {};
       let likertIdx = 0;
       slots.forEach((slot, i) => {
@@ -106,7 +103,7 @@ export default function PollForm({ uniqueId, kind, questions }) {
           vote[String(likertIdx)] = parseInt(answers[i], 10);
           likertIdx += 1;
         } else if (slot.type === "checkbox") {
-          vote.expertise = answers[i];
+          vote[String(i)] = answers[i];
         }
       });
     }

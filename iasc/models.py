@@ -6,14 +6,64 @@ from django.db import models, transaction
 from datetime import datetime
 
 from iasc import settings
-from iasc.survey_defs import VALID_KINDS
 
 
 def validate_survey_kind(value):
-    if value not in VALID_KINDS:
-        raise ValidationError(
-            f"Invalid survey kind '{value}'. Valid kinds: {VALID_KINDS}"
-        )
+    from iasc.survey_defs import get_valid_slugs
+
+    valid = get_valid_slugs()
+    if value not in valid:
+        raise ValidationError(f"Invalid survey kind '{value}'. Valid kinds: {valid}")
+
+
+SLOT_TYPES = ["likert", "checkbox"]
+
+
+class SurveyTemplate(models.Model):
+    """
+    Database-backed survey template, replacing conf/survey_definitions.json.
+    Each template defines a reusable structure (ordered list of question slots)
+    that surveys are created from.  Slots are stored in SurveyTemplateSlot.
+    """
+
+    label = models.CharField(max_length=255)
+    slug = models.SlugField(max_length=32, unique=True, db_index=True)
+    is_builtin = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.label} ({self.slug})"
+
+
+class SurveyTemplateSlot(models.Model):
+    """
+    A single question slot within a SurveyTemplate.
+    Slots are ordered by their `order` field and identified by `slot_id`
+    (e.g. "q0", "q1") which becomes the key in the vote payload.
+    """
+
+    template = models.ForeignKey(
+        "SurveyTemplate", on_delete=models.CASCADE, related_name="slot_set"
+    )
+    order = models.PositiveIntegerField()
+    slot_id = models.CharField(max_length=32, help_text='Vote key, e.g. "q0"')
+    type = models.CharField(max_length=32, choices=[(t, t.title()) for t in SLOT_TYPES])
+    placeholder = models.TextField(blank=True, default="")
+
+    class Meta:
+        ordering = ["order"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["template", "slot_id"], name="unique_slot_id_per_template"
+            ),
+            models.UniqueConstraint(
+                fields=["template", "order"], name="unique_slot_order_per_template"
+            ),
+        ]
+
+    def __str__(self):
+        return f"{self.template.slug}[{self.order}] {self.slot_id} ({self.type})"
 
 
 class Institution(models.Model):

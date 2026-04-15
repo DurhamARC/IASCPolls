@@ -15,11 +15,12 @@ The icon ⚠️ indicates that the routes in the given group require login to re
 * [Participants](#participants)
   * [Data Entry](#data-entry)
   * [Data Queries](#data-queries)
+* [Survey Templates](#survey-templates)
 * [Surveys](#surveys)
   * [List Surveys](#list-surveys)
   * [Create Survey](#create-survey)
   * [Close Surveys](#close-surveys)
-* [Voting](#voting) 
+* [Voting](#voting)
 * [Links](#links)
 * [Results](#results)
 * [Pages](#pages)
@@ -167,6 +168,81 @@ discipline=2
 
 
 ---
+# Survey Templates
+Session-authorization protected route. ⚠️
+
+Survey templates define the structure of a survey: an ordered list of question slots, each with a type (`likert` or `checkbox`) and placeholder text. The three built-in templates (`LI`, `L2E`, `LI3`) cannot be modified or deleted. Custom templates can be created, updated, and deleted provided no surveys have been created from them.
+
+Templates are looked up by their `slug` in all detail, update, and delete routes.
+
+## List Templates
+`GET /api/survey/templates/`
+
+Returns all templates (not paginated).
+
+```json
+[
+  {
+    "id": 1,
+    "label": "Single Likert",
+    "slug": "LI",
+    "slots": [
+      { "id": "q0", "type": "likert", "placeholder": "Enter the statement participants will see" }
+    ],
+    "is_builtin": true,
+    "survey_count": 14,
+    "created_at": "2026-04-13T19:18:23.628Z",
+    "updated_at": "2026-04-13T19:18:23.628Z"
+  }
+]
+```
+
+## Retrieve Template
+`GET /api/survey/templates/<slug>/`
+
+Returns a single template by slug.
+
+## Create Template
+`POST /api/survey/templates/`
+
+```json
+{
+  "label": "My Custom Template",
+  "slug": "MYCUSTOM",
+  "slots": [
+    { "id": "q0", "type": "likert", "placeholder": "Statement 1" },
+    { "id": "q1", "type": "checkbox", "placeholder": "I have relevant expertise" }
+  ]
+}
+```
+
+Validation rules:
+- `slots` must be a non-empty list
+- Each slot must have an `id` (string) and a `type` of `likert` or `checkbox`
+- Slot `id` values must be unique within a template
+- `slug` must be unique across all templates
+
+Returns `201 Created` on success with the full template object.
+
+## Update Template
+`PATCH /api/survey/templates/<slug>/`
+
+Allows updating `label`, `slots`, or both. `slug` and `is_builtin` are read-only and any supplied values are ignored.
+
+Built-in templates (`is_builtin: true`) cannot be updated at all — returns `400 Bad Request`.
+
+If surveys have been created using this template, structural changes to slots (adding, removing, reordering, or changing the type of a slot) are blocked — returns `400 Bad Request`. Only `label` and slot `placeholder` text may be changed.
+
+## Delete Template
+`DELETE /api/survey/templates/<slug>/`
+
+Deletes a custom template. Returns `204 No Content` on success.
+
+Returns `400 Bad Request` if:
+- The template is built-in (`is_builtin: true`)
+- Any surveys have been created using this template
+
+---
 # Surveys
 Session-authorization protected route. ⚠️
 
@@ -178,13 +254,16 @@ Takes the optional `GET` parameter `?active=True`.
 
 Returns a filtered list of active surveys, accessible under the key `results`, values are data.
 
-```javascript
+```json
 {
   "results": [
     {
       "id": 1,
       "question": "Science has proven beyond all reasonable doubt that...",
       "kind": "LI",
+      "template_slots": [
+        { "id": "q0", "type": "likert", "placeholder": "Enter the statement participants will see" }
+      ],
       "active": "True",
       "expiry": "2023-05-01T12:34:56.789Z",
       "participants": 10000,

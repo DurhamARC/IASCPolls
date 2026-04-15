@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { client } from "../Api";
-import definitions from "../surveyDefinitions";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -135,9 +134,7 @@ function PieChart({ surveyId, fallbackQuestion }) {
     );
   }
 
-  const kind = survey?.kind ?? "LI";
-  const definition = definitions[kind] ?? definitions.LI;
-  const slots = definition.questions;
+  const slots = survey?.template_slots ?? [];
   const isMulti = slots.length > 1;
 
   if (isMulti) {
@@ -153,7 +150,7 @@ function PieChart({ surveyId, fallbackQuestion }) {
         }}
       >
         <p style={{ fontWeight: "bold", marginBottom: "1rem" }}>{title}</p>
-        {slots.map((slot) => {
+        {slots.map((slot, i) => {
           if (slot.type === "likert") {
             const key = String(likertIdx);
             const slotTitle =
@@ -169,11 +166,13 @@ function PieChart({ surveyId, fallbackQuestion }) {
             ) : null;
           }
           if (slot.type === "checkbox") {
-            return voteCounts.expertise ? (
+            // Vote key is the slot's overall position index (String(i)).
+            const cbCounts = voteCounts[String(i)];
+            return cbCounts ? (
               <SinglePie
                 key={slot.id}
-                title={slot.label}
-                chartData={buildCheckboxChartData(voteCounts.expertise)}
+                title={dbStatements[i] || slot.placeholder}
+                chartData={buildCheckboxChartData(cbCounts)}
               />
             ) : null;
           }
