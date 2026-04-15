@@ -41,7 +41,6 @@ RUN npm install
 
 # Copy files and build app
 ADD react-app /app/react-app
-COPY conf/survey_definitions.json /app/conf/survey_definitions.json
 WORKDIR /app/react-app
 RUN npm run webpack
 
@@ -128,7 +127,6 @@ RUN mkdir -p /data/nginx/cache
 COPY iasc ./iasc
 COPY frontend ./frontend
 COPY manage.py .
-COPY conf/survey_definitions.json ./conf/survey_definitions.json
 COPY conf/init.sh /usr/local/bin/
 RUN chmod u+x /usr/local/bin/init.sh
 
