@@ -742,10 +742,12 @@ class SurveyAggregateView(APIView):
             return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
 
         results = Result.objects.filter(survey_id=survey_id)
-        institution_id = request.query_params.get("institution")
+        institution_param = request.query_params.get("institution")
         discipline_id = request.query_params.get("discipline")
-        if institution_id:
-            results = results.filter(institution_id=institution_id)
+        if institution_param:
+            ids = [int(i) for i in institution_param.split(";") if i.strip().isdigit()]
+            if ids:
+                results = results.filter(institution_id__in=ids)
         if discipline_id:
             results = results.filter(discipline_id=discipline_id)
 

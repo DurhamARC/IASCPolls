@@ -1041,6 +1041,39 @@ class DatabaseModelTestCase(TestCase):
         self.assertIn("4", data["vote_counts"])
         self.assertNotIn("2", data["vote_counts"])
 
+    def test_aggregate_endpoint_multi_institution_filter(self):
+        """GET /api/survey/<id>/aggregate/?institution=1;2 filters by multiple institutions."""
+        inst_a = Institution.objects.create(name="Inst A", country="GB")
+        inst_b = Institution.objects.create(name="Inst B", country="DE")
+        inst_c = Institution.objects.create(name="Inst C", country="FR")
+        disc = Discipline.objects.create(name="Multi Disc")
+        # Consume the default active link (vote=1)
+        link = ActiveLink.objects.get()
+        link.vote(1)
+        # Votes from inst_a and inst_b should be included; inst_c excluded
+        Result.objects.create(
+            survey=self.survey, vote=2, institution=inst_a, discipline=disc
+        )
+        Result.objects.create(
+            survey=self.survey, vote=3, institution=inst_b, discipline=disc
+        )
+        Result.objects.create(
+            survey=self.survey, vote=5, institution=inst_c, discipline=disc
+        )
+
+        import json as json_mod
+
+        client = self._authed_client()
+        resp = client.get(
+            f"/api/survey/{self.survey.id}/aggregate/?institution={inst_a.id};{inst_b.id}"
+        )
+        self.assertEqual(resp.status_code, 200)
+        data = json_mod.loads(resp.content)
+        self.assertEqual(data["count"], 2)
+        self.assertIn("2", data["vote_counts"])
+        self.assertIn("3", data["vote_counts"])
+        self.assertNotIn("5", data["vote_counts"])
+
     def test_timeseries_endpoint_basic(self):
         """GET /api/survey/<id>/timeseries/ returns series with cumulative counts."""
         link = ActiveLink.objects.get()
