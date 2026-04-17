@@ -248,7 +248,7 @@ function BurnupChart({ surveyId, participants, expiry }) {
   );
 }
 
-function InstitutionPanel({ surveyId, onSelect, selectedId }) {
+function InstitutionPanel({ surveyId, onSelect, selectedIds }) {
   const [institutions, setInstitutions] = useState(null);
 
   useEffect(() => {
@@ -267,12 +267,14 @@ function InstitutionPanel({ surveyId, onSelect, selectedId }) {
 
   return (
     <div className="results--inst-panel">
-      <p className="results--inst-hint">Click a row to filter charts.</p>
-      {selectedId && (
+      <p className="results--inst-hint">
+        Click to filter. Shift+click to select multiple.
+      </p>
+      {selectedIds.size > 0 && (
         <button
           type="button"
           className="results--clear-filter"
-          onClick={() => onSelect(null)}
+          onClick={() => onSelect(null, false)}
         >
           ✕ Clear filter
         </button>
@@ -294,10 +296,8 @@ function InstitutionPanel({ surveyId, onSelect, selectedId }) {
             return (
               <tr
                 key={inst.id}
-                className={`results--inst-row${selectedId === inst.id ? " selected" : ""}`}
-                onClick={() =>
-                  onSelect(selectedId === inst.id ? null : inst.id)
-                }
+                className={`results--inst-row${selectedIds.has(inst.id) ? " selected" : ""}`}
+                onClick={(e) => onSelect(inst.id, e.shiftKey)}
               >
                 <td>{inst.name}</td>
                 <td>
@@ -319,12 +319,12 @@ export default function ResultsView() {
 
   const [survey, setSurvey] = useState(null);
   const [aggregate, setAggregate] = useState(null);
-  const [selectedInstitution, setSelectedInstitution] = useState(null);
+  const [selectedInstitutions, setSelectedInstitutions] = useState(new Set());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchAggregate = (institutionId) => {
-    const params = institutionId ? `?institution=${institutionId}` : "";
+  const fetchAggregate = (ids) => {
+    const params = ids.size > 0 ? `?institution=${[...ids].join(";")}` : "";
     return client
       .get(`/api/survey/${surveyId}/aggregate/${params}`)
       .then((r) => setAggregate(r.data));
@@ -335,7 +335,7 @@ export default function ResultsView() {
       .get(`/api/survey/${surveyId}/`)
       .then((r) => {
         setSurvey(r.data);
-        return fetchAggregate(null);
+        return fetchAggregate(new Set());
       })
       .catch((e) =>
         setError(e.response?.status === 404 ? "not_found" : "error")
@@ -343,9 +343,23 @@ export default function ResultsView() {
       .finally(() => setLoading(false));
   }, [surveyId]);
 
-  const handleInstitutionSelect = (id) => {
-    setSelectedInstitution(id);
-    fetchAggregate(id);
+  const handleInstitutionSelect = (id, isShift) => {
+    // null id = clear all
+    if (id === null) {
+      setSelectedInstitutions(new Set());
+      fetchAggregate(new Set());
+      return;
+    }
+    setSelectedInstitutions((prev) => {
+      const next = isShift ? new Set(prev) : new Set();
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      fetchAggregate(next);
+      return next;
+    });
   };
 
   if (!isAuth && !isLocal) return <Navigate to="/login" />;
@@ -437,7 +451,7 @@ export default function ResultsView() {
             <InstitutionPanel
               surveyId={Number(surveyId)}
               onSelect={handleInstitutionSelect}
-              selectedId={selectedInstitution}
+              selectedIds={selectedInstitutions}
             />
           </aside>
 
@@ -448,11 +462,13 @@ export default function ResultsView() {
 
             <section className="results--section">
               <h2>Votes over time</h2>
-              <BurnupChart
-                surveyId={Number(surveyId)}
-                participants={survey.participants}
-                expiry={survey.expiry}
-              />
+              <div className="results--question-block">
+                <BurnupChart
+                  surveyId={Number(surveyId)}
+                  participants={survey.participants}
+                  expiry={survey.expiry}
+                />
+              </div>
             </section>
           </div>
         </div>
