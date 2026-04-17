@@ -10,7 +10,7 @@ module.exports = {
     filename: "[name]-[chunkhash].js",
     chunkFilename: "[name]-[chunkhash].bundle.js",
     path: path.resolve("../frontend/static/dist/"),
-    publicPath: "static/dist/",
+    publicPath: "/static/dist/",
   },
   plugins: [
     new CleanWebpackPlugin(),
