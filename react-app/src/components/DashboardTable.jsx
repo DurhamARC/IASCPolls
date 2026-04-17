@@ -159,9 +159,7 @@ function DashboardTable({ reload, selectedSurveyId, onSelect }) {
                 </td>
                 <td>{row.id}</td>
                 <td className="no-mobile">
-                  <span className="dashboard--kind-badge">
-                    {definitions[row.kind]?.label ?? row.kind}
-                  </span>
+                  {definitions[row.kind]?.label ?? row.kind}
                 </td>
                 <td>
                   {(() => {
