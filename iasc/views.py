@@ -671,6 +671,49 @@ class SurveyTemplateViewSet(viewsets.ModelViewSet):
         return super().update(request, *args, **kwargs)
 
 
+class SurveyTimeseriesView(APIView):
+    """
+    GET /api/survey/<survey_id>/timeseries/
+    Returns daily vote counts and cumulative totals for burn-up charting.
+    """
+
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request, survey_id):
+        try:
+            survey = Survey.objects.get(pk=survey_id)
+        except Survey.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        rows = (
+            Result.objects.filter(survey_id=survey_id)
+            .annotate(date=TruncDate("added"))
+            .values("date")
+            .annotate(count=Count("id"))
+            .order_by("date")
+        )
+
+        series = []
+        cumulative = 0
+        for row in rows:
+            cumulative += row["count"]
+            series.append(
+                {
+                    "date": row["date"].isoformat(),
+                    "count": row["count"],
+                    "cumulative": cumulative,
+                }
+            )
+
+        return Response(
+            {
+                "participants": survey.participants,
+                "expiry": survey.expiry,
+                "series": series,
+            }
+        )
+
+
 class SurveyAggregateView(APIView):
     """
     GET /api/survey/<survey_id>/aggregate/

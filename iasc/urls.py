@@ -60,6 +60,11 @@ urlpatterns = [
         views.SurveyAggregateView.as_view(),
         name="survey-aggregate",
     ),
+    path(
+        "api/survey/<int:survey_id>/timeseries/",
+        views.SurveyTimeseriesView.as_view(),
+        name="survey-timeseries",
+    ),
     path("admin/", admin.site.urls),
 ]
 
