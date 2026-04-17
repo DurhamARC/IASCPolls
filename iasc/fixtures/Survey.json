@@ -62,7 +62,8 @@
       "question": "Rate your views on research software and state your expertise.",
       "questions": [
         "Research software should be treated as a first-class research output",
-        "Current training for research software development is adequate"
+        "Current training for research software development is adequate",
+        "I have relevant expertise in research software"
       ],
       "active": true,
       "kind": "L2E",
@@ -79,7 +80,8 @@
       "question": "Rate your views on data management and state your expertise.",
       "questions": [
         "FAIR data principles are well understood in my field",
-        "Institutional data management support is sufficient"
+        "Institutional data management support is sufficient",
+        "I have relevant expertise in data management"
       ],
       "active": false,
       "kind": "L2E",
