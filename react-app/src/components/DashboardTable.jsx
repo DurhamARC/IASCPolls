@@ -158,9 +158,26 @@ function DashboardTable({ reload, selectedSurveyId, onSelect }) {
               </td>
               <td>{row.id}</td>
               <td className="no-mobile">
-                {definitions[row.kind]?.label ?? row.kind}
+                <span className="dashboard--kind-badge">
+                  {definitions[row.kind]?.label ?? row.kind}
+                </span>
               </td>
-              <td>{Math.round((row.voted * 100) / row.participants)}%</td>
+              <td>
+                {(() => {
+                  const pct = Math.round((row.voted * 100) / row.participants);
+                  return (
+                    <div className="dashboard--completion">
+                      <span className="dashboard--completion-pct">{pct}%</span>
+                      <div className="dashboard--progress-bar">
+                        <div
+                          className="dashboard--progress-fill"
+                          style={{ width: `${pct}%` }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })()}
+              </td>
               <td className="no-mobile">
                 <a href={`/download?pollId=${row.id}`}>
                   <span className="material-symbols-outlined">groups</span>

@@ -152,6 +152,49 @@
   border: 2px solid #e0e0e0;
 }
 
+/* ── Backported from results page ────────────────────────────── */
+
+.dashboard--kind-badge {
+  background: #14213d;
+  color: #fff;
+  border-radius: 4px;
+  padding: 0.15rem 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.dashboard--completion {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  min-width: 4rem;
+}
+
+.dashboard--completion-pct {
+  font-size: 0.85rem;
+}
+
+.dashboard--progress-bar {
+  position: relative;
+  width: 100%;
+  height: 6px;
+  background: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.dashboard--progress-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: #27ae60;
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+
 .pie-chart--placeholder {
   color: #999;
   font-size: 0.95rem;
