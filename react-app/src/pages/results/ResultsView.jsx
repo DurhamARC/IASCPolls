@@ -248,7 +248,7 @@ function BurnupChart({ surveyId, participants, expiry }) {
   );
 }
 
-function InstitutionTable({ surveyId, onSelect, selectedId }) {
+function InstitutionPanel({ surveyId, onSelect, selectedId }) {
   const [institutions, setInstitutions] = useState(null);
 
   useEffect(() => {
@@ -260,37 +260,55 @@ function InstitutionTable({ surveyId, onSelect, selectedId }) {
 
   if (institutions === null)
     return <p className="results--loading">Loading…</p>;
-  if (institutions.length === 0) return null;
+  if (institutions.length === 0)
+    return (
+      <p className="results--empty">No institution breakdown available.</p>
+    );
 
   return (
-    <table className="results--institution-table">
-      <thead>
-        <tr>
-          <th>Institution</th>
-          <th>Voted</th>
-          <th>Total invited</th>
-          <th>Response rate</th>
-        </tr>
-      </thead>
-      <tbody>
-        {institutions.map((inst) => (
-          <tr
-            key={inst.id}
-            className={`results--inst-row${selectedId === inst.id ? " selected" : ""}`}
-            onClick={() => onSelect(selectedId === inst.id ? null : inst.id)}
-          >
-            <td>{inst.name}</td>
-            <td>{inst.total_count - inst.link_count}</td>
-            <td>{inst.total_count}</td>
-            <td>
-              {inst.total_count > 0
-                ? `${Math.round(((inst.total_count - inst.link_count) / inst.total_count) * 100)}%`
-                : "—"}
-            </td>
+    <div className="results--inst-panel">
+      <p className="results--inst-hint">Click a row to filter charts.</p>
+      {selectedId && (
+        <button
+          type="button"
+          className="results--clear-filter"
+          onClick={() => onSelect(null)}
+        >
+          ✕ Clear filter
+        </button>
+      )}
+      <table className="results--institution-table">
+        <thead>
+          <tr>
+            <th>Institution</th>
+            <th>Rate</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {institutions.map((inst) => {
+            const voted = inst.total_count - inst.link_count;
+            const rate =
+              inst.total_count > 0
+                ? `${Math.round((voted / inst.total_count) * 100)}%`
+                : "—";
+            return (
+              <tr
+                key={inst.id}
+                className={`results--inst-row${selectedId === inst.id ? " selected" : ""}`}
+                onClick={() =>
+                  onSelect(selectedId === inst.id ? null : inst.id)
+                }
+              >
+                <td>{inst.name}</td>
+                <td>
+                  {voted}/{inst.total_count} ({rate})
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
@@ -410,44 +428,34 @@ export default function ResultsView() {
               style={{ width: `${responseRate}%` }}
             />
           </div>
-          {selectedInstitution && (
-            <p className="results--filter-notice">
-              Showing results for selected institution.{" "}
-              <button
-                type="button"
-                className="results--clear-filter"
-                onClick={() => handleInstitutionSelect(null)}
-              >
-                Show all
-              </button>
-            </p>
-          )}
         </div>
 
-        <div className="results--charts">
-          {isSingleLikert ? singleLikertBlock : chartBlocks}
+        <div className="results--body">
+          <aside className="results--sidebar">
+            <p className="results--section-header">Filter by institution</p>
+            <hr />
+            <InstitutionPanel
+              surveyId={Number(surveyId)}
+              onSelect={handleInstitutionSelect}
+              selectedId={selectedInstitution}
+            />
+          </aside>
+
+          <div className="results--main">
+            <div className="results--charts">
+              {isSingleLikert ? singleLikertBlock : chartBlocks}
+            </div>
+
+            <section className="results--section">
+              <h2>Votes over time</h2>
+              <BurnupChart
+                surveyId={Number(surveyId)}
+                participants={survey.participants}
+                expiry={survey.expiry}
+              />
+            </section>
+          </div>
         </div>
-
-        <section className="results--section">
-          <h2>Votes over time</h2>
-          <BurnupChart
-            surveyId={Number(surveyId)}
-            participants={survey.participants}
-            expiry={survey.expiry}
-          />
-        </section>
-
-        <section className="results--section">
-          <h2>Response rate by institution</h2>
-          <p className="results--inst-hint">
-            Click a row to filter charts to that institution.
-          </p>
-          <InstitutionTable
-            surveyId={Number(surveyId)}
-            onSelect={handleInstitutionSelect}
-            selectedId={selectedInstitution}
-          />
-        </section>
       </div>
     </div>
   );
