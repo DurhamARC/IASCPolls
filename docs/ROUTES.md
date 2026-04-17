@@ -423,8 +423,9 @@ Retrieve survey results incrementally and following the close of a survey.
 Returns aggregated vote counts for a single survey, with optional filtering:
 
 ```
-institution=1   (optional) filter to one institution
-discipline=2    (optional) filter to one discipline
+institution=1      (optional) filter to one institution
+institution=1;3;7  (optional) semicolon-separated for multi-institution filter
+discipline=2       (optional) filter to one discipline
 ```
 
 Response shape matches `/api/survey/results/` per-survey entry but for a single survey:
@@ -461,6 +462,25 @@ Returns a compact daily time-series of votes received, suitable for a burn-up ch
   ]
 }
 ```
+
+Returns `404 Not Found` if the survey does not exist.
+
+## Survey institution breakdown
+`GET /api/survey/<id>/institutions/` ⚠️
+
+Returns institutions that have either active voting links or submitted results for the given survey. Covers both open surveys (active links) and closed surveys (results only). Not paginated.
+
+```json
+{
+  "count": 3,
+  "results": [
+    { "id": 1, "name": "University of Durham", "total_count": 12, "link_count": 4 },
+    { "id": 2, "name": "MIT", "total_count": 8, "link_count": 0 }
+  ]
+}
+```
+
+`total_count` is the number of participants at that institution; `link_count` is remaining unused voting links. Votes cast = `total_count - link_count`.
 
 Returns `404 Not Found` if the survey does not exist.
 
