@@ -55,6 +55,11 @@ urlpatterns = [
     path("login", views.UserLoginView.as_view(), name="login"),
     path("logout", views.UserLogoutView.as_view(), name="logout"),
     path("api/", include(router.urls)),
+    path(
+        "api/survey/<int:survey_id>/aggregate/",
+        views.SurveyAggregateView.as_view(),
+        name="survey-aggregate",
+    ),
     path("admin/", admin.site.urls),
 ]
 

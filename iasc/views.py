@@ -7,6 +7,7 @@ from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import transaction, IntegrityError
 from django.db.models import Count, Q
+from django.db.models.functions import TruncDate
 from django.http import HttpResponseRedirect
 from django_filters import rest_framework as filters
 from rest_framework import viewsets, permissions, status
@@ -668,6 +669,44 @@ class SurveyTemplateViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
         return super().update(request, *args, **kwargs)
+
+
+class SurveyAggregateView(APIView):
+    """
+    GET /api/survey/<survey_id>/aggregate/
+    Returns vote_counts for a survey, optionally filtered by institution and/or discipline.
+    """
+
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request, survey_id):
+        try:
+            survey = Survey.objects.get(pk=survey_id)
+        except Survey.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        results = Result.objects.filter(survey_id=survey_id)
+        institution_id = request.query_params.get("institution")
+        discipline_id = request.query_params.get("discipline")
+        if institution_id:
+            results = results.filter(institution_id=institution_id)
+        if discipline_id:
+            results = results.filter(discipline_id=discipline_id)
+
+        vote_counts = serializers.compute_vote_counts(results)
+        data = {
+            "id": survey.id,
+            "question": survey.question,
+            "questions": survey.questions,
+            "kind": survey.kind,
+            "active": survey.active,
+            "hide_title": survey.hide_title,
+            "participants": survey.participants,
+            "voted": survey.voted,
+            "count": results.count(),
+            "vote_counts": vote_counts,
+        }
+        return Response(serializers.SurveyAggregateSerializer(data).data)
 
 
 # Azure Healthcheck route
