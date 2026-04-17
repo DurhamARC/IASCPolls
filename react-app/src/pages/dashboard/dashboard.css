@@ -304,13 +304,31 @@
   align-items: center;
 }
 
+.dashboard--table-scroll {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.5) #f5f5f5;
+}
+
+.dashboard--table-scroll::-webkit-scrollbar {
+  height: 8px;
+}
+
+.dashboard--table-scroll::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.dashboard--table-scroll::-webkit-scrollbar-track {
+  background-color: #f5f5f5;
+}
+
 .dashboard--question--table {
   width: 100%;
   background: #fff;
-  border-radius: 8px;
-  border: 1px solid #e0e0e0;
-  border-collapse: separate;
-  border-spacing: 0;
+  border-collapse: collapse;
 }
 
 .dashboard--question--table::-webkit-scrollbar {
@@ -336,23 +354,6 @@
   align-items: center;
   text-align: center;
   font-size: 1rem;
-}
-
-.dashboard--question--table::-webkit-scrollbar {
-  width: 8px; /* Width of the scrollbar */
-}
-
-.dashboard--question--table::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.5); /* Color of the scrollbar thumb */
-}
-
-.dashboard--question--table::-webkit-scrollbar-track {
-  background-color: #f5f5f5; /* Color of the scrollbar track */
-}
-
-.dashboard--question--table {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(0, 0, 0, 0.5) #f5f5f5;
 }
 
 .dashboard--question--table thead tr th {
