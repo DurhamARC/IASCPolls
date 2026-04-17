@@ -55,6 +55,16 @@ urlpatterns = [
     path("login", views.UserLoginView.as_view(), name="login"),
     path("logout", views.UserLogoutView.as_view(), name="logout"),
     path("api/", include(router.urls)),
+    path(
+        "api/survey/<int:survey_id>/aggregate/",
+        views.SurveyAggregateView.as_view(),
+        name="survey-aggregate",
+    ),
+    path(
+        "api/survey/<int:survey_id>/timeseries/",
+        views.SurveyTimeseriesView.as_view(),
+        name="survey-timeseries",
+    ),
     path("admin/", admin.site.urls),
 ]
 

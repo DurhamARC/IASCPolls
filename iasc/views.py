@@ -7,6 +7,7 @@ from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import transaction, IntegrityError
 from django.db.models import Count, Q
+from django.db.models.functions import TruncDate
 from django.http import HttpResponseRedirect
 from django_filters import rest_framework as filters
 from rest_framework import viewsets, permissions, status
@@ -518,9 +519,22 @@ class SurveyInstitutionViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         sid = self.kwargs["survey_id"]
+        # Include institutions that have active links OR results for this survey.
+        # Active-only filtering excludes closed surveys where all links are deleted.
+        from_links = Institution.objects.filter(
+            participant__activelink__survey_id=sid
+        ).values("id")
+        from_results = Institution.objects.filter(result__survey_id=sid).values("id")
+        institution_ids = from_links.union(from_results)
         return (
-            Institution.objects.filter(participant__activelink__survey_id=sid)
-            .annotate(link_count=Count("participant__activelink", distinct=True))
+            Institution.objects.filter(id__in=institution_ids)
+            .annotate(
+                link_count=Count(
+                    "participant__activelink",
+                    filter=Q(participant__activelink__survey_id=sid),
+                    distinct=True,
+                )
+            )
             .annotate(
                 voted_count=Count(
                     "result", filter=Q(result__survey_id=sid), distinct=True
@@ -668,6 +682,89 @@ class SurveyTemplateViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
         return super().update(request, *args, **kwargs)
+
+
+class SurveyTimeseriesView(APIView):
+    """
+    GET /api/survey/<survey_id>/timeseries/
+    Returns daily vote counts and cumulative totals for burn-up charting.
+    """
+
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request, survey_id):
+        try:
+            survey = Survey.objects.get(pk=survey_id)
+        except Survey.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        rows = (
+            Result.objects.filter(survey_id=survey_id)
+            .annotate(date=TruncDate("added"))
+            .values("date")
+            .annotate(count=Count("id"))
+            .order_by("date")
+        )
+
+        series = []
+        cumulative = 0
+        for row in rows:
+            cumulative += row["count"]
+            series.append(
+                {
+                    "date": row["date"].isoformat(),
+                    "count": row["count"],
+                    "cumulative": cumulative,
+                }
+            )
+
+        return Response(
+            {
+                "participants": survey.participants,
+                "expiry": survey.expiry,
+                "series": series,
+            }
+        )
+
+
+class SurveyAggregateView(APIView):
+    """
+    GET /api/survey/<survey_id>/aggregate/
+    Returns vote_counts for a survey, optionally filtered by institution and/or discipline.
+    """
+
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request, survey_id):
+        try:
+            survey = Survey.objects.get(pk=survey_id)
+        except Survey.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        results = Result.objects.filter(survey_id=survey_id)
+        institution_param = request.query_params.get("institution")
+        discipline_id = request.query_params.get("discipline")
+        if institution_param:
+            ids = [int(i) for i in institution_param.split(";") if i.strip().isdigit()]
+            if ids:
+                results = results.filter(institution_id__in=ids)
+        if discipline_id:
+            results = results.filter(discipline_id=discipline_id)
+
+        vote_counts = serializers.compute_vote_counts(results)
+        data = {
+            "id": survey.id,
+            "question": survey.question,
+            "questions": survey.questions,
+            "kind": survey.kind,
+            "active": survey.active,
+            "hide_title": survey.hide_title,
+            "participants": survey.participants,
+            "voted": survey.voted,
+            "count": results.count(),
+            "vote_counts": vote_counts,
+        }
+        return Response(serializers.SurveyAggregateSerializer(data).data)
 
 
 # Azure Healthcheck route

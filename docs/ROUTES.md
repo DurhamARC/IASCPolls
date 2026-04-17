@@ -417,14 +417,63 @@ Session-authorization protected route. ⚠️
 
 Retrieve survey results incrementally and following the close of a survey.
 
+## Aggregate vote counts
+`GET /api/survey/<id>/aggregate/` ⚠️
+
+Returns aggregated vote counts for a single survey, with optional filtering:
+
+```
+institution=1   (optional) filter to one institution
+discipline=2    (optional) filter to one discipline
+```
+
+Response shape matches `/api/survey/results/` per-survey entry but for a single survey:
+
+```json
+{
+  "id": 14,
+  "question": "Science has proven beyond...",
+  "kind": "LI",
+  "active": false,
+  "hide_title": false,
+  "participants": 250,
+  "voted": 180,
+  "count": 180,
+  "vote_counts": { "1": 45, "2": 72, "3": 30, "4": 20, "5": 13 },
+  "template_slots": [{ "id": "q0", "type": "likert", "placeholder": "..." }]
+}
+```
+
+Returns `404 Not Found` if the survey does not exist.
+
+## Vote timeseries
+`GET /api/survey/<id>/timeseries/` ⚠️
+
+Returns a compact daily time-series of votes received, suitable for a burn-up chart:
+
+```json
+{
+  "participants": 250,
+  "expiry": "2024-06-30T23:59:59Z",
+  "series": [
+    { "date": "2024-03-01", "count": 8,  "cumulative": 8 },
+    { "date": "2024-03-02", "count": 15, "cumulative": 23 }
+  ]
+}
+```
+
+Returns `404 Not Found` if the survey does not exist.
+
 ## Download Results
 `GET /api/result/`
 
 Provide the following parameters for survey ID, and OPTIONAL pagination:
 ```javascript
 survey=12
-page=1  *optional
-size=10 *optional
+institution=1   *optional
+discipline=2    *optional
+page=1          *optional
+size=10         *optional
 ```
 
 ### Download results as Microsoft Excel XLS
@@ -453,3 +502,4 @@ The following routes return pages in the React web application:
 | /dashboard/survey       | Perform survey administration actions: create, list, close     |
 | /dashboard/participants | Administer participants: upload CSV or Excel spreadsheet       |
 | /dashboard/results      | Retrieve survey results, while survey running or after closure |
+| /dashboard/results/:id  | Full results view: bar charts, burn-up chart, institution breakdown |

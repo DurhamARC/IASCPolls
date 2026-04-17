@@ -1,4 +1,5 @@
 import React, { useEffect, useContext, useState } from "react";
+import { Link } from "react-router-dom";
 import Symbol from "./Symbol";
 import { client } from "../Api";
 import { MessageContext } from "./MessageHandler";
@@ -178,6 +179,9 @@ function DashboardTable({ reload, selectedSurveyId, onSelect }) {
                 />
               </td>
               <td className="no-mobile no-tablet">
+                <Link to={`/dashboard/results/${row.id}`}>
+                  <span className="material-symbols-outlined">bar_chart</span>
+                </Link>{" "}
                 <a href={`/api/result/xls/?survey=${row.id}`}>
                   <span className="material-symbols-outlined">download</span>
                 </a>
