@@ -6,10 +6,11 @@ from iasc.models import Result, ActiveLink, Participant, Survey
 class ResultFilter(filters.FilterSet):
     institution = filters.NumberFilter(field_name="institution_id")
     survey = filters.NumberFilter(field_name="survey_id")
+    discipline = filters.NumberFilter(field_name="discipline_id")
 
     class Meta:
         model = Result
-        fields = ["institution", "survey"]
+        fields = ["institution", "survey", "discipline"]
 
 
 class InstitutionFilter(filters.FilterSet):
