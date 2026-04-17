@@ -519,9 +519,22 @@ class SurveyInstitutionViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         sid = self.kwargs["survey_id"]
+        # Include institutions that have active links OR results for this survey.
+        # Active-only filtering excludes closed surveys where all links are deleted.
+        from_links = Institution.objects.filter(
+            participant__activelink__survey_id=sid
+        ).values("id")
+        from_results = Institution.objects.filter(result__survey_id=sid).values("id")
+        institution_ids = from_links.union(from_results)
         return (
-            Institution.objects.filter(participant__activelink__survey_id=sid)
-            .annotate(link_count=Count("participant__activelink", distinct=True))
+            Institution.objects.filter(id__in=institution_ids)
+            .annotate(
+                link_count=Count(
+                    "participant__activelink",
+                    filter=Q(participant__activelink__survey_id=sid),
+                    distinct=True,
+                )
+            )
             .annotate(
                 voted_count=Count(
                     "result", filter=Q(result__survey_id=sid), distinct=True
