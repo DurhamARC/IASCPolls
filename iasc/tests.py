@@ -975,6 +975,149 @@ class DatabaseModelTestCase(TestCase):
             ActiveLink.objects.filter(unique_link=link.unique_link).exists()
         )
 
+    def _authed_client(self):
+        """Return a logged-in test client."""
+        user = User.objects.create(username="aggtest")
+        user.set_password("password")
+        user.save()
+        self.client.login(username="aggtest", password="password")
+        return self.client
+
+    def test_aggregate_endpoint_basic(self):
+        """GET /api/survey/<id>/aggregate/ returns vote_counts for a survey."""
+        link = ActiveLink.objects.get()
+        link.vote(3)
+
+        client = self._authed_client()
+        resp = client.get(f"/api/survey/{self.survey.id}/aggregate/")
+        self.assertEqual(resp.status_code, 200)
+
+        import json as json_mod
+
+        data = json_mod.loads(resp.content)
+        self.assertEqual(data["id"], self.survey.id)
+        self.assertEqual(data["kind"], "LI")
+        self.assertEqual(data["count"], 1)
+        self.assertIn("3", data["vote_counts"])
+
+    def test_aggregate_endpoint_404(self):
+        """GET /api/survey/99999/aggregate/ returns 404 for a missing survey."""
+        client = self._authed_client()
+        resp = client.get("/api/survey/99999/aggregate/")
+        self.assertEqual(resp.status_code, 404)
+
+    def test_aggregate_endpoint_institution_filter(self):
+        """GET /api/survey/<id>/aggregate/?institution=<id> filters by institution."""
+        other_inst = Institution.objects.create(name="Other Inst", country="US")
+        other_disc = Discipline.objects.create(name="Other Disc")
+        other_participant = Participant.objects.create(
+            email="other@test.invalid",
+            name="Other",
+            institution=other_inst,
+            discipline=other_disc,
+        )
+        # Vote from original participant (self.institution)
+        link = ActiveLink.objects.get()
+        link.vote(4)
+        # Vote from other institution participant — create survey link manually
+        Result.objects.create(
+            survey=self.survey,
+            vote=2,
+            institution=other_inst,
+            discipline=other_disc,
+        )
+
+        client = self._authed_client()
+        resp = client.get(
+            f"/api/survey/{self.survey.id}/aggregate/?institution={self.institution.id}"
+        )
+        self.assertEqual(resp.status_code, 200)
+
+        import json as json_mod
+
+        data = json_mod.loads(resp.content)
+        # Only the vote from self.institution (vote=4) should appear
+        self.assertEqual(data["count"], 1)
+        self.assertIn("4", data["vote_counts"])
+        self.assertNotIn("2", data["vote_counts"])
+
+    def test_aggregate_endpoint_multi_institution_filter(self):
+        """GET /api/survey/<id>/aggregate/?institution=1;2 filters by multiple institutions."""
+        inst_a = Institution.objects.create(name="Inst A", country="GB")
+        inst_b = Institution.objects.create(name="Inst B", country="DE")
+        inst_c = Institution.objects.create(name="Inst C", country="FR")
+        disc = Discipline.objects.create(name="Multi Disc")
+        # Consume the default active link (vote=1)
+        link = ActiveLink.objects.get()
+        link.vote(1)
+        # Votes from inst_a and inst_b should be included; inst_c excluded
+        Result.objects.create(
+            survey=self.survey, vote=2, institution=inst_a, discipline=disc
+        )
+        Result.objects.create(
+            survey=self.survey, vote=3, institution=inst_b, discipline=disc
+        )
+        Result.objects.create(
+            survey=self.survey, vote=5, institution=inst_c, discipline=disc
+        )
+
+        import json as json_mod
+
+        client = self._authed_client()
+        resp = client.get(
+            f"/api/survey/{self.survey.id}/aggregate/?institution={inst_a.id};{inst_b.id}"
+        )
+        self.assertEqual(resp.status_code, 200)
+        data = json_mod.loads(resp.content)
+        self.assertEqual(data["count"], 2)
+        self.assertIn("2", data["vote_counts"])
+        self.assertIn("3", data["vote_counts"])
+        self.assertNotIn("5", data["vote_counts"])
+
+    def test_timeseries_endpoint_basic(self):
+        """GET /api/survey/<id>/timeseries/ returns series with cumulative counts."""
+        link = ActiveLink.objects.get()
+        link.vote(5)
+
+        client = self._authed_client()
+        resp = client.get(f"/api/survey/{self.survey.id}/timeseries/")
+        self.assertEqual(resp.status_code, 200)
+
+        import json as json_mod
+
+        data = json_mod.loads(resp.content)
+        self.assertEqual(data["participants"], self.survey.participants)
+        self.assertIn("series", data)
+        self.assertEqual(len(data["series"]), 1)
+        self.assertEqual(data["series"][0]["count"], 1)
+        self.assertEqual(data["series"][0]["cumulative"], 1)
+
+    def test_timeseries_endpoint_404(self):
+        """GET /api/survey/99999/timeseries/ returns 404 for a missing survey."""
+        client = self._authed_client()
+        resp = client.get("/api/survey/99999/timeseries/")
+        self.assertEqual(resp.status_code, 404)
+
+    def test_result_filter_discipline(self):
+        """GET /api/result/?discipline=<id> filters results by discipline."""
+        other_disc = Discipline.objects.create(name="FilterDisc")
+        # Vote the existing link (uses self.discipline)
+        link = ActiveLink.objects.get()
+        link.vote(2)
+
+        client = self._authed_client()
+        resp = client.get(f"/api/result/?discipline={self.discipline.id}")
+        self.assertEqual(resp.status_code, 200)
+        import json as json_mod
+
+        data = json_mod.loads(resp.content)
+        self.assertEqual(data["count"], 1)
+
+        # Filter by a discipline with no results
+        resp2 = client.get(f"/api/result/?discipline={other_disc.id}")
+        data2 = json_mod.loads(resp2.content)
+        self.assertEqual(data2["count"], 0)
+
     def test_vote_validation_rejects_wrong_checkbox_type(self):
         """POST /api/vote/ with an integer where a boolean is expected returns 400."""
         link = self._l2e_link()

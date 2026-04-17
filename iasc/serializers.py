@@ -231,20 +231,7 @@ class SurveyResultSerializer(serializers.ModelSerializer):
 
     def get_vote_counts(self, obj):
         results = models.Result.objects.filter(survey_id=obj.survey.id)
-        counts = {}
-        for result in results:
-            if isinstance(result.vote, dict):
-                # multi-question vote: {"0": 3, "1": 2, ..., "3": true}
-                for sub_key, sub_val in result.vote.items():
-                    if sub_key not in counts:
-                        counts[sub_key] = {}
-                    val_key = str(sub_val)
-                    counts[sub_key][val_key] = counts[sub_key].get(val_key, 0) + 1
-            else:
-                # LI: vote is a plain integer
-                key = str(result.vote)
-                counts[key] = counts.get(key, 0) + 1
-        return counts
+        return compute_vote_counts(results)
 
     class Meta:
         model = models.Result
@@ -259,6 +246,44 @@ class SurveyResultSerializer(serializers.ModelSerializer):
             "count",
             "vote_counts",
         ]
+
+
+class SurveyAggregateSerializer(serializers.Serializer):
+    """
+    Returns vote_counts aggregated over a filtered Result queryset,
+    plus survey metadata. Used by GET /api/survey/<id>/aggregate/.
+    """
+
+    id = serializers.IntegerField()
+    question = serializers.CharField()
+    questions = serializers.JSONField()
+    kind = serializers.CharField()
+    active = serializers.BooleanField()
+    hide_title = serializers.BooleanField()
+    participants = serializers.IntegerField()
+    voted = serializers.IntegerField()
+    template_slots = serializers.SerializerMethodField()
+    count = serializers.IntegerField()
+    vote_counts = serializers.DictField()
+
+    def get_template_slots(self, obj):
+        return _template_slots_list(obj["kind"])
+
+
+def compute_vote_counts(results):
+    """Compute vote_counts dict from a Result queryset."""
+    counts = {}
+    for result in results:
+        if isinstance(result.vote, dict):
+            for sub_key, sub_val in result.vote.items():
+                if sub_key not in counts:
+                    counts[sub_key] = {}
+                val_key = str(sub_val)
+                counts[sub_key][val_key] = counts[sub_key].get(val_key, 0) + 1
+        else:
+            key = str(result.vote)
+            counts[key] = counts.get(key, 0) + 1
+    return counts
 
 
 class ActiveLinkSerializer(serializers.ModelSerializer):
