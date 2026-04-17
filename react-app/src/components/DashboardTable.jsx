@@ -135,9 +135,9 @@ function DashboardTable({ reload, selectedSurveyId, onSelect }) {
               <th>ID</th>
               <th className="no-mobile">Type</th>
               <th>Completed</th>
-              <th className="no-mobile">Links</th>
               <th>Expiry</th>
               <th>Active</th>
+              <th className="no-mobile">Links</th>
               <th>Results</th>
             </tr>
           </thead>
@@ -181,11 +181,6 @@ function DashboardTable({ reload, selectedSurveyId, onSelect }) {
                     );
                   })()}
                 </td>
-                <td className="no-mobile">
-                  <a href={`/download?pollId=${row.id}`}>
-                    <span className="material-symbols-outlined">groups</span>
-                  </a>
-                </td>
                 <td>{row.expiry.slice(0, 10)}</td>
                 <td>
                   <Symbol
@@ -197,6 +192,11 @@ function DashboardTable({ reload, selectedSurveyId, onSelect }) {
                       updateData(row.id, value);
                     }}
                   />
+                </td>
+                <td className="no-mobile">
+                  <a href={`/download?pollId=${row.id}`}>
+                    <span className="material-symbols-outlined">groups</span>
+                  </a>
                 </td>
                 <td>
                   <Link to={`/dashboard/results/${row.id}`}>
