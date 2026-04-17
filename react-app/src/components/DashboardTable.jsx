@@ -137,7 +137,7 @@ function DashboardTable({ reload, selectedSurveyId, onSelect }) {
             <th className="no-mobile">Links</th>
             <th>Expiry</th>
             <th>Active</th>
-            <th className="no-mobile no-tablet">Results</th>
+            <th>Results</th>
           </tr>
         </thead>
         <tbody>
@@ -178,7 +178,7 @@ function DashboardTable({ reload, selectedSurveyId, onSelect }) {
                   }}
                 />
               </td>
-              <td className="no-mobile no-tablet">
+              <td>
                 <Link to={`/dashboard/results/${row.id}`}>
                   <span className="material-symbols-outlined">bar_chart</span>
                 </Link>{" "}
