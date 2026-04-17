@@ -127,69 +127,90 @@ function DashboardTable({ reload, selectedSurveyId, onSelect }) {
       </div>
 
       {/* Display Table body by mapping questionDatabase */}
-      <table className="dashboard--question--table">
-        <thead>
-          <tr>
-            <th className="no-mobile no-tablet">Statement</th>
-            <th>ID</th>
-            <th className="no-mobile">Type</th>
-            <th>Completed</th>
-            <th className="no-mobile">Links</th>
-            <th>Expiry</th>
-            <th>Active</th>
-            <th className="no-mobile no-tablet">Results</th>
-          </tr>
-        </thead>
-        <tbody>
-          {questionDatabase.map((row) => (
-            <tr
-              key={row.id}
-              className={`survey-row${selectedSurveyId === row.id ? " selected" : ""}`}
-              onClick={() =>
-                onSelect(
-                  row.id === selectedSurveyId ? null : row.id,
-                  row.id === selectedSurveyId ? null : row.question
-                )
-              }
-            >
-              <td className="no-mobile no-tablet">
-                {row.question.substring(0, 50)}
-                {row.question.length > 50 && "..."}
-              </td>
-              <td>{row.id}</td>
-              <td className="no-mobile">
-                {definitions[row.kind]?.label ?? row.kind}
-              </td>
-              <td>{Math.round((row.voted * 100) / row.participants)}%</td>
-              <td className="no-mobile">
-                <a href={`/download?pollId=${row.id}`}>
-                  <span className="material-symbols-outlined">groups</span>
-                </a>
-              </td>
-              <td>{row.expiry.slice(0, 10)}</td>
-              <td>
-                <Symbol
-                  isActive={row.active}
-                  surveyId={row.id}
-                  activeSymbol="stop_circle"
-                  inactiveSymbol="close"
-                  onChange={(value) => {
-                    updateData(row.id, value);
-                  }}
-                />
-              </td>
-              <td className="no-mobile no-tablet">
-                <Link to={`/dashboard/results/${row.id}`}>
-                  <span className="material-symbols-outlined">bar_chart</span>
-                </Link>{" "}
-                <a href={`/api/result/xls/?survey=${row.id}`}>
-                  <span className="material-symbols-outlined">download</span>
-                </a>
-              </td>
+      <div className="dashboard--table-scroll">
+        <table className="dashboard--question--table">
+          <thead>
+            <tr>
+              <th className="no-mobile no-tablet">Statement</th>
+              <th>ID</th>
+              <th className="no-mobile">Type</th>
+              <th>Completed</th>
+              <th>Expiry</th>
+              <th>Active</th>
+              <th className="no-mobile">Links</th>
+              <th>Results</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {questionDatabase.map((row) => (
+              <tr
+                key={row.id}
+                className={`survey-row${selectedSurveyId === row.id ? " selected" : ""}`}
+                onClick={() =>
+                  onSelect(
+                    row.id === selectedSurveyId ? null : row.id,
+                    row.id === selectedSurveyId ? null : row.question
+                  )
+                }
+              >
+                <td className="no-mobile no-tablet">
+                  {row.question.substring(0, 50)}
+                  {row.question.length > 50 && "..."}
+                </td>
+                <td>{row.id}</td>
+                <td className="no-mobile">
+                  {definitions[row.kind]?.label ?? row.kind}
+                </td>
+                <td>
+                  {(() => {
+                    const pct = Math.round(
+                      (row.voted * 100) / row.participants
+                    );
+                    return (
+                      <div className="dashboard--completion">
+                        <span className="dashboard--completion-pct">
+                          {pct}%
+                        </span>
+                        <div className="dashboard--progress-bar">
+                          <div
+                            className="dashboard--progress-fill"
+                            style={{ width: `${pct}%` }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })()}
+                </td>
+                <td>{row.expiry.slice(0, 10)}</td>
+                <td>
+                  <Symbol
+                    isActive={row.active}
+                    surveyId={row.id}
+                    activeSymbol="stop_circle"
+                    inactiveSymbol="close"
+                    onChange={(value) => {
+                      updateData(row.id, value);
+                    }}
+                  />
+                </td>
+                <td className="no-mobile">
+                  <a href={`/download?pollId=${row.id}`}>
+                    <span className="material-symbols-outlined">groups</span>
+                  </a>
+                </td>
+                <td>
+                  <Link to={`/dashboard/results/${row.id}`}>
+                    <span className="material-symbols-outlined">bar_chart</span>
+                  </Link>{" "}
+                  <a href={`/api/result/xls/?survey=${row.id}`}>
+                    <span className="material-symbols-outlined">download</span>
+                  </a>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       {/* Pagination: navigate data by setting page */}
       <div className="dashboard--next--page">
