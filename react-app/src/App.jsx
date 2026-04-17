@@ -43,6 +43,9 @@ const DownloadParticipants = lazy(
       /* webpackChunkName: "dashboard" */ "./pages/download/DownloadParticipants"
     )
 );
+const ResultsView = lazy(
+  () => import(/* webpackChunkName: "results" */ "./pages/results/ResultsView")
+);
 
 /**
  * Display an error message if something goes wrong!
@@ -79,6 +82,10 @@ function App() {
                   <Route path="/error" element={<Error />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/dashboard" element={<Dashboard />} />
+                  <Route
+                    path="/dashboard/results/:surveyId"
+                    element={<ResultsView />}
+                  />
                   <Route path="/download" element={<DownloadParticipants />} />
                 </Routes>
                 <Footer />
