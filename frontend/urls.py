@@ -9,7 +9,7 @@ urlpatterns = [
     path("ethics", views.index),
     path("poll", views.index),
     path("dashboard", views.index),
-    path("dashboard/results/<int:survey_id>", views.index),
+    path("dashboard/results/<int:survey_id>", lambda req, **_: views.index(req)),
     path("download", views.index),
     path("create", views.index),
     path("thankyou", views.index),
