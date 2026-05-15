@@ -3,6 +3,8 @@ import ReactMarkdown from "react-markdown";
 import homeWhatIsContent from "../../content/home-what-is.md";
 import homeEthicsContent from "../../content/home-ethics.md";
 import "./home.css";
+import logo from "../../imgs/C-SCOPE-Primary-Logo-Black.svg";
+import logoWhite from "../../imgs/C-SCOPE-Primary-Logo-White.svg";
 import mobileFrontPage from "../../imgs/min/mobile-front-page.webp";
 import frontPageComp from "../../imgs/min/balance.svg";
 import frontPageScientists from "../../imgs/min/scientists-shaking-hands.webp";
@@ -38,7 +40,13 @@ function Home() {
         />
         <div>
           <h1 className="home--title">
-            C-SCOPE: <br />
+            <img
+              id="main-logo"
+              width="60%"
+              src={isMobile ? logoWhite : logo}
+              alt="C-SCOPE logo"
+            />{" "}
+            <br />
             The Centre for Scientific Community Opinion Polling and Evaluation
           </h1>
         </div>

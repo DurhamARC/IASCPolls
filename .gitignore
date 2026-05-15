@@ -146,6 +146,7 @@ webpack-stats.json
 /frontend/static/dist/
 /frontend/static/admin/
 /frontend/static/rest_framework/
+/Logo\ Assets/
 
 # OSX
 .DS_Store
