@@ -48,7 +48,3 @@ This project has full ethics approval from Durham University (UK), equivalent to
 ### What will be done with the collected data?
 
 Data is collected purely for the purposes of ascertaining strength of scientific community opinion, regarding a given statement of interest.
-
-### Why aren't targeted scientists given the opportunity to "unsubscribe"?
-
-Targeted scientists aren't subscribed to anything. They will be emailed only twice during the 2022-23 academic year, with the email coming from somebody internal to their own institution.
