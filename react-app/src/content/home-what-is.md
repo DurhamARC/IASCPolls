@@ -7,3 +7,5 @@ Responses are recorded anonymously and analysed to map the distribution of scien
 C-SCOPE’s international network also makes it possible to examine variation across disciplines, institutions, and geographical regions. By providing transparent, systematic snapshots of scientific community judgement, C-SCOPE contributes to a clearer understanding of where scientific communities converge, where they do not, and how expert views evolve.
 
 These data can serve as a valuable resource for researchers, policymakers, journalists, and the public, offering structured insight into scientific opinion whilst avoiding oversimplified claims about “the science” speaking with a single voice.
+
+For further information, please visit the official [Durham University C-SCOPE webpages](https://www.durham.ac.uk/research/institutes-and-centres/centre-for-scientific-community-opinion-polling-and-evaluation/).
