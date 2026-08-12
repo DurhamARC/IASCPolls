@@ -17,8 +17,8 @@
     "react-select": "^5.10.1"
   },
   "scripts": {
-    "dev": "webpack --config webpack.config.js --watch --mode development",
-    "webpack": "webpack --config webpack.config.js --mode production"
+    "dev": "NODE_ENV=development webpack --config webpack.config.js --watch --mode development",
+    "webpack": "NODE_ENV=production webpack --config webpack.config.js --mode production"
   },
   "browserslist": {
     "production": [
