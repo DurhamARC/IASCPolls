@@ -39,26 +39,19 @@ jobs:
         name: Get current date for caching Conda envs
         id: date
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v7
 
-      # https://github.com/actions/cache/issues/133#issuecomment-599102035
-      - name: Fix /usr/share/miniconda directory permissions
-        run: sudo chown -R $(whoami):$(id -ng) /usr/share/miniconda
-
-      - uses: actions/cache@v3
-        name: Cache Miniconda environment
+      - uses: actions/cache@v6
+        name: Cache conda packages
         with:
-          path: |
-            ${{ env.CONDA_PREFIX }}/envs/
-            /home/runner/conda_pkgs_dir/
+          path: ~/conda_pkgs_dir
           key: conda-${{ runner.os }}-${{ runner.arch }}-${{ steps.date.outputs.date }}-${{ hashFiles('conf/iasc.base.yml', 'conf/iasc.dev.yml') }}-${{ env.CACHE_NUMBER }}
         env:
           # Increase this to manually invalidate the cache
           CACHE_NUMBER: 0 +
-          CONDA_PREFIX: /usr/share/miniconda
         id: cache
 
-      - uses: conda-incubator/setup-miniconda@v3
+      - uses: conda-incubator/setup-miniconda@v4
         name: Set Up Miniforge
         with:
           activate-environment: anaconda-client-env
@@ -83,6 +76,6 @@ jobs:
         run: coverage xml
 
       - name: Upload coverage reports to Codecov with GitHub Action
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
