@@ -1,0 +1,77 @@
+name: Raise release PR
+
+# Opens (or refreshes) a main -> release PR whenever main has commits that
+# release doesn't, e.g. Dependabot base image bumps auto-merged into main.
+# Merging the PR deploys to production via docker.yml.
+#
+# The PR head is a release-pr/main branch with release merged in, because
+# release's branch protection requires the head to be up to date with it and
+# release carries merge commits that main doesn't.
+#
+# PRs and pushes made with GITHUB_TOKEN don't trigger other workflows, so the
+# required unit tests are dispatched explicitly. For the same reason the PR
+# must be merged by a person (or auto-merge enabled by a person); a merge by
+# GITHUB_TOKEN would not trigger the deploy.
+
+on:
+  schedule:
+    - cron: "0 8 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+
+concurrency: release-pr
+
+env:
+  HEAD_BRANCH: release-pr/main
+
+jobs:
+  release-pr:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Open or update PR
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          pending=$(git log --no-merges --format='- %h %s' origin/release..origin/main)
+          if [ -z "$pending" ]; then
+            echo "release already contains main; nothing to do."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -C "$HEAD_BRANCH" origin/main
+          if ! git merge --no-edit -m "Merge release into $HEAD_BRANCH" origin/release; then
+            echo "::error::release doesn't merge cleanly into main; resolve by hand"
+            exit 1
+          fi
+          git push --force origin "$HEAD_BRANCH"
+
+          body=$(printf '%s\n' \
+            "Deploys the following commits from \`main\` to production:" \
+            "" "$pending" "" \
+            "Opened automatically by the \`release-pr\` workflow. Merge it (or enable" \
+            "auto-merge) yourself: a merge by the workflow wouldn't trigger the deploy.")
+
+          number=$(gh pr list --head "$HEAD_BRANCH" --base release --state open --json number --jq '.[].number')
+          if [ -n "$number" ]; then
+            gh pr edit "$number" --body "$body"
+          else
+            gh pr create --base release --head "$HEAD_BRANCH" \
+              --title "Merge main into release" --body "$body"
+          fi
+
+          # Satisfies release's required "Set up and test" check on the PR head
+          gh workflow run unit-tests.yml --ref "$HEAD_BRANCH"

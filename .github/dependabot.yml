@@ -1,0 +1,33 @@
+# Dependabot version updates. npm security updates are enabled separately in
+# the repository settings; conda dependencies are not supported by Dependabot.
+# Dependabot reads this file from the default branch only.
+version: 2
+updates:
+  # Base images in the Dockerfile. The runtime image is pinned by digest, so
+  # this raises a PR each time Debian publishes a rebuilt trixie-slim.
+  # Digest-only PRs auto-merge into main after CI (see the automerge job in
+  # docker.yml), then release-pr.yml raises the main -> release PR.
+  # Tag changes need review.
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "daily"
+      time: "04:00"
+      timezone: "Europe/London"
+    target-branch: "main"
+    labels:
+      - "dependencies"
+      - "docker"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    target-branch: "main"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    groups:
+      actions:
+        patterns:
+          - "*"
