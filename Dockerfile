@@ -82,7 +82,9 @@ SHELL ["/bin/bash", "--login", "-c"]
 
 # ----------------------------------------------------------------------------
 # Create a python Docker container for running the app with gunicorn and whitenoise
-FROM debian:bullseye-slim AS iasc
+# Pinned by digest so Dependabot raises a PR whenever Debian republishes the tag
+# (i.e. security updates). Bump the codename manually before it reaches EOL.
+FROM debian:trixie-slim@sha256:a72b4433de1cf7d6bae0c4cee74d0547f58601a643b3375f070c51600d63b6b2 AS iasc
 LABEL org.opencontainers.image.authors="Samantha Finnigan <samantha.finnigan@durham.ac.uk>, ARC Durham University"
 WORKDIR /app
 
@@ -93,10 +95,15 @@ ENV BASH_ENV="~/.bashrc"
 # Avoid <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1129)>
 ENV SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
 
-# Replicate environment from miniconda image
+# Replicate environment from miniconda image, applying Debian security fixes
+# the base image doesn't include yet. CI passes today's date as
+# OS_UPDATES_DATE so this layer isn't served stale from the build cache.
+# postgresql-client provides psql for debugging the database over SSH
+ARG OS_UPDATES_DATE
 RUN apt-get update -q && \
+    DEBIAN_FRONTEND=noninteractive apt-get upgrade -q -y && \
     apt-get install -q -y --no-install-recommends \
-        nginx openssh-server ca-certificates \
+        nginx openssh-server ca-certificates postgresql-client \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
