@@ -5,28 +5,59 @@ on:
   push:
     branches:
       - release
+  # Build (without pushing) on PRs, so base image bumps are tested before merge
+  pull_request:
+    paths:
+      - 'Dockerfile'
+      - 'conf/**'
+      - 'react-app/**'
+      - 'iasc/**'
+      - 'frontend/**'
+      - '.github/workflows/docker.yml'
 
 env:
   DOCKERHUB_REPO: ${{ secrets.AZURE_ACR_REGISTRY }}/arc/iasc
 
 jobs:
+  build-check:
+    name: Build image
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Build docker image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          platforms: linux/amd64
+          push: false
+          target: iasc
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
   docker:
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     outputs:
       short_sha: ${{ steps.sha.outputs.short_sha }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
 
       - name: Login to DockerHub
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ${{ secrets.AZURE_ACR_REGISTRY }}
           username: ${{ secrets.AZURE_ACR_USER }}
           password: ${{ secrets.AZURE_ACR_TOKEN }}
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@v4
 
       # https://stackoverflow.com/questions/59810838/how-to-get-the-short-sha-for-the-github-workflow
       # https://stackoverflow.com/questions/58033366/how-to-get-the-current-branch-within-github-actions
@@ -35,20 +66,24 @@ jobs:
         run: |
           echo "SHORT_SHA=$(git rev-parse --short=8 HEAD)" >> $GITHUB_ENV \
           && echo "short_sha=$(git rev-parse --short=8 HEAD)" >> $GITHUB_OUTPUT \
-          && echo "BRANCH=release" >> $GITHUB_ENV
+          && echo "BRANCH=release" >> $GITHUB_ENV \
+          && echo "TODAY=$(date -u +%F)" >> $GITHUB_ENV
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v4
 
       - name: Build and push docker image
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v7
         with:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
           target: iasc
+          # Rebuilds the apt upgrade layer instead of reusing a stale cached one
+          build-args: |
+            OS_UPDATES_DATE=${{ env.TODAY }}
           tags: >
-            ${{ env.DOCKERHUB_REPO }}:latest , 
+            ${{ env.DOCKERHUB_REPO }}:latest ,
             ${{ env.DOCKERHUB_REPO }}:${{ env.SHORT_SHA }} ,
             ${{ env.DOCKERHUB_REPO }}:${{ env.BRANCH }}
           cache-from: type=registry,ref=${{ env.DOCKERHUB_REPO }}:cache
@@ -56,6 +91,7 @@ jobs:
 
   release-prod:
     name: Release to Azure Pipelines Production
+    if: github.event_name == 'push'
     needs: docker
     runs-on: ubuntu-latest
 
@@ -67,3 +103,48 @@ jobs:
           azure-devops-project-url: ${{ secrets.AZURE_DEVOPS_URL }}
           azure-devops-token: ${{ secrets.AZURE_DEVOPS_TOKEN }}
           azure-pipeline-variables: '{"commitHash": "${{ needs.docker.outputs.short_sha }}"}'
+
+  # Dependabot PRs that only change image digests (same tag, rebuilt upstream)
+  # merge into main once the image builds and the unit tests pass. Anything
+  # else waits for a human. Getting to production still needs the main ->
+  # release PR raised by release-pr.yml.
+  automerge:
+    needs: build-check
+    if: github.event_name == 'pull_request' && github.event.pull_request.user.login == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_REPO: ${{ github.repository }}
+      PR_URL: ${{ github.event.pull_request.html_url }}
+    steps:
+      - id: check
+        shell: python
+        run: |
+          import os, re, subprocess
+          diff = subprocess.run(["gh", "pr", "diff", os.environ["PR_URL"]],
+                                capture_output=True, text=True, check=True).stdout
+          removed, added = [], []
+          for line in diff.splitlines():
+              if line.startswith(("--- a/", "+++ b/", "--- /dev/null", "+++ /dev/null")):
+                  continue
+              if line.startswith("-"):
+                  removed.append(line[1:])
+              elif line.startswith("+"):
+                  added.append(line[1:])
+          digest = re.compile(r"@sha256:[0-9a-f]{64}")
+          only_digests = (
+              bool(removed)
+              and len(removed) == len(added)
+              and all(digest.search(l) for l in removed + added)
+              and [digest.sub("", l) for l in removed] == [digest.sub("", l) for l in added]
+          )
+          print("digest-only change" if only_digests else "not digest-only; leaving for review")
+          with open(os.environ["GITHUB_OUTPUT"], "a") as out:
+              out.write(f"digest_only={str(only_digests).lower()}\n")
+
+      # --auto waits for main's required check (unit tests) before merging
+      - if: steps.check.outputs.digest_only == 'true'
+        run: gh pr merge --auto --squash "$PR_URL"

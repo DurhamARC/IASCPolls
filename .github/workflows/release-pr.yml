@@ -1,0 +1,91 @@
+name: Raise release PR
+
+# Opens (or refreshes) a main -> release PR whenever main has commits that
+# release doesn't, e.g. Dependabot base image bumps auto-merged into main.
+# Merging the PR deploys to production via docker.yml.
+#
+# The PR head is a release-pr/main branch with release merged in, because
+# release's branch protection requires the head to be up to date with it and
+# release carries merge commits that main doesn't.
+#
+# Pushes and PRs are made as the iasc-release-bot GitHub App rather than with
+# GITHUB_TOKEN, because events caused by GITHUB_TOKEN don't trigger other
+# workflows: release's required unit tests would never run on the PR.
+# Requires the RELEASE_APP_CLIENT_ID variable and RELEASE_APP_PRIVATE_KEY
+# secret; the App needs Contents and Pull requests (read & write).
+
+on:
+  schedule:
+    - cron: "0 8 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency: release-pr
+
+env:
+  HEAD_BRANCH: release-pr/main
+
+jobs:
+  release-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.RELEASE_APP_CLIENT_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+
+      # The App token is persisted for git, so the push below is made as the App
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Open or update PR
+        shell: bash
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          APP_SLUG: ${{ steps.app-token.outputs.app-slug }}
+        run: |
+          set -euo pipefail
+
+          pending=$(git log --no-merges --format='- %h %s' origin/release..origin/main)
+          if [ -z "$pending" ]; then
+            echo "release already contains main; nothing to do."
+            exit 0
+          fi
+
+          # Only push when main or release has moved: re-pushing an identical
+          # merge would re-run the PR's checks for nothing
+          if git rev-parse -q --verify "origin/$HEAD_BRANCH" >/dev/null \
+            && git merge-base --is-ancestor origin/main "origin/$HEAD_BRANCH" \
+            && git merge-base --is-ancestor origin/release "origin/$HEAD_BRANCH"; then
+            echo "$HEAD_BRANCH is already up to date."
+          else
+            user_id=$(gh api "users/${APP_SLUG}%5Bbot%5D" --jq .id)
+            git config user.name "${APP_SLUG}[bot]"
+            git config user.email "${user_id}+${APP_SLUG}[bot]@users.noreply.github.com"
+            git switch -C "$HEAD_BRANCH" origin/main
+            if ! git merge --no-edit -m "Merge release into $HEAD_BRANCH" origin/release; then
+              echo "::error::release doesn't merge cleanly into main; resolve by hand"
+              exit 1
+            fi
+            git push --force origin "$HEAD_BRANCH"
+          fi
+
+          body=$(printf '%s\n' \
+            "Deploys the following commits from \`main\` to production:" \
+            "" "$pending" "" \
+            "Opened automatically by the \`release-pr\` workflow. Merge it (or enable" \
+            "auto-merge) once the checks pass.")
+
+          number=$(gh pr list --head "$HEAD_BRANCH" --base release --state open --json number --jq '.[].number')
+          if [ -n "$number" ]; then
+            gh pr edit "$number" --body "$body"
+          else
+            gh pr create --base release --head "$HEAD_BRANCH" \
+              --title "Merge main into release" --body "$body"
+          fi
