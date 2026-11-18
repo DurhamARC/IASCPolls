@@ -11,8 +11,6 @@ on:
     types:
       - opened
       - synchronize
-  # Dispatched by release-pr.yml, whose PRs don't trigger pull_request runs
-  workflow_dispatch:
 
 jobs:
   test:
