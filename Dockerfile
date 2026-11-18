@@ -47,7 +47,7 @@ RUN npm run webpack
 
 # ----------------------------------------------------------------------------
 # Create conda environment
-FROM continuumio/miniconda3:25.3.1-1 AS build_python
+FROM continuumio/miniconda3:26.7.1-1 AS build_python
 
 # This is how I used to do this: it's slower than using conda-lock
 # https://pythonspeed.com/articles/conda-docker-image-size/
